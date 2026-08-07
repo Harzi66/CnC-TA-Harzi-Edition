@@ -31,18 +31,19 @@ https://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
 
 ## 🎯 Sektorsprung – Harzi Edition
 
-Berechnung der Landepunkte.
+Erweiterte Version des Sektorsprung-Scripts.
 
 **Funktionen**
 
-- Allianzchat
-- Offizierschat
-- Weltkarte zentrieren
+- Spieler anhand des Namens suchen
+- Berechnung der voraussichtlichen Landepunkte
+- Ausgabe im Allianzchat
+- Ausgabe im Offizierschat
+- Weltkarte direkt auf den gewählten Landepunkt zentrieren
 
 ➡ Repository:
 
-*folgt*
-
+https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
 ---
 
 ## 🧰 Toolkit
