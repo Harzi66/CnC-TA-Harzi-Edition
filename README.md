@@ -40,6 +40,7 @@ Erweiterte Version des Sektorsprung-Scripts.
 - Ausgabe im Allianzchat
 - Ausgabe im Offizierschat
 - Weltkarte direkt auf den gewählten Landepunkt zentrieren
+- Läuft ohne "Toolbox Main"
 
 ➡ Repository:
 
