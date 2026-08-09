@@ -2,7 +2,7 @@
 // @name           CnC-TA-Sektorsprung-Harzi-Edition
 // @author         Trinitroglycerol
 // @contributor    leo7044 (https://github.com/leo7044)
-// @version        0.1.5.0 Beta
+// @version        0.1.5.0-Beta
 // @description    Erweiterte Version des Toolbox_Addon_Sektorsprung
 // @description    Original by Trinitroglycerol, leo7044, further developed by Harzi66.
 // @description    Landepunkt für Spieler berechnen
