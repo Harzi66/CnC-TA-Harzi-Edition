@@ -2,15 +2,13 @@
 // @name           ToolBox_Addon_Sektorsprung
 // @author         Trinitroglycerol
 // @contributor    leo7044 (https://github.com/leo7044)
-// @contributor    Harzi (https://github.com/Harzi66)
-// @version        0.1.4.0 Beta
+// @version        0.1.5.0 Beta
 // @description    Erweiterte Version des Toolbox_Addon_Sektorsprung
 // @description    Original by Trinitroglycerol, leo7044, further developed by Harzi66.
 // @description    Landepunkt für Spieler berechnen
 // @include        https://cncapp*.alliances.commandandconquer.com/*/index.aspx*
-// @downloadURL    https://raw.githubusercontent.com/leo7044/CnC_TA/master/ToolBox_Addon_Sektorsprung.user.js
-// @updateURL      https://raw.githubusercontent.com/leo7044/CnC_TA/master/ToolBox_Addon_Sektorsprung.user.js
-// @version        0.1.3.2 Beta
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/ToolBox_Addon_Sektorsprung-0.1.5.0 Beta.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/ToolBox_Addon_Sektorsprung-0.1.5.0 Beta.user.js
 // @grant          none
 // ==/UserScript==
 
@@ -18,6 +16,10 @@
 //  0.1.4.0 Beta
 //  Neu
 // - Hinzufügen der Ausgabeoption "Weltkarte"
+//  0.1.5.0 Beta
+//  Neu
+// - Entkoppeln von "Toolbox Main"
+// - Script ist jetzt Eigenständig unter "Scripte" zu finden
 
 (function(){
     var injectFunction = function()
@@ -39,26 +41,24 @@
                         var erneuern = true;
                         var chatkanal = "/a ";
                         var modus = "allianz";
-                        var ToolBoxMainFenster = window.ToolBoxMain.getInstance().ToolBoxFenster;
-                        var SektorsprungButton = new qx.ui.form.Button("Sektorsprung").set({
-                            toolTipText: "Hauptmenü",
-                            width: 140,
-                            height: 25,
-                            maxWidth: 140,
-                            maxHeight: 25,
-                        });
-                        SektorsprungButton.addListener("click", function (e) {
-                            if(SektorsprungFenster.getVisibility() == "hidden") {
-                                SektorsprungFenster.setVisibility("visible");
-                                SektorsprungFenster.setActive(true);
-                                SektorsprungFenster.setAlwaysOnTop(true);
-                            } else {
-                                SektorsprungFenster.setVisibility("hidden");
-                                SektorsprungFenster.setActive(false);
-                                SektorsprungFenster.setAlwaysOnTop(false);
-                            }
-                        }, this);
-                        ToolBoxMainFenster.add(SektorsprungButton);
+                       var scriptsButton = qx.core.Init.getApplication().getMenuBar().getScriptsButton();
+
+scriptsButton.Add("Sektorsprung", "");
+
+var children = scriptsButton.getMenu().getChildren();
+var lastChild = children[children.length - 1];
+
+lastChild.addListener("execute", function () {
+    if(SektorsprungFenster.getVisibility() == "hidden") {
+        SektorsprungFenster.setVisibility("visible");
+        SektorsprungFenster.setActive(true);
+        SektorsprungFenster.setAlwaysOnTop(true);
+    } else {
+        SektorsprungFenster.setVisibility("hidden");
+        SektorsprungFenster.setActive(false);
+        SektorsprungFenster.setAlwaysOnTop(false);
+    }
+}, this);
 
                         var SektorsprungFenster = new qx.ui.window.Window("Sektorsprung").set({
                             showMaximize:false,
@@ -621,10 +621,10 @@
         {
             try
             {
-                if (typeof qx != 'undefined' && typeof qx.core != 'undefined' && typeof qx.core.Init != 'undefined' && qx.core.Init.getApplication() !== null && typeof window.ToolBoxMain != 'undefined')
+                if (typeof qx != 'undefined' && typeof qx.core != 'undefined' && typeof qx.core.Init != 'undefined' && qx.core.Init.getApplication() !== null)
                 {
                     var app = qx.core.Init.getApplication();
-                    if (app.initDone === true && typeof window.ToolBoxMain != 'undefined')
+                    if (app.initDone === true)
                     {
                         try
                         {
