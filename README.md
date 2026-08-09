@@ -47,6 +47,29 @@ Erweiterte Version des Sektorsprung-Scripts.
 https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
 ---
 
+## 🤖 SubSender – Harzi Edition
+
+Automatische Verwaltung der Spielervertretung (UV) für C&C Tiberium Alliances.
+
+### Funktionen
+
+- 🌍 Automatische Erkennung von Welt und Allianz
+- 👤 Zielspieler für die UV festlegen
+- 🔄 UV manuell senden
+- ↩️ UV manuell zurückrufen
+- 🤖 Automatische UV-Verwaltung beim Login
+- 💾 Einstellungen automatisch speichern
+- 🌐 Einstellungen getrennt nach Welt und Allianz
+- 🖥 Mehrere Welten und Tabs unabhängig voneinander
+- 🚫 Keine permanente Prüfung und keine unnötigen Serveranfragen
+- ⚙️ Läuft unabhängig von der Toolbox
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
+
+---
+
 ## 🧰 Toolkit
 
 In Entwicklung.
