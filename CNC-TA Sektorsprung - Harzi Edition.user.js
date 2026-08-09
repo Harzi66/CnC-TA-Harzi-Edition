@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           ToolBox_Addon_Sektorsprung
+// @name           CnC-TA-Sektorsprung-Harzi-Edition
 // @author         Trinitroglycerol
 // @contributor    leo7044 (https://github.com/leo7044)
 // @version        0.1.5.0 Beta
