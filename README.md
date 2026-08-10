@@ -1,5 +1,6 @@
 # CnC-TA-Harzi-Edition
-Collection of Command &amp; Conquer: Tiberium Alliances scripts by Harzi.
+
+Collection of Command & Conquer: Tiberium Alliances scripts by Harzi.
 
 # C&C: Tiberium Alliances – Harzi Edition
 
@@ -25,7 +26,7 @@ Erweiterte Spieler- und Allianzlisten.
 
 ➡ Repository:
 
-https://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
+https\://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
 
 ---
 
@@ -44,7 +45,30 @@ Erweiterte Version des Sektorsprung-Scripts.
 
 ➡ Repository:
 
-https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
+https\://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
+
+---
+
+## 🎯 Raidhelper – HE
+
+Erweiterte Version des C&C TA Raidhelper-Scripts.
+
+**Funktionen**
+
+- Frei einstellbare Lower Range
+- Berücksichtigung von Offensivstufe und Deffhöhe
+- Der höhere Wert wird als Grundlage verwendet
+- Anzeige der erwarteten Zielhöhe
+- Zielhöhe wird bei Änderung der Lower Range automatisch aktualisiert
+- Lager außerhalb des gewünschten Bereichs ausblenden
+- Spielerinformationen und Points of Interest ausblenden
+- Anzeige jederzeit über **Show All** wiederherstellen
+- Läuft unabhängig von der Toolbox
+
+➡ Repository:
+
+https\://github.com/Harzi66/CnC-TA-Raidhelper-HE
+
 ---
 
 ## 🤖 SubSender – Harzi Edition
@@ -66,7 +90,7 @@ Automatische Verwaltung der Spielervertretung (UV) für C&C Tiberium Alliances.
 
 ➡️ **Repository:**
 
-https://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
+https\://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
 
 ---
 
@@ -78,11 +102,13 @@ In Entwicklung.
 
 # Aktuelle Projekte
 
-| Projekt | Status |
-|----------|--------|
-| Lister | ✅ Aktiv |
-| Sektorsprung | ✅ Aktiv |
-| Toolkit | 🚧 Entwicklung |
+| Projekt      | Status         |
+| ------------ | -------------- |
+| Lister       | ✅ Aktiv        |
+| Sektorsprung | ✅ Aktiv        |
+| Raidhelper   | ✅ Aktiv        |
+| SubSender    | ✅ Aktiv        |
+| Toolkit      | 🚧 Entwicklung |
 
 ---
 
