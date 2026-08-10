@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           CnC-TA Sektorsprung - Harzi Edition
+// @name           CnC-TA Sektorsprung - HE
 // @namespace      https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
 // @version        0.1.5.0-Beta
 // @description    Erweiterte Version des Sektorsprung-Scripts
