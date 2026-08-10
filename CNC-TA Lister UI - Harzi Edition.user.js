@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           CnC-TA Lister UI - Harzi Edition
+// @name           CnC-TA Lister UI - HE
 // @namespace      https://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
 // @version        1.25.0-Beta1
 // @description    Erweiterte Version des CnC-TA Lister UI
