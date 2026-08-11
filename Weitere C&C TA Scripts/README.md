@@ -1,5 +1,12 @@
 Hier stehen weitere C&C TA Scripts von anderen Entwicklern
 
+
+# BaseInfo
+
+Stellt Informationen über die eigene Basis zur Verfügung
+
+---
+
 # C&C: TA-TargetWatcher_Enhancer
 
 Mit diesem Script kann man auf der Weltkarte sehen wer sich in einem Lager/ Vopo befindet und ob der Spieler aktiv oder abwesend ist.
