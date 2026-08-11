@@ -7,18 +7,23 @@ Stellt Informationen über die eigene Basis zur Verfügung
 
 ---
 
-# CnCTA Base Finder.users
+# CnCTA Base Finder
 
 Zeigt die Schwebenden Basen
 
 ---
 
-# CnCTA Base Scanner.user
+# CnCTA Base Scanner
 
 Ein einfacher aber schneller Basescanner, der gleich um Alle eigenen Basen nach neuen Layouts scannt 
 
 ---
 
+# CnCTA BaseNavigationBar MR
+
+Zeigt auf der Hauptseite bei den Basen an wie lange der Cooldown noch besteht 
+
+---
 # C&C: TA-TargetWatcher_Enhancer
 
 Mit diesem Script kann man auf der Weltkarte sehen wer sich in einem Lager/ Vopo befindet und ob der Spieler aktiv oder abwesend ist.
