@@ -1,6 +1,7 @@
 # CnC-TA-Harzi-Edition
 
-Collection of Command & Conquer: Tiberium Alliances scripts by Harzi. Zum installieren links auswählen und anschließend rechts oben auf "raw" klicken!
+Collection of Command & Conquer: Tiberium Alliances scripts by Harzi. 
+Zum installieren links auswählen und anschließend rechts oben auf "raw" klicken!
 
 # C&C: Tiberium Alliances – Harzi Edition
 
