@@ -9,6 +9,8 @@ Willkommen bei der **Harzi Edition**.
 Hier findest du alle meine Erweiterungen und Werkzeuge für
 **Command & Conquer: Tiberium Alliances**.
 
+Weitere sinnvolle Scripts von anderen Entwicklern findest du im Ordner "Weitere C&C TA Scripts"
+
 ---
 
 # Verfügbare Projekte
