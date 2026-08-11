@@ -4,7 +4,7 @@ Collection of Command & Conquer: Tiberium Alliances scripts by Harzi.
 
 # Installation
 
-Zur Installation oben auf das jeweilige Script klicken oder den Ordner "Weitere C&C TA Scripts" auswählen und anschließend rechts oben auf "Raw" klicken!
+Zur Installation oben auf das jeweilige Script klicken oder den Ordner "Weitere C&C TA Scripts" auswählen und anschließend rechts oben auf "Raw" klicken! Voraussetzung für alle Scripte ist "Tempermonkey" und das Script "infernal wrapper"
 
 # C&C: Tiberium Alliances – Harzi Edition
 
