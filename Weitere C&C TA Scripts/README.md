@@ -24,6 +24,17 @@ Ein einfacher aber schneller Basescanner, der gleich um Alle eigenen Basen nach 
 Zeigt auf der Hauptseite bei den Basen an wie lange der Cooldown noch besteht 
 
 ---
+
+# Shockr - Tiberium Alliances Tools
+
+Sammlung von wichtigen Scripts, wie Basescanner, Produktionsübersichten usw. 
+
+---
+
+Zeigt auf der Hauptseite bei den Basen an wie lange der Cooldown noch besteht 
+
+---
+
 # C&C: TA-TargetWatcher_Enhancer
 
 Mit diesem Script kann man auf der Weltkarte sehen wer sich in einem Lager/ Vopo befindet und ob der Spieler aktiv oder abwesend ist.
