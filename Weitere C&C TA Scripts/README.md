@@ -12,6 +12,6 @@ Nach Installation kann man den Umzug von Basen vorab simulieren und auch wieder 
 
 ---
 
-# infernal warapper
+# infernal wrapper
 
 Voraussetzung für das Benutzen der C&C TA Scripte
