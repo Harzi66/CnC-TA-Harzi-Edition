@@ -7,6 +7,12 @@ Stellt Informationen über die eigene Basis zur Verfügung
 
 ---
 
+# CnCTA Base Finder.users
+
+Zeigt die Schwebenden Basen
+
+---
+
 # CnCTA Base Scanner.user
 
 Ein einfacher aber schneller Basescanner, der gleich um Alle eigenen Basen nach neuen Layouts scannt 
