@@ -7,6 +7,12 @@ Stellt Informationen über die eigene Basis zur Verfügung
 
 ---
 
+# CnCTA Base Scanner.user
+
+Ein einfacher aber schneller Basescanner, der gleich um Alle eigenen Basen nach neuen Layouts scannt 
+
+---
+
 # C&C: TA-TargetWatcher_Enhancer
 
 Mit diesem Script kann man auf der Weltkarte sehen wer sich in einem Lager/ Vopo befindet und ob der Spieler aktiv oder abwesend ist.
