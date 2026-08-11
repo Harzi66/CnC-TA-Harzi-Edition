@@ -13,6 +13,12 @@ Mit diesem Script kann man auf der Weltkarte sehen wer sich in einem Lager/ Vopo
 
 ---
 
+# Tiberium Alliances Report Stats
+
+Fügt der Basis unter "Ausgehend" eine Checkbox hinzu um mehrere Raids besser auszuwerten.  
+
+---
+
 # C&C: Tiberium Alliances The Movement
 
 Nach Installation kann man den Umzug von Basen vorab simulieren und auch wieder rückgängig machen
