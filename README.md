@@ -125,12 +125,6 @@ https\://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
 
 ---
 
-## 🧰 Toolkit
-
-In Entwicklung.
-
----
-
 # Aktuelle Projekte
 
 | Projekt      | Status         |
@@ -139,7 +133,7 @@ In Entwicklung.
 | Sektorsprung | ✅ Aktiv        |
 | Raidhelper   | ✅ Aktiv        |
 | SubSender    | ✅ Aktiv        |
-| Toolkit      | 🚧 Entwicklung |
+| Rankingtool  | ✅ Aktiv        |
 
 ---
 
