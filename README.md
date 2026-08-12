@@ -79,6 +79,29 @@ https\://github.com/Harzi66/CnC-TA-Raidhelper-HE
 
 ---
 
+## 🏆 RankingTool – HE
+
+Spieler- und Allianz-Ranking für C&C: Tiberium Alliances.
+
+### Funktionen
+
+- Spieler-Ranking mit frei einstellbarem Rangbereich
+- Rangbereich bis maximal 1000
+- Spielersuche mit automatischem Anspringen
+- Anzeige der Punktentwicklung
+- Farbliche Punktetendenzen
+- Allianz-Ranking
+- Top-40-Punkte der Allianzen
+- Gesamtpunkte der Allianzen
+- Speicherung der Rang-Einstellungen
+- Läuft unabhängig von der Toolbox
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-RankingTool-HE
+
+---
+
 ## 🤖 SubSender – Harzi Edition
 
 Automatische Verwaltung der Spielervertretung (UV) für C&C Tiberium Alliances.
