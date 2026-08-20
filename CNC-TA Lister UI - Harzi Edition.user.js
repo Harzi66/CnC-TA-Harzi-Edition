@@ -318,7 +318,7 @@
             Tiberium: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAA6hJREFUOE+tlFtMXFUYhdc++1zmcmCG+zAQGS5DDSXEVIwVY2xNtJqYlvQy+kBqkyYa++AjsVUjPkiMRqM11tTEmhptBR60GjHVkrSgTWk1tmmLIEUqIJcZGGDu58zZ5zdQxKImvLhf915fVva/1s/wPx22HoeI2CsAqwOW3w4A1MaY/U/dGtCKiOMm5FINkjUPSfdAEwyutG1oskkmV81Ebiw3EdrIzNthf4OIWOcAlLQHOWQbXkvVnJaZdUhgBaRQ0M6X9kpx6kGavrANY3SmWo+2MWb9BVsFtRFJ5RPwcjlbnckR7WPzQ0W1nvrLQqaK0YW+u/rmvvT6Ew3JBze0HKc4jpFTGTpQhCRjjJZgq6DDw6S5uREgr/LUheg3B3+mbuwqfBE9E8cRqqpBpwhj7GwvdtcdRKWn/ulsgn9VdAmRUIiJNaAPByM5wu3dlNZT7d8nX2py5jXAiLtw7YeLkPQF1JTV4sLNfgSmyrEv9M4JsWC/ZZnx4b6a/GQXY+KWIyJ2bDpRCO586LfMr29/HuvwsUgMizcWkOtxIuyIwRweB8UyaKx+GDt3HBpkGfqMm64TLgWTe0uQWgYd/ZEUyjMCXFeaz1/peL2j+wNodwdgh+Pg0TlksgnIleWg2TC23/cY4nIKwardZlCt30cwe2ZK9Fm29MnFY/Co3NrE8/iB/l++e/zTw8+rUqAc8P0BazEJ0S/gqfehJBDEC0+04JIYwcB1W2yv2/+qlpE/6u7DODtKpPDRjN8ulp/9aaSj9fT5kyw6bsBxRxR8GwOldCQ7BaxJE+6mIKr8BWjaeCc6Tp3Gyy1dR7SU8obbh3HWdp3UMrdZHVXn2l97s7lZ6IWQ8nX4ixVUbQ3i2vwE5t6/AtvlhVyqQoRnkV+Qi3sqd4ltW/a30qJ5cqrCNbPsyBoxKqLy5Lsfv3fo0UkpCsmvQe6dgbvcjcxWF4yvJ5CejcJ5bwCbdzyJRwr3hHXLc4QLdmo+oYy0bkCCdRLxxdFkoe10NJqu7HO9Zz9p8tfWJ4pyS42rg2cqhq5eBIUN5FT78MD9e8YDxQ3nWEb6loS4nGXqpDKN2DONLMuWRt8JOBZvpAuEW/bJTKrMGkLlKnMRY2W2zjZzCykQpuyY6OGM/W5J1rTEnfNnSmEsZWg1kEtl7QKU+BC0NMVVTZNk05ZUrkkOIqYpACymGsJKxpFyJyJhZNq2QGClHmuS/a91csupVLRSowhAIcC+Xfzf7V9vMa1z/yem2KPLWChEcAAAAABJRU5ErkJggg==',
             Crystal: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAA5FJREFUOE+tlG1oW2UUx//PfZ57b15uetsm6ctWm1JRSalTaEGZUgbTgmLdHFql2DkVJo5NxlAUJy5DRMHh1LFBqygT/DD9sA8OxE5pNwVh00ynri5N1y5ZUpJ0Se7N6829uY/El+IQVj94vh7Oj3P4//+H4H8qshqHcy5M/gDa0g5WssB7FmGd2gA7RIj9z9lrQJxzMgPQzBWIhRKY1QYBetklUZdiEdNLGTivifFqAfqOPpQIIfxv2DWgie+5KKporjmMZpHRLoHDIgJpMQR+a8rM7rbKVf0GZe0uGOasGnAkRgmp/QsUCnGhcxwe6jB70SS8ejoS2zzUHzhXLpR5olINhiM5p3Y5hbFNt806LedupcrOzn0ELRT688SVjaY5Z5ElrGGK/Uh4KXZgPtsElksj91sUm4fX4/OZPJYyCXT7F/Do+NhBQa8fKXfJ8V1ArXHiCujtOHc28dqNopc9fyKceKJN9uC7s0lw7RIiP+oIdMuAs4jc5Z/x4sHQt1Je3O+wzZ9MTck/MwBrBTQxz1XZbQ0uGOmvJvdOQSsSWFc1dAYZ0lddgJUERwX963vw2FNbdGoKU6qovmHqmN/eC52AczIBMCtZ6ZCZtGEhNffWm4+/0k5dgxBoHbJfQ0VPgEgDkDvqGN86goq3ikyMWw/c3f8CLPHYkg8p0pD8w2Uo3DKDgirsubi8/ODhnfucVkqCY9NdoIFmaJOfwdXqBhd6sP+lMWSdCo4dn+J7nht5h+WsQ2rAESOfck61BfjEVnvLyfnZ92Y++Zpp0TIcGwPwjdyPQpZj+d2jqP96DmLPMKhs4N6td+L01Cm8Hnr6sFwWD7g7ECcNtaIJdBSdpdfe/+DjbXNfxCG2BOFpzWDdQ/fhl6QDuW+Ow74SBfUGQFQVXWs13DF4e3po6J6XYdATiTZkSMOEkhfeqs/Ye34xtvPoviMA8UHtVpENfwlXcCNKixEI9SzENevw8LNPYqDPe4YVcUiw+RlTkpM7/CiREOdC5yV4JDe6bdkejqbj47LLzXv93kxc03tnw+e7DC3DZX975Zabb7ro9/imxYp90jJZjDmR9kyjPDpK6n+oNg3QxTyUWgVNxDZbJULcNoXMJOIwynDZqBNS4wZ10wxFPS1W5Wwxg+L2hn/+ytuKjxqb9V0AQxNoVYSQL4AyCZSYRdGtKKjYsJkIo+RDLQuY103/ai/lev1V/9F/hf8O1jSTcwWrPEMAAAAASUVORK5CYII=',
             Production: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAZJJREFUOE9jZKAQMFKon4E2BphnT+gS5ONNZ2ZmBjvw79+/DB8+f2s9MSW3C93FWF1gnjVhVntBVKqmrDBY/aX7Lxnqp69pOzE5r5poA5pywlLVZMXB6s/dfMTQvXAzaQZUZEekykhAXHDz0QuGKfPWEzbANLPvvZ6KHD8zCzODspwU4+Pnbxn8fe0Y7j98zjBr6ebqM9OL2vB6walo2qd5jam8jIyQoJmy+iCDoa0xw7uXbxnWrNn59OfvX89//vr97tysUneYQSiBaFcw5VN9SQIvSJKLnZVh9caDDCoWRgwfP39j0GRnYNBVkWJIrJvx+dCEHD6sBlhkT/iUUwAxAOSI4/tOMciY6DO8fvuRQenfNwYFNQWG5p4Fn09MLcBugFlW38fAlGi45PWDJxjkLU0YPr95x8DO8I9BQVGaYf7URZ9OTSvix+oC4/TuT1qWZmAXgMDHB48Y+GSkGP7+/s3AwsLCwC3Ay3B6z6HPZ2eWYneBekzjmj9//ojgyx8sLCxvbi6pD8HqAnIyFsWZCQAHS5MRrpL/9AAAAABJRU5ErkJggg==',
-            Lister: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAGZJREFUOE9jZKAQMFKonwGrAd2Hvf6X2m5jBNG4LADJg+TgBqBrgikg5EIUA2CKidWM4gIQB+YKmEEkeQHZqegG4fMGwTDA5QqsgYgtDIg2AFsYEIoBjEBEDryRng6ICTyYGopzIwAF2VQRfJD3EwAAAABJRU5ErkJggg==',
+            Lister: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADEElEQVR42iXO3W7bVADA8f85dmwnsRPaZtmapV8ZoK4gUdapAiZWlYKGkNhTDB6Ii94gnqTbkOCCizI2QNPoRpq2S7I5SVvn247tc7jg9wQ/Aejvvn/A3Z0dms3XdC7PCYIApVIwFWmqGPenJHGCnbHwXI/SlRK/Hz7h54ePEN/c/1avvrvCT/s/EoURxfkiX+3tEgQDOr0O0zBke2uLfn/AwcPHRNOIjG2xu7fHaDhCbm5tsf/DPlpCJm+xtLRMfzBkOB5x984d7u1+iRQG7Tc+brGAlXdQaB4dHLC+cRPz7PQUlEJKk0Sn1NvHdC/OkQVF8+Urcq7F4IVCjCyGkxGmIzBVhkkwodlsIcNJSKYsWVh3qN4qYJXBH7UZpRHV3Doi8hhMJnT7PZwFgxs7y6zsVhBZUEphZnMOyaVi8YsiylAMfcFSZZFyqYy+MCjqKwjXIi1AU9e5+fUS/dGQxpPXODkbU5gCHUG/MyUiIS/eYbVaonfeRVgpC/kK82vLGE4GNzHw+/8yDQBLo9FIADLQa40JOjOcvOD9T+aYq1jU3quxvfs5+mqGx89+pZCWaB7E1A+6RK0ZWmlkqlIwYTicEU0VOdeg43cZDSaY5HhW/5Nj/wgxl3KeBszaFkF9hlYCw5TIWTz7P5ET5PImliVIohSJpNU6wRyniFnM5kc1agtLjK0umawAoRECZBIngMB2BbYEb94CQ+F6DomYcPy8QSm8SvRCcPjbIdfsKvliFgRYtomZJDGYAgxFGqb88csJSE0SgUo1cRLz8p860jKYuzWjcXzBvLWIYU8YjIaYSZyAUlS9GjMds/HpBp6Xp9vrUPA8klTh5nO0em26Y59r24ucvnpD2kwwpYFp2za5govf6FEtV+hc+IynWepnDUqlItcrZVpve7ztXqBSCInwL32svIVj2oi1G2t67YMaT/96ynA8JhUKIaBQsCldz2J7krPnAeFUoxEk0xjPddn88GPa9SYC0KtrK9z+7DZxnBCrmEQnRFFEFIagBU7WQkgJWiCVwDRMjv4+4qRxyn9WVXpUWkBUhAAAAABJRU5ErkJggg==',
             TheForgotten: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAACoUExURQAAAAsNBxEWCR0dEwAAAAIFAQUIAwYJAwUFAwICAQMGARAWCAUIAgkLBQIDAhkaEQUFAwAAAAMEAT6lAEGtAAgLBQ0fA0OyACssIcbEh4GAWXR2UhocFDaJBBxGBEJEMNDOjSRbAxUyBEa7AI6OYpiXZqalc1jqABASCy51A2tvTWZmSVBWN1fmAE/QADExLDmWAFXhANvalFPcALe5hOXkq7KyeUB5HgcpoUYAAAARdFJOUwAzqycT9AqM7XtmT6HHtdXVuJdJNwAAAT9JREFUKM+1ktlywjAMRSEhJGGXwGlsZ9/IVkLD0v//s8oztGnK9JHzpPGZO5ZlTSavZ2Zq0//cwioTXM2ezucL096w+HT0Hcs27XHeZp0Hn0ciRey83Uia3U2C/06c0LsJaz6Sbl+D/0GQ7IU1Smpu30BwulwuPni9/J3UtxhGEsDxDwGAG2W4W/48wfBEFEWZCwRreBQVIawe0go5l27NufCgvfPcDa9csIfcuFlHGU/wa8EpRHHZfPekWwBJpW4rri2CU8UIaA8jqNI09R2Qd4T4kKbnZOjXdN4UAciC4V6VlTEb5EERQE3yrMqR3CtI5iRVGQ9yiYm/PwcITc6oH3JsPcxoYWDCAMIsFzSJxBn/6lyjSJ3LNsvrEtd/92EJbRYislaU2vOSbMvSsKcaMqY/S329UqdTc/nqPf4CuKojdch7y7kAAAAASUVORK5CYII=',
             GDI: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAADtUExURQAAABoaGC8rHCgmHgcHBg8PDR4dFgoLCwsKCAoJBggIBi0vMCQnKCooHyIhGwcICC8xMhwdHgEBAQAAAAgHBQ0NDJ+NRaKRRxwaERUUEZCAP72oU3N5e6qXSiUmI5iHQigjEZKZm1hcXnyCg0M6HdnBX7CdTbW+wtO9X3ptNk9TVKiwtK63u+nWaSkrLUpNT8vU2KKorMawVtvj52ddN1lQKuPMY5ugoYd4O822WENDQLikUHJkMFJIJWNXKjMsFGZqbLvDx3ZuToeNkLWiTjc5OEdBJjo2Kefbb+7idbzFyqeaY7/Izbm7r3hsPJb6nMEAAAATdFJOUwBBVmn5AxDw27/pf9Aeq5yaLXYxpceLAAABe0lEQVQoz7WS2XKCQBREjaICGhNz78AMA8gq4G7Afc2qZvn/3wlWxaiVsiov6ddTPdPVtzOZP6ggi/mLMEsT+SK9xq13geZyGcHfWeKdJEmVwjmrUlKRBu22hX1Xn6J8fZaGhCsEPhyybtyLAwdzp1SOdhEu26HPXuKPh9gmR3pVyBK1zakV+iE13V7QG2H1m91RFNFLbQtqTHwGtB/0GvLBaM4iC1dKONReZ3xCAUdBixxCSa/bobKg1vieG8ZswoA0Hxo3P9WZA+7zeVI3DEOtcxOcN108JMrLm9WSP9cVNVX9/hE6gV78ySvan2zDlb3UsQXpuydQclpTmD7XUikU9nB9hDedpgPgGVoqY4BgthrisQYcuanBU8aaqvAEuk1SOvZX7PY7AFjTIs/y3pntCCflXqFrEwCtNt//6D5h6bT6Cuq2CS+PKgPmPpHy+U3L2LX1DhksycjB8q8VCaShr0lETLj9vZV8qSggTeYL4cLObhkiZjP/qy9e9S7QIkU6xAAAAABJRU5ErkJggg==',
             NOD: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAACNUExURQAAAOw8Q4tPUY1YWrFPU6ZxcrmDhZg5O+Rlaax1d6csL5dMT6BaXK07PqBqbNJ0d7BrbOJXXL59f9NFSshkZw0BASADBKofJKEdIbAhJRUCAkMICm0SFHkTFbsjKLYhJsEjKZQbHs4jKTkICV0OEdooLSsEBVAND8glK4UXGvAwN+YrMq8WGpIQFNIpL/ELCXgAAAAVdFJOUwD9sWPrMUX18Qv73bn3Tdyy9Zr55xQta2QAAAFFSURBVCjPtZLXbsMwDEWb7nQlbXOpZQ1bkkc8/v/zSiXpSp97AAsEjkiQlC8u/pnb+xO3f916VUXDRLta/5GbCfUBTJtzdzPqYX+g1uPNmXxNtM+hHsJ+T+n1t3trsHQopDGjefvdDaXMhvjTsqLxZ0+7GZko2XGIkaD0vPsxYkbtEce85NECnUD+Hvbd0Digb3omtOAq5v3TbSeoxWLoA9O7jiNM21M3izZNCB01jukjYLLRy7Gna4vgvFuidN773gBVCLDXxb1w4JRS3go+w8AdKe8s/EtJ7HQvGMXOu8SzGidEr01JfRpQq2KFs5WC1hj4Xo35qdR9NtpLRhnossKkpPTaPB8fZEISUopYsqirS5wwnZ7m0UKeZJSiFJGwj59rf2ipYrou2eoAtQ9fq7+aWyJqGTrSzlffm7+8O+PyP3/lD/3hLDLjPwEEAAAAAElFTkSuQmCC'
@@ -1962,968 +1962,968 @@
             return allianceCitiesTab;
         }
 
-        function tabSettings() {
-            const settingsTab = new qx.ui.tabview.Page("Konfiguration");
-            settingsTab.setLayout(new qx.ui.layout.VBox());
+function tabSettings() {
+    const settingsTab = new qx.ui.tabview.Page("Konfiguration");
+    settingsTab.setLayout(new qx.ui.layout.VBox());
 
-            const layout = new qx.ui.container.Composite(
-                new qx.ui.layout.HBox(10)
-            );
+    const layout = new qx.ui.container.Composite(
+        new qx.ui.layout.HBox(10)
+    );
 
-            const navigation = new qx.ui.container.Composite(
-                new qx.ui.layout.VBox(8)
-            );
+    const navigation = new qx.ui.container.Composite(
+        new qx.ui.layout.VBox(8)
+    );
 
-            navigation.setWidth(200);
-            navigation.setPaddingTop(8);
+    navigation.setWidth(200);
+    navigation.setPaddingTop(8);
 
 
-            const content = new qx.ui.container.Composite(
-                new qx.ui.layout.VBox(10)
-            );
+    const content = new qx.ui.container.Composite(
+        new qx.ui.layout.VBox(10)
+    );
 
-            const pageContainer = new qx.ui.container.Composite(
-                new qx.ui.layout.VBox(10)
-            );
+    const pageContainer = new qx.ui.container.Composite(
+        new qx.ui.layout.VBox(10)
+    );
 
-            pageContainer.add(
-                new qx.ui.basic.Label("Bitte links einen Bereich auswählen.")
-            );
+    pageContainer.add(
+        new qx.ui.basic.Label("Bitte links einen Bereich auswählen.")
+    );
 
-            content.add(pageContainer);
+    content.add(pageContainer);
 
 
-            const btnAlliance = new qx.ui.form.Button("Alliance Cities");
-            btnAlliance.addListener("execute", function () {
-                showAllianceCitiesPage(pageContainer);
-            });
-
-            navigation.add(btnAlliance);
-
-            const btnPoi = new qx.ui.form.Button("Points of Interest");
-
-            btnPoi.addListener("execute", function () {
-                showPointsOfInterestPage(pageContainer);
-            });
-
-            navigation.add(btnPoi);
-
-
-            const btnExport = new qx.ui.form.Button("Export");
-
-            btnExport.addListener("execute", function () {
-                showExportPage(pageContainer);
-            });
-
-            navigation.add(btnExport);
-
-            const btnProfile = new qx.ui.form.Button("Profile");
-
-            btnProfile.addListener("execute", function () {
-                showProfilePage(pageContainer);
-            });
-
-            navigation.add(btnProfile);
-
-            layout.add(navigation);
-            layout.add(content, { flex: 1 });
-
-            settingsTab.add(layout, { flex: 1 });
-
-            function showColumnConfiguration(pageContainer, title, columns) {
-
-                clearPage(pageContainer, title);
-
-                const displaySection = new qx.ui.container.Composite(
-                    new qx.ui.layout.HBox(30)
-                );
-
-                const leftDisplay = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(10)
-                );
-
-                const rightDisplay = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(10)
-                );
-
-                displaySection.add(leftDisplay, { flex: 1 });
-                displaySection.add(rightDisplay, { flex: 1 });
-
-
-                // ====================================================
-                // Standard wiederherstellen - Restore default settings
-                // ====================================================
-
-                const btnRestoreDefaults = new qx.ui.form.Button(
-                    "Standard wiederherstellen"
-                );
-
-                btnRestoreDefaults.set({
-                    width: 350,
-                    allowGrowX: false,
-                    alignX: "center",
-                    height: 34,
-                    font: new qx.bom.Font(16).set({
-                        bold: true
-                    })
-                });
-
-                // ========================================
-                // Funktionsbutton "My Cities"
-                // ========================================
-
-                function filterCitiesView(view) {
-
-                    if (view === "My Cities") {
-
-                        const myId = ClientLib.Data.MainData
-                        .GetInstance()
-                        .get_Player()
-                        .get_Id();
-
-                        const myCities = AllianceCitiesArr.filter(
-                            city => city.Player_Id === myId
-                        );
-
-                        tableModel.setData(
-                            myCities.map(createRowData)
-                        );
-
-                        return;
-                    }
-
-                    // All Cities
-                    applyProfileStartAction();
-
-                }
-
-                // ========================================
-                // Klick auf "Standard wiederherstellen"
-                // Alle Checkboxen auf ihre Standardwerte setzen.
-                // ========================================
-
-                btnRestoreDefaults.addListener("execute", function () {
-
-                    columns.forEach(column => {
-
-
-                        if (column.checkBox) {
-                            column.checkBox.setValue(column.default);
-                        }
-
-                    });
-
-                });
-
-                pageContainer.add(btnRestoreDefaults);
-
-                pageContainer.add(displaySection);
-                pageContainer.add(displaySection);
-
-                const orderSection = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(5)
-                );
-
-                orderSection.set({
-                    width: 800,
-                    allowGrowX: false,
-                    alignX: "center",
-                    padding: 10,
-                    backgroundColor: "rgba(120, 120, 120, 0.25)",
-                    decorator: new qx.ui.decoration.Decorator()
-                    .set({
-                        width: 1,
-                        color: "#666666",
-                        radius: 6
-                    })
-                });
-
-                const orderTitle = new qx.ui.basic.Label(
-                    "Spaltenreihenfolge wird durch verschieben der Spalten geändert"
-                );
-
-                orderTitle.set({
-                    font: new qx.bom.Font(14).set({
-                        bold: true
-                    }),
-                    alignX: "center"
-                });
-
-                orderSection.add(orderTitle);
-
-                const orderScroll = new qx.ui.container.Scroll();
-
-                orderScroll.set({
-                    height: 320,
-                    minHeight: 320,
-                    maxHeight: 320
-                });
-
-                const orderColumns = new qx.ui.container.Composite(
-                    new qx.ui.layout.HBox(30)
-                );
-
-                const orderListLeft = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(2)
-                );
-
-                const orderListMiddle = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(2)
-                );
-
-                const orderListRight = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(2)
-                );
-
-                orderColumns.add(orderListLeft, { flex: 1 });
-                orderColumns.add(orderListMiddle, { flex: 1 });
-                orderColumns.add(orderListRight, { flex: 1 });
-
-                orderScroll.add(orderColumns);
-                orderSection.add(orderScroll);
-
-                pageContainer.add(orderSection);
-
-
-                const sections = {};
-
-                columns.forEach(column => {
-
-                    if (!sections[column.category]) {
-
-                        const targetContainer =
-                              (column.category === "general" ||
-                               column.category === "production" ||
-                               column.category === "defense")
-                        ? leftDisplay
-                        : rightDisplay;
-
-                        sections[column.category] = addSection(
-                            targetContainer,
-                            categories[column.category] || column.category
-                        );
-
-                    }
-
-                    const checkBox = new qx.ui.form.CheckBox(column.label);
-
-                    // - checkBox.setFont("bold");
-
-                    checkBox.set({
-                        font: new qx.bom.Font(13)
-                    });
-
-                    column.checkBox = checkBox;
-
-                    const allianceCitiesSettings =
-                          window.harzi.core.settings.data.tables.allianceCities;
-
-                    let visibleColumns;
-
-                    if (
-                        Array.isArray(allianceCitiesSettings.order) &&
-                        allianceCitiesSettings.order.length > 0
-                    ) {
-                        visibleColumns = allianceCitiesSettings.order;
-                    } else {
-                        visibleColumns =
-                            window.harzi.core.settings.defaults.tables.allianceCities.initialView;
-                    }
-
-                    checkBox.setValue(
-                        visibleColumns.includes(column.id)
-                    );
-
-                    checkBox.setEnabled(column.available !== false);
-
-                    checkBox.addListener("changeValue", function () {
-
-                        const allianceCitiesSettings =
-                              window.harzi.core.settings.data.tables.allianceCities;
-
-                        if (
-                            !Array.isArray(allianceCitiesSettings.order) ||
-                            allianceCitiesSettings.order.length === 0
-                        ) {
-
-                            allianceCitiesSettings.order =
-                                [...allianceCitiesSettings.initialView];
-
-                        }
-
-                        const order = allianceCitiesSettings.order;
-
-                        if (checkBox.getValue()) {
-
-                            if (!order.includes(column.id)) {
-                                order.push(column.id);
-                            }
-
-                        } else {
-
-                            const index = order.indexOf(column.id);
-
-                            if (index !== -1) {
-                                order.splice(index, 1);
-                            }
-
-                        }
-
-                        window.harzi.core.settings.save();
-
-                        const columnIndex =
-                              window.columnIndexMap[column.field];
-
-                        if (columnIndex >= 0) {
-
-                            window.allianceCitiesTable
-                                .getTableColumnModel()
-                                .setColumnVisible(
-                                columnIndex,
-                                checkBox.getValue()
-                            );
-
-                            const currentOrder =
-                                  window.harzi.core.settings.data.tables.allianceCities.order;
-
-                            if (
-                                Array.isArray(currentOrder) &&
-                                currentOrder.length > 0
-                            ) {
-
-                                const tableColumnModel =
-                                      window.allianceCitiesTable.getTableColumnModel();
-
-                                const orderedColumnIndices =
-                                      currentOrder
-                                .map(columnId => {
-
-                                    const definition =
-                                          window.columnDefinitions.allianceCities.find(
-                                              definition => definition.id === columnId
-                                          );
-
-                                    if (!definition) {
-                                        return null;
-                                    }
-
-                                    return window.columnIndexMap[definition.field];
-
-                                })
-                                .filter(index => index != null);
-
-                                const allColumnIndices =
-                                      Array.from(
-                                          {
-                                              length:
-                                              tableColumnModel.getOverallColumnCount()
-                                          },
-                                          (_, index) => index
-                                      );
-
-                                const remainingColumnIndices =
-                                      allColumnIndices.filter(
-                                          index => !orderedColumnIndices.includes(index)
-                                      );
-
-                                const completeColumnOrder = [
-                                    ...orderedColumnIndices,
-                                    ...remainingColumnIndices
-                                ];
-
-                                tableColumnModel.setColumnsOrder(
-                                    completeColumnOrder
-                                );
-
-                                window.updateColumnOrderList();
-
-                            }
-
-                        }
-
-                    });
-                    const section = sections[column.category];
-
-                    if (section.count % 2 === 0) {
-                        section.left.add(checkBox);
-                    } else {
-                        section.right.add(checkBox);
-                    }
-
-                    section.count++;
-
-                });
-
-
-                function updateColumnOrderList() {
-
-                    orderListLeft.removeAll();
-                    orderListMiddle.removeAll();
-                    orderListRight.removeAll();
-
-                    const allianceCitiesSettings =
-                          window.harzi.core.settings.data.tables.allianceCities;
-
-                    let visibleColumns;
-
-                    if (
-                        Array.isArray(allianceCitiesSettings.order) &&
-                        allianceCitiesSettings.order.length > 0
-                    ) {
-
-                        visibleColumns =
-                            allianceCitiesSettings.order;
-
-                    } else {
-
-                        visibleColumns =
-                            window.harzi.core.settings.defaults.tables
-                            .allianceCities.initialView;
-
-                    }
-
-                    const columnsPerList =
-                          Math.ceil(visibleColumns.length / 3);
-
-                    visibleColumns.forEach((columnId, index) => {
-
-                        const column =
-                              window.columnDefinitions.allianceCities.find(
-                                  column => column.id === columnId
-                              );
-
-                        if (!column) {
-                            return;
-                        }
-
-                        const row = new qx.ui.container.Composite(
-                            new qx.ui.layout.HBox(8)
-                        );
-
-                        row.set({
-                            height: 28,
-                            paddingLeft: 8,
-                            paddingRight: 8
-                        });
-
-                        const grip =
-                              new qx.ui.basic.Label("☷");
-
-                        const position =
-                              new qx.ui.basic.Label(
-                                  `${index + 1}.`
-            );
-
-        position.setWidth(30);
-
-        const label =
-              new qx.ui.basic.Label(
-                  column.label
-              );
-
-        row.add(grip);
-        row.add(position);
-        row.add(label);
-
-        if (index < columnsPerList) {
-
-            orderListLeft.add(row);
-
-        } else if (index < columnsPerList * 2) {
-
-            orderListMiddle.add(row);
-
-        } else {
-
-            orderListRight.add(row);
-
-        }
-
+    const btnAlliance = new qx.ui.form.Button("Alliance Cities");
+    btnAlliance.addListener("execute", function () {
+        showAllianceCitiesPage(pageContainer);
     });
 
+    navigation.add(btnAlliance);
+
+    const btnPoi = new qx.ui.form.Button("Points of Interest");
+
+    btnPoi.addListener("execute", function () {
+        showPointsOfInterestPage(pageContainer);
+    });
+
+    navigation.add(btnPoi);
+
+
+    const btnExport = new qx.ui.form.Button("Export");
+
+    btnExport.addListener("execute", function () {
+        showExportPage(pageContainer);
+    });
+
+    navigation.add(btnExport);
+
+    const btnProfile = new qx.ui.form.Button("Profile");
+
+    btnProfile.addListener("execute", function () {
+        showProfilePage(pageContainer);
+    });
+
+    navigation.add(btnProfile);
+
+    layout.add(navigation);
+    layout.add(content, { flex: 1 });
+
+    settingsTab.add(layout, { flex: 1 });
+
+    function showColumnConfiguration(pageContainer, title, columns) {
+
+        clearPage(pageContainer, title);
+
+        const displaySection = new qx.ui.container.Composite(
+            new qx.ui.layout.HBox(30)
+        );
+
+        const leftDisplay = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(10)
+        );
+
+        const rightDisplay = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(10)
+        );
+
+        displaySection.add(leftDisplay, { flex: 1 });
+        displaySection.add(rightDisplay, { flex: 1 });
+
+
+        // ====================================================
+        // Standard wiederherstellen - Restore default settings
+        // ====================================================
+
+        const btnRestoreDefaults = new qx.ui.form.Button(
+            "Standard wiederherstellen"
+        );
+
+        btnRestoreDefaults.set({
+            width: 350,
+            allowGrowX: false,
+            alignX: "center",
+            height: 34,
+            font: new qx.bom.Font(16).set({
+                bold: true
+            })
+        });
+
+        // ========================================
+        // Funktionsbutton "My Cities"
+        // ========================================
+
+        function filterCitiesView(view) {
+
+            if (view === "My Cities") {
+
+                const myId = ClientLib.Data.MainData
+                .GetInstance()
+                .get_Player()
+                .get_Id();
+
+                const myCities = AllianceCitiesArr.filter(
+                    city => city.Player_Id === myId
+                );
+
+                tableModel.setData(
+                    myCities.map(createRowData)
+                );
+
+                return;
+            }
+
+            // All Cities
+            applyProfileStartAction();
+
+        }
+
+        // ========================================
+        // Klick auf "Standard wiederherstellen"
+        // Alle Checkboxen auf ihre Standardwerte setzen.
+        // ========================================
+
+        btnRestoreDefaults.addListener("execute", function () {
+
+            columns.forEach(column => {
+
+
+                if (column.checkBox) {
+                    column.checkBox.setValue(column.default);
                 }
 
-                window.updateColumnOrderList = updateColumnOrderList;
+            });
 
-                window.updateColumnOrderList();
+        });
 
-                validateColumnDefinitions();
+        pageContainer.add(btnRestoreDefaults);
 
-            }
-            // =============================================
-            // Hier beginnen die Konfigurationsseitenaufrufe
-            // =============================================
+        pageContainer.add(displaySection);
+        pageContainer.add(displaySection);
 
-            function showAllianceCitiesPage(pageContainer) {
+        const orderSection = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(5)
+        );
 
-                showColumnConfiguration(
-                    pageContainer,
-                    "Alliance Cities",
-                    columnDefinitions.allianceCities
+        orderSection.set({
+            width: 800,
+            allowGrowX: false,
+            alignX: "center",
+            padding: 10,
+            backgroundColor: "rgba(120, 120, 120, 0.25)",
+            decorator: new qx.ui.decoration.Decorator()
+            .set({
+                width: 1,
+                color: "#666666",
+                radius: 6
+            })
+        });
+
+        const orderTitle = new qx.ui.basic.Label(
+            "Spaltenreihenfolge wird durch verschieben der Spalten geändert"
+        );
+
+        orderTitle.set({
+            font: new qx.bom.Font(14).set({
+                bold: true
+            }),
+            alignX: "center"
+        });
+
+        orderSection.add(orderTitle);
+
+        const orderScroll = new qx.ui.container.Scroll();
+
+        orderScroll.set({
+            height: 320,
+            minHeight: 320,
+            maxHeight: 320
+        });
+
+        const orderColumns = new qx.ui.container.Composite(
+            new qx.ui.layout.HBox(30)
+        );
+
+        const orderListLeft = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(2)
+        );
+
+        const orderListMiddle = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(2)
+        );
+
+        const orderListRight = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(2)
+        );
+
+        orderColumns.add(orderListLeft, { flex: 1 });
+        orderColumns.add(orderListMiddle, { flex: 1 });
+        orderColumns.add(orderListRight, { flex: 1 });
+
+        orderScroll.add(orderColumns);
+        orderSection.add(orderScroll);
+
+        pageContainer.add(orderSection);
+
+
+        const sections = {};
+
+        columns.forEach(column => {
+
+            if (!sections[column.category]) {
+
+                const targetContainer =
+                      (column.category === "general" ||
+                       column.category === "production" ||
+                       column.category === "defense")
+                ? leftDisplay
+                : rightDisplay;
+
+                sections[column.category] = addSection(
+                    targetContainer,
+                    categories[column.category] || column.category
                 );
 
             }
 
-            function showPointsOfInterestPage(pageContainer) {
+            const checkBox = new qx.ui.form.CheckBox(column.label);
 
-                pageContainer.removeAll();
+            // - checkBox.setFont("bold");
 
-                clearPage(pageContainer, "Points of Interest");
+            checkBox.set({
+                font: new qx.bom.Font(13)
+            });
 
-                pageContainer.add(
-                    new qx.ui.basic.Label("Hier werden später die Einstellungen für Points of Interest angezeigt.")
-                );
+            column.checkBox = checkBox;
 
-            }
-            function showExportPage(pageContainer) {
+            const allianceCitiesSettings =
+                  window.harzi.core.settings.data.tables.allianceCities;
 
-                pageContainer.removeAll();
+            let visibleColumns;
 
-                clearPage(pageContainer, "Export");
-
-                pageContainer.add(
-                    new qx.ui.basic.Label("Hier werden später die Exporteinstellungen angezeigt.")
-                );
-
-            }
-
-            function createSettingRow(labelText, control) {
-
-                const row = new qx.ui.container.Composite(
-                    new qx.ui.layout.HBox(10)
-                );
-
-                const label = new qx.ui.basic.Label(labelText);
-
-                label.setWidth(180);
-
-                row.add(label);
-                row.add(control);
-
-                return row;
-
+            if (
+                Array.isArray(allianceCitiesSettings.order) &&
+                allianceCitiesSettings.order.length > 0
+            ) {
+                visibleColumns = allianceCitiesSettings.order;
+            } else {
+                visibleColumns =
+                    window.harzi.core.settings.defaults.tables.allianceCities.initialView;
             }
 
-            // Hier beginnt die Profil Seite
+            checkBox.setValue(
+                visibleColumns.includes(column.id)
+            );
 
-            // ===== Profile Layout =====
+            checkBox.setEnabled(column.available !== false);
 
-            const PROFILE_LEFT_MARGIN = 25;
-            const PROFILE_LABEL_WIDTH = 140;
-            const PROFILE_CONTROL_WIDTH = 260;
-            const PROFILE_ROW_SPACING = 15;
+            checkBox.addListener("changeValue", function () {
 
+                const allianceCitiesSettings =
+                      window.harzi.core.settings.data.tables.allianceCities;
 
+                if (
+                    !Array.isArray(allianceCitiesSettings.order) ||
+                    allianceCitiesSettings.order.length === 0
+                ) {
 
-            window.profileStartAction = "Keine";
+                    allianceCitiesSettings.order =
+                        [...allianceCitiesSettings.initialView];
 
-            function sortAllianceCities(field, ascending = true) {
-
-                if (!window.allianceCitiesTable) {
-                    return;
                 }
 
-                const sortedCities = [...AllianceCitiesArr];
+                const order = allianceCitiesSettings.order;
 
-                sortedCities.sort((a, b) => {
+                if (checkBox.getValue()) {
 
-                    let av = a[field];
-                    let bv = b[field];
+                    if (!order.includes(column.id)) {
+                        order.push(column.id);
+                    }
 
-                    // null behandeln
-                    if (av == null) av = "";
-                    if (bv == null) bv = "";
+                } else {
 
-                    // Text
-                    if (typeof av === "string") {
+                    const index = order.indexOf(column.id);
 
-                        return ascending
-                            ? av.localeCompare(bv)
-                        : bv.localeCompare(av);
+                    if (index !== -1) {
+                        order.splice(index, 1);
+                    }
+
+                }
+
+                window.harzi.core.settings.save();
+
+                const columnIndex =
+                      window.columnIndexMap[column.field];
+
+                if (columnIndex >= 0) {
+
+                    window.allianceCitiesTable
+                        .getTableColumnModel()
+                        .setColumnVisible(
+                        columnIndex,
+                        checkBox.getValue()
+                    );
+
+                    const currentOrder =
+                          window.harzi.core.settings.data.tables.allianceCities.order;
+
+                    if (
+                        Array.isArray(currentOrder) &&
+                        currentOrder.length > 0
+                    ) {
+
+                        const tableColumnModel =
+                              window.allianceCitiesTable.getTableColumnModel();
+
+                        const orderedColumnIndices =
+                              currentOrder
+                        .map(columnId => {
+
+                            const definition =
+                                  window.columnDefinitions.allianceCities.find(
+                                      definition => definition.id === columnId
+                                  );
+
+                            if (!definition) {
+                                return null;
+                            }
+
+                            return window.columnIndexMap[definition.field];
+
+                        })
+                        .filter(index => index != null);
+
+                        const allColumnIndices =
+                              Array.from(
+                                  {
+                                      length:
+                                      tableColumnModel.getOverallColumnCount()
+                                  },
+                                  (_, index) => index
+                              );
+
+                        const remainingColumnIndices =
+                              allColumnIndices.filter(
+                                  index => !orderedColumnIndices.includes(index)
+                              );
+
+                        const completeColumnOrder = [
+                            ...orderedColumnIndices,
+                            ...remainingColumnIndices
+                        ];
+
+                        tableColumnModel.setColumnsOrder(
+                            completeColumnOrder
+                        );
+
+                        window.updateColumnOrderList();
 
                     }
 
-                    // Zahlen
-                    return ascending
-                        ? av - bv
-                    : bv - av;
+                }
 
-                });
+            });
+            const section = sections[column.category];
 
-                const model = window.allianceCitiesTable.getTableModel();
-                console.table(
-                    sortedCities.slice(0, 20).map(c => ({
-                        Player: c.Player_Name,
-                        Off: c.Base_Offense_Level
-                    }))
-                );
-                model.setData(
-                    sortedCities.map(createRowData)
-                );
+            if (section.count % 2 === 0) {
+                section.left.add(checkBox);
+            } else {
+                section.right.add(checkBox);
+            }
+
+            section.count++;
+
+        });
+
+
+        function updateColumnOrderList() {
+
+            orderListLeft.removeAll();
+            orderListMiddle.removeAll();
+            orderListRight.removeAll();
+
+            const allianceCitiesSettings =
+                  window.harzi.core.settings.data.tables.allianceCities;
+
+            let visibleColumns;
+
+            if (
+                Array.isArray(allianceCitiesSettings.order) &&
+                allianceCitiesSettings.order.length > 0
+            ) {
+
+                visibleColumns =
+                    allianceCitiesSettings.order;
+
+            } else {
+
+                visibleColumns =
+                    window.harzi.core.settings.defaults.tables
+                    .allianceCities.initialView;
 
             }
 
-            function applyProfileStartAction() {
+            const columnsPerList =
+                  Math.ceil(visibleColumns.length / 3);
 
-                if (!window.allianceCitiesTable) {
+            visibleColumns.forEach((columnId, index) => {
+
+                const column =
+                      window.columnDefinitions.allianceCities.find(
+                          column => column.id === columnId
+                      );
+
+                if (!column) {
                     return;
                 }
-
-                const model = window.allianceCitiesTable.getTableModel();
-
-                switch (window.profileStartAction) {
-
-                    case "Rangliste":
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Player_Ranking"],
-                            true
-                        );
-
-                        break;
-
-                    case "Name":
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Player_Name"],
-                            true
-                        );
-
-                        break;
-
-                    case "Original":
-                    default:
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Player_Id"],
-                            true
-                        );
-
-                        break;
-
-                    case "Tiberium/h":
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Base_Tiberium_per_Hour"],
-                            false
-                        );
-
-                        break;
-
-                    case "Kristall/h":
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Base_Crystal_per_Hour"],
-                            false
-                        );
-
-                        break;
-
-                    case "Strom/h":
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Base_Power_per_Hour"],
-                            false
-                        );
-
-                        break;
-
-                    case "Credits/h":
-
-                        model.sortByColumn(
-                            window.columnIndexMap["Base_Credit_per_Hour"],
-                            false
-                        );
-
-                        break;
-
-                    case "Höchste Off":
-
-                        window.harziStartHighestOff();
-
-                        break;
-
-                    case "Höchste Deff":
-
-                        window.harziStartHighestDeff();
-
-                        break;
-
-
-                }
-
-            }
-
-            function showProfilePage(pageContainer) {
-
-                pageContainer.removeAll();
-
-                clearPage(pageContainer, "Profile");
-
-                const settings =
-                      window.harzi.core.settings.data;
-
-                if (settings?.profiles?.startAction) {
-                    window.profileStartAction =
-                        settings.profiles.startAction;
-                } else {
-                    window.profileStartAction = "Keine";
-                }
-
-                const profileContainer = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(10)
-                );
-
-                const startActionSelect =
-                      new qx.ui.form.SelectBox();
-                startActionSelect.setWidth(PROFILE_CONTROL_WIDTH);
-
-                // - Befüllung des Dropdown Menüs unter Profile
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Original")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Name")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Rangliste")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Höchste Off")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Höchste Deff")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Höchste Tib-Produktion je Basis")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Höchste Kristall-Produktion je Basis")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Höchste Strom-Produktion je Basis")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Höchste Credits-Produktion je Basis")
-                );
-
-                startActionSelect.add(
-                    new qx.ui.form.ListItem("Eigener Account")
-                );
-
-                const items = startActionSelect.getSelectables();
-
-                const selectedItem = items.find(
-                    item => item.getLabel() === window.profileStartAction
-                );
-
-                if (selectedItem) {
-                    startActionSelect.setSelection([selectedItem]);
-                } else if (items.length > 0) {
-                    startActionSelect.setSelection([items[0]]);
-                }
-
-                startActionSelect.addListener("changeSelection", function () {
-
-                    window.profileStartAction =
-                        startActionSelect.getSelection()[0].getLabel();
-
-                    window.harzi.core.settings.data.profiles.startAction =
-                        window.profileStartAction;
-
-                    window.harzi.core.settings.save();
-
-                    applyProfileStartAction();
-
-                });
-
-                const startActionRow = new qx.ui.container.Composite(
-                    new qx.ui.layout.HBox(PROFILE_ROW_SPACING)
-                );
-
-                startActionRow.setMarginLeft(25);
-
-                const startActionLabel = new qx.ui.basic.Label("Startaktion");
-
-                startActionLabel.setWidth(140);
-                startActionLabel.setTextAlign("right");
-
-                startActionRow.add(startActionLabel);
-                startActionRow.add(startActionSelect);
-
-                profileContainer.add(startActionRow);
-
-                pageContainer.add(profileContainer);
-
-            }
-
-            function clearPage(pageContainer, title) {
-
-                pageContainer.removeAll();
-
-                const titleLabel = new qx.ui.basic.Label(title);
-
-                titleLabel.set({
-                    font: new qx.bom.Font(15).set({
-                        bold: true
-                    })
-                });
-
-                pageContainer.add(titleLabel);
-
-            }
-
-            function addSection(pageContainer, title) {
-
-                pageContainer.add(
-                    new qx.ui.basic.Label("")
-                );
-
-                const sectionLabel = new qx.ui.basic.Label(title);
-
-                sectionLabel.set({
-                    font: new qx.bom.Font(16).set({
-                        bold: true
-                    })
-                });
-
-                pageContainer.add(sectionLabel);
 
                 const row = new qx.ui.container.Composite(
-                    new qx.ui.layout.HBox(20)
+                    new qx.ui.layout.HBox(8)
                 );
 
-                const leftColumn = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(5)
-                );
-
-                const rightColumn = new qx.ui.container.Composite(
-                    new qx.ui.layout.VBox(5)
-                );
-
-                row.add(leftColumn, { flex: 1 });
-                row.add(rightColumn, { flex: 1 });
-
-                pageContainer.add(row);
-
-                return {
-                    left: leftColumn,
-                    right: rightColumn,
-                    count: 0
-                };
-
-            }
-
-            const categories = {
-                general: "Allgemein",
-                base: "Basis",
-                production: "Produktion",
-                military: "Militär",
-                poi: "Points of Interest",
-                support: "Support",
-                other: "Sonstiges"
-            };
-
-            return settingsTab;
-        }
-        // Points Of Interest UI
-        async function tabPointsOfInterest(tabView, data) {
-            const existingTab = tabView.getChildren().find(tab => tab.getLabel() === "Points of Interest");
-            if (existingTab) {
-                const tableModel = existingTab.getUserData("tableModel");
-                cleanupHoldersButtons();
-                updateTableData(data, tableModel);
-                updateSelectBoxes(poiNameSelectBox, poiOwnerSelectBox, data);
-                return;
-            }
-            let activeButtonIds = [];
-            const poiTimestampKey = wid + 'poiTimestampLabel';
-            const poiTab = new qx.ui.tabview.Page("Points of Interest");
-            poiTab.setLayout(new qx.ui.layout.VBox());
-            const tableModel = new qx.ui.table.model.Simple();
-            console.log(tableModel);
-            console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(tableModel)));
-            console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(tableModel)));
-            tableModel.setColumns(Object.keys(poiTemplate));
-            poiTab.setUserData("tableModel", tableModel);
-            const storedTimestamp = await Lister.get(poiTimestampKey);
-            const poiTimestamp = new qx.ui.basic.Atom().set({label: storedTimestamp ? `Last POI scan age: ${msToTime(Date.now() - storedTimestamp)}` : "No data available... Refresh required.", textColor: "darkgreen"});
-            const poiNameSelectBox = new qx.ui.form.SelectBox().set({toolTipText: "Filter POIs by name/type"});
-            const poiOwnerSelectBox = new qx.ui.form.SelectBox().set({width: 170,toolTipText: "Filter POIs by owner"});
-            updateTableData(data, tableModel);
-            updateSelectBoxes(poiNameSelectBox, poiOwnerSelectBox, data);
-            const poiTable = new qx.ui.table.Table(tableModel);
-            poiTable.getChildControl("statusbar").setTextColor("darkgreen");
-            // Apply cell renderers to specific columns
-            [1, 3, 4, 5, 6, 8].forEach(index => poiTable.getTableColumnModel().setDataCellRenderer(index, new qx.ui.table.cellrenderer.Html()));
-            // Add custom renderer for Holders column
-            class HoldersButtonRenderer extends qx.ui.table.cellrenderer.Abstract {
-                createDataCellHtml(cellInfo, htmlArr) {
-                    const holders = cellInfo.value || [];
-                    const buttonId = `btn-holders-${cellInfo.row}`;
-                    const buttonLabel = `${holders.length} Holders`;
-                    activeButtonIds.push(buttonId);
-                    htmlArr.push(`<div><button id="${buttonId}" style="cursor:pointer; padding:2px 5px; font-size:11px;">${buttonLabel}</button></div>`);
-                    setTimeout(() => {
-                        const buttonElement = document.getElementById(buttonId);
-                        if (buttonElement) {buttonElement.addEventListener("click", () => showHoldersPopup(holders))}
-                    }, 10);
-                }
-            }
-            poiTable.getTableColumnModel().setDataCellRenderer(0, new HoldersButtonRenderer());
-            // Add POI Table and Footer to Tab
-            const poiFooterContainer = buildPoiFooterContainer(data, tableModel, poiNameSelectBox, poiOwnerSelectBox);
-            poiTab.add(poiTable, {flex: 1});
-            poiTab.add(poiFooterContainer);
-            return poiTab;
-            // Event subscription for data refresh
-            eventBus.subscribe("POIs_Refreshed", async (e) => {
-                const refreshedData = e.getData();
-                tabView.setUserData("poiData", refreshedData);
-                updateTableData(refreshedData, tableModel);
-                updateSelectBoxes(poiNameSelectBox, poiOwnerSelectBox, refreshedData);
-                await Lister.set(poiTimestampKey, Date.now());
-                poiTimestamp.setLabel(`Last POI scan age: ${msToTime(Date.now() - (await Lister.get(poiTimestampKey)))}`);
-            });
-            // Helper Functions
-            function updateTableData(filteredData, tableModel) {
-                const tableData = filteredData.map(poi => Object.keys(poiTemplate).map(key => poi[key]));
-                tableModel.setData(tableData);
-                filteredData.forEach((poi, index) => {
-                    const formattedScore = webfrontend.phe.cnc.gui.util.Numbers.formatNumbers(poi.Score ?? 0);
-                    const formattedDistance = Math.round(poi.Distance);
-                    const [x, y] = poi.Coords.split(":");
-                    const coordsLink = webfrontend.gui.util.BBCode.createCoordsLinkText(poi.Coords, parseInt(x), parseInt(y));
-                    const allianceLink = poi.Alliance && poi.Alliance.trim() ? webfrontend.gui.util.BBCode.createAllianceLinkText(poi.Alliance) : "No Alliance";
-                    const formattedValues = {
-                        Coords: coordsLink,
-                        Alliance: allianceLink,
-                        Score: formattedScore,
-                        Distance: formattedDistance,
-                        Holders: poi.Holders || [] // Ensure Holders data is an array
-                    };
-                    Object.keys(formattedValues).forEach(key => {
-                        const col = Object.keys(poiTemplate).indexOf(key);
-                        if (col !== -1) {tableModel.setValue(col, index, formattedValues[key])}
-                    });
+                row.set({
+                    height: 28,
+                    paddingLeft: 8,
+                    paddingRight: 8
                 });
+
+                const grip =
+                      new qx.ui.basic.Label("☷");
+
+                const position =
+                      new qx.ui.basic.Label(
+                          `${index + 1}.`
+            );
+
+                position.setWidth(30);
+
+                const label =
+                      new qx.ui.basic.Label(
+                          column.label
+                      );
+
+                row.add(grip);
+                row.add(position);
+                row.add(label);
+
+                if (index < columnsPerList) {
+
+                    orderListLeft.add(row);
+
+                } else if (index < columnsPerList * 2) {
+
+                    orderListMiddle.add(row);
+
+                } else {
+
+                    orderListRight.add(row);
+
+                }
+
+            });
+
+        }
+
+        window.updateColumnOrderList = updateColumnOrderList;
+
+        window.updateColumnOrderList();
+
+        validateColumnDefinitions();
+
+    }
+    // =============================================
+    // Hier beginnen die Konfigurationsseitenaufrufe
+    // =============================================
+
+    function showAllianceCitiesPage(pageContainer) {
+
+        showColumnConfiguration(
+            pageContainer,
+            "Alliance Cities",
+            columnDefinitions.allianceCities
+        );
+
+    }
+
+    function showPointsOfInterestPage(pageContainer) {
+
+        pageContainer.removeAll();
+
+        clearPage(pageContainer, "Points of Interest");
+
+        pageContainer.add(
+            new qx.ui.basic.Label("Hier werden später die Einstellungen für Points of Interest angezeigt.")
+        );
+
+    }
+    function showExportPage(pageContainer) {
+
+        pageContainer.removeAll();
+
+        clearPage(pageContainer, "Export");
+
+        pageContainer.add(
+            new qx.ui.basic.Label("Hier werden später die Exporteinstellungen angezeigt.")
+        );
+
+    }
+
+    function createSettingRow(labelText, control) {
+
+        const row = new qx.ui.container.Composite(
+            new qx.ui.layout.HBox(10)
+        );
+
+        const label = new qx.ui.basic.Label(labelText);
+
+        label.setWidth(180);
+
+        row.add(label);
+        row.add(control);
+
+        return row;
+
+    }
+
+    // Hier beginnt die Profil Seite
+
+    // ===== Profile Layout =====
+
+    const PROFILE_LEFT_MARGIN = 25;
+    const PROFILE_LABEL_WIDTH = 140;
+    const PROFILE_CONTROL_WIDTH = 260;
+    const PROFILE_ROW_SPACING = 15;
+
+
+
+    window.profileStartAction = "Keine";
+
+    function sortAllianceCities(field, ascending = true) {
+
+        if (!window.allianceCitiesTable) {
+            return;
+        }
+
+        const sortedCities = [...AllianceCitiesArr];
+
+        sortedCities.sort((a, b) => {
+
+            let av = a[field];
+            let bv = b[field];
+
+            // null behandeln
+            if (av == null) av = "";
+            if (bv == null) bv = "";
+
+            // Text
+            if (typeof av === "string") {
+
+                return ascending
+                    ? av.localeCompare(bv)
+                : bv.localeCompare(av);
+
             }
 
-            function showHoldersPopup(holders) {
-                if (!holders || holders.length === 0) {
-                    alert("No Holders data available.");
-                    return;
-                }
-                const holderDetails = holders.map((holder, idx) => `
+            // Zahlen
+            return ascending
+                ? av - bv
+            : bv - av;
+
+        });
+
+        const model = window.allianceCitiesTable.getTableModel();
+        console.table(
+            sortedCities.slice(0, 20).map(c => ({
+                Player: c.Player_Name,
+                Off: c.Base_Offense_Level
+            }))
+        );
+        model.setData(
+            sortedCities.map(createRowData)
+        );
+
+    }
+
+    function applyProfileStartAction() {
+
+        if (!window.allianceCitiesTable) {
+            return;
+        }
+
+        const model = window.allianceCitiesTable.getTableModel();
+
+        switch (window.profileStartAction) {
+
+            case "Rangliste":
+
+                model.sortByColumn(
+                    window.columnIndexMap["Player_Ranking"],
+                    true
+                );
+
+                break;
+
+            case "Name":
+
+                model.sortByColumn(
+                    window.columnIndexMap["Player_Name"],
+                    true
+                );
+
+                break;
+
+            case "Original":
+            default:
+
+                model.sortByColumn(
+                    window.columnIndexMap["Player_Id"],
+                    true
+                );
+
+                break;
+
+            case "Tiberium/h":
+
+                model.sortByColumn(
+                    window.columnIndexMap["Base_Tiberium_per_Hour"],
+                    false
+                );
+
+                break;
+
+            case "Kristall/h":
+
+                model.sortByColumn(
+                    window.columnIndexMap["Base_Crystal_per_Hour"],
+                    false
+                );
+
+                break;
+
+            case "Strom/h":
+
+                model.sortByColumn(
+                    window.columnIndexMap["Base_Power_per_Hour"],
+                    false
+                );
+
+                break;
+
+            case "Credits/h":
+
+                model.sortByColumn(
+                    window.columnIndexMap["Base_Credit_per_Hour"],
+                    false
+                );
+
+                break;
+
+            case "Höchste Off":
+
+                window.harziStartHighestOff();
+
+                break;
+
+            case "Höchste Deff":
+
+                window.harziStartHighestDeff();
+
+                break;
+
+
+        }
+
+    }
+
+    function showProfilePage(pageContainer) {
+
+        pageContainer.removeAll();
+
+        clearPage(pageContainer, "Profile");
+
+        const settings =
+              window.harzi.core.settings.data;
+
+        if (settings?.profiles?.startAction) {
+            window.profileStartAction =
+                settings.profiles.startAction;
+        } else {
+            window.profileStartAction = "Keine";
+        }
+
+        const profileContainer = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(10)
+        );
+
+        const startActionSelect =
+              new qx.ui.form.SelectBox();
+        startActionSelect.setWidth(PROFILE_CONTROL_WIDTH);
+
+        // - Befüllung des Dropdown Menüs unter Profile
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Original")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Name")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Rangliste")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Höchste Off")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Höchste Deff")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Höchste Tib-Produktion je Basis")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Höchste Kristall-Produktion je Basis")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Höchste Strom-Produktion je Basis")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Höchste Credits-Produktion je Basis")
+        );
+
+        startActionSelect.add(
+            new qx.ui.form.ListItem("Eigener Account")
+        );
+
+        const items = startActionSelect.getSelectables();
+
+        const selectedItem = items.find(
+            item => item.getLabel() === window.profileStartAction
+        );
+
+        if (selectedItem) {
+            startActionSelect.setSelection([selectedItem]);
+        } else if (items.length > 0) {
+            startActionSelect.setSelection([items[0]]);
+        }
+
+        startActionSelect.addListener("changeSelection", function () {
+
+            window.profileStartAction =
+                startActionSelect.getSelection()[0].getLabel();
+
+            window.harzi.core.settings.data.profiles.startAction =
+                window.profileStartAction;
+
+            window.harzi.core.settings.save();
+
+            applyProfileStartAction();
+
+        });
+
+        const startActionRow = new qx.ui.container.Composite(
+            new qx.ui.layout.HBox(PROFILE_ROW_SPACING)
+        );
+
+        startActionRow.setMarginLeft(25);
+
+        const startActionLabel = new qx.ui.basic.Label("Startaktion");
+
+        startActionLabel.setWidth(140);
+        startActionLabel.setTextAlign("right");
+
+        startActionRow.add(startActionLabel);
+        startActionRow.add(startActionSelect);
+
+        profileContainer.add(startActionRow);
+
+        pageContainer.add(profileContainer);
+
+    }
+
+    function clearPage(pageContainer, title) {
+
+        pageContainer.removeAll();
+
+        const titleLabel = new qx.ui.basic.Label(title);
+
+        titleLabel.set({
+            font: new qx.bom.Font(15).set({
+                bold: true
+            })
+        });
+
+        pageContainer.add(titleLabel);
+
+    }
+
+    function addSection(pageContainer, title) {
+
+        pageContainer.add(
+            new qx.ui.basic.Label("")
+        );
+
+        const sectionLabel = new qx.ui.basic.Label(title);
+
+        sectionLabel.set({
+            font: new qx.bom.Font(16).set({
+                bold: true
+            })
+        });
+
+        pageContainer.add(sectionLabel);
+
+        const row = new qx.ui.container.Composite(
+            new qx.ui.layout.HBox(20)
+        );
+
+        const leftColumn = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(5)
+        );
+
+        const rightColumn = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(5)
+        );
+
+        row.add(leftColumn, { flex: 1 });
+        row.add(rightColumn, { flex: 1 });
+
+        pageContainer.add(row);
+
+        return {
+            left: leftColumn,
+            right: rightColumn,
+            count: 0
+        };
+
+    }
+
+    const categories = {
+        general: "Allgemein",
+        base: "Basis",
+        production: "Produktion",
+        military: "Militär",
+        poi: "Points of Interest",
+        support: "Support",
+        other: "Sonstiges"
+    };
+
+    return settingsTab;
+}
+// Points Of Interest UI
+async function tabPointsOfInterest(tabView, data) {
+    const existingTab = tabView.getChildren().find(tab => tab.getLabel() === "Points of Interest");
+    if (existingTab) {
+        const tableModel = existingTab.getUserData("tableModel");
+        cleanupHoldersButtons();
+        updateTableData(data, tableModel);
+        updateSelectBoxes(poiNameSelectBox, poiOwnerSelectBox, data);
+        return;
+    }
+    let activeButtonIds = [];
+    const poiTimestampKey = wid + 'poiTimestampLabel';
+    const poiTab = new qx.ui.tabview.Page("Points of Interest");
+    poiTab.setLayout(new qx.ui.layout.VBox());
+    const tableModel = new qx.ui.table.model.Simple();
+    console.log(tableModel);
+    console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(tableModel)));
+    console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(tableModel)));
+    tableModel.setColumns(Object.keys(poiTemplate));
+    poiTab.setUserData("tableModel", tableModel);
+    const storedTimestamp = await Lister.get(poiTimestampKey);
+    const poiTimestamp = new qx.ui.basic.Atom().set({label: storedTimestamp ? `Last POI scan age: ${msToTime(Date.now() - storedTimestamp)}` : "No data available... Refresh required.", textColor: "darkgreen"});
+    const poiNameSelectBox = new qx.ui.form.SelectBox().set({toolTipText: "Filter POIs by name/type"});
+    const poiOwnerSelectBox = new qx.ui.form.SelectBox().set({width: 170,toolTipText: "Filter POIs by owner"});
+    updateTableData(data, tableModel);
+    updateSelectBoxes(poiNameSelectBox, poiOwnerSelectBox, data);
+    const poiTable = new qx.ui.table.Table(tableModel);
+    poiTable.getChildControl("statusbar").setTextColor("darkgreen");
+    // Apply cell renderers to specific columns
+    [1, 3, 4, 5, 6, 8].forEach(index => poiTable.getTableColumnModel().setDataCellRenderer(index, new qx.ui.table.cellrenderer.Html()));
+    // Add custom renderer for Holders column
+    class HoldersButtonRenderer extends qx.ui.table.cellrenderer.Abstract {
+        createDataCellHtml(cellInfo, htmlArr) {
+            const holders = cellInfo.value || [];
+            const buttonId = `btn-holders-${cellInfo.row}`;
+            const buttonLabel = `${holders.length} Holders`;
+            activeButtonIds.push(buttonId);
+            htmlArr.push(`<div><button id="${buttonId}" style="cursor:pointer; padding:2px 5px; font-size:11px;">${buttonLabel}</button></div>`);
+            setTimeout(() => {
+                const buttonElement = document.getElementById(buttonId);
+                if (buttonElement) {buttonElement.addEventListener("click", () => showHoldersPopup(holders))}
+            }, 10);
+        }
+    }
+    poiTable.getTableColumnModel().setDataCellRenderer(0, new HoldersButtonRenderer());
+    // Add POI Table and Footer to Tab
+    const poiFooterContainer = buildPoiFooterContainer(data, tableModel, poiNameSelectBox, poiOwnerSelectBox);
+    poiTab.add(poiTable, {flex: 1});
+    poiTab.add(poiFooterContainer);
+    return poiTab;
+    // Event subscription for data refresh
+    eventBus.subscribe("POIs_Refreshed", async (e) => {
+        const refreshedData = e.getData();
+        tabView.setUserData("poiData", refreshedData);
+        updateTableData(refreshedData, tableModel);
+        updateSelectBoxes(poiNameSelectBox, poiOwnerSelectBox, refreshedData);
+        await Lister.set(poiTimestampKey, Date.now());
+        poiTimestamp.setLabel(`Last POI scan age: ${msToTime(Date.now() - (await Lister.get(poiTimestampKey)))}`);
+    });
+    // Helper Functions
+    function updateTableData(filteredData, tableModel) {
+        const tableData = filteredData.map(poi => Object.keys(poiTemplate).map(key => poi[key]));
+        tableModel.setData(tableData);
+        filteredData.forEach((poi, index) => {
+            const formattedScore = webfrontend.phe.cnc.gui.util.Numbers.formatNumbers(poi.Score ?? 0);
+            const formattedDistance = Math.round(poi.Distance);
+            const [x, y] = poi.Coords.split(":");
+            const coordsLink = webfrontend.gui.util.BBCode.createCoordsLinkText(poi.Coords, parseInt(x), parseInt(y));
+            const allianceLink = poi.Alliance && poi.Alliance.trim() ? webfrontend.gui.util.BBCode.createAllianceLinkText(poi.Alliance) : "No Alliance";
+            const formattedValues = {
+                Coords: coordsLink,
+                Alliance: allianceLink,
+                Score: formattedScore,
+                Distance: formattedDistance,
+                Holders: poi.Holders || [] // Ensure Holders data is an array
+            };
+            Object.keys(formattedValues).forEach(key => {
+                const col = Object.keys(poiTemplate).indexOf(key);
+                if (col !== -1) {tableModel.setValue(col, index, formattedValues[key])}
+            });
+        });
+    }
+
+    function showHoldersPopup(holders) {
+        if (!holders || holders.length === 0) {
+            alert("No Holders data available.");
+            return;
+        }
+        const holderDetails = holders.map((holder, idx) => `
 					<p>
 					<strong>Holder ${idx + 1}</strong><br>
 					<strong>Base:</strong> ${holder.Base || "N/A"}<br>
@@ -2997,182 +2997,182 @@
                 updateTableData(filteredData, tableModel);
             }
         }
-        /*
+/*
          * Helper functions
          */
 
-        // ========================================
-        // Settings
-        // ========================================
+// ========================================
+// Settings
+// ========================================
 
-        const SETTINGS_STORAGE_KEY = "HarziEdition.Settings";
-
-
-        function validateColumnDefinitions() {
-
-            const templateFields = new Set(Object.keys(AllianceCitiesTemplate));
-            const usedFields = new Set();
-
-            window.columnDefinitions.allianceCities.forEach(column => {
-
-                if (!column.field) {
-                    console.warn("[Harzi] FEHLT field:", column.id);
-                    return;
-                }
-
-                if (!templateFields.has(column.field)) {
-
-                    console.group("[Harzi] Feld existiert nicht im Template: " + column.field);
-
-                    console.log("Vorhandene Felder:");
-                    console.table([...templateFields].sort());
-
-                    console.groupEnd();
-
-                }
-
-                if (usedFields.has(column.field)) {
-                    console.warn("[Harzi] Doppeltes field:", column.field);
-                }
-
-                usedFields.add(column.field);
-
-            });
+const SETTINGS_STORAGE_KEY = "HarziEdition.Settings";
 
 
+function validateColumnDefinitions() {
+
+    const templateFields = new Set(Object.keys(AllianceCitiesTemplate));
+    const usedFields = new Set();
+
+    window.columnDefinitions.allianceCities.forEach(column => {
+
+        if (!column.field) {
+            console.warn("[Harzi] FEHLT field:", column.id);
+            return;
+        }
+
+        if (!templateFields.has(column.field)) {
+
+            console.group("[Harzi] Feld existiert nicht im Template: " + column.field);
+
+            console.log("Vorhandene Felder:");
+            console.table([...templateFields].sort());
+
+            console.groupEnd();
 
         }
 
-        function getSelectedAllianceCityData() {
+        if (usedFields.has(column.field)) {
+            console.warn("[Harzi] Doppeltes field:", column.field);
+        }
+
+        usedFields.add(column.field);
+
+    });
 
 
-            const selectedFields = window.columnDefinitions.allianceCities
-            .filter(col => col.checkBox && col.checkBox.getValue() && col.field)
-            .map(col => col.field);
+
+}
+
+function getSelectedAllianceCityData() {
 
 
-            return AllianceCitiesArr.map(city => {
-                const result = {};
+    const selectedFields = window.columnDefinitions.allianceCities
+    .filter(col => col.checkBox && col.checkBox.getValue() && col.field)
+    .map(col => col.field);
 
-                selectedFields.forEach(field => {
-                    result[field] = city[field];
+
+    return AllianceCitiesArr.map(city => {
+        const result = {};
+
+        selectedFields.forEach(field => {
+            result[field] = city[field];
+        });
+
+        return result;
+    });
+}
+// Array formatter to TSV file download
+function getTSV(data, name) {
+    if (!data || data.length === 0) {
+        console.warn("No data available for TSV export.");
+        return;
+    }
+    const flattenValue = (value) => {// Recursively process objects/arrays to a flat TSV-safe string
+        if (Array.isArray(value)) {// Process sub-arrays recursively
+            return value.map(flattenValue).join("‖"); // Unicode separator for sub-arrays
+        } else if (value && typeof value === "object") {// Process objects as key-value pairs
+            return Object.entries(value).map(([key, val]) => `${key}:${flattenValue(val)}`).join("¦"); // Unicode separator for object key-values
+        } else {// Replace tabs in raw values to avoid breaking TSV
+            return String(value || "").replace(/\t/g, " ");
+        }
+    }
+    const headers = Object.keys(data[0]).join("\t");
+    const rows = data.map(item => Object.values(item).map(flattenValue).join("\t")).join("\n");
+    const tsvContent = `data:text/tab-separated-values;charset=utf-8,${headers}\n${rows}`;
+    const encodedUri = encodeURI(tsvContent);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = encodedUri;
+    downloadLink.download = `${new Date().toISOString().slice(0, 10)}_${wid}_${name}.tsv`;
+    downloadLink.dispatchEvent(new MouseEvent("click"));
+}
+
+// Progress bar
+function progressBar(pbIndex, pbLength, pbName, targetContainer = null) {
+    const optionsBar = qxApp.getOptionsBar().getLayoutParent().getChildren()[0].getChildren()[2];
+    const container = targetContainer ? targetContainer : optionsBar;
+    let pbContainer = container.getChildren().find(child => child.getUserData("pbContainer"));
+    if (!pbContainer) {
+        pbContainer = new qx.ui.container.Composite(new qx.ui.layout.HBox()).set({padding: 0, width: 115, decorator: new qx.ui.decoration.Decorator().set({width: 1, style: "solid", color: "black", backgroundColor: "transparent"})});
+        pbContainer.setUserData("pbContainer", true);
+        targetContainer ? container.add(pbContainer) : optionsBar.addAt(pbContainer, 1);
+    }
+    let pb = pbContainer.getChildren()[0];
+    if (!pb) {
+        pb = new qx.ui.basic.Label();
+        pb.set({value: `${pbIndex} / ${pbLength} ${pbName}`, width: 0, height: 11, maxWidth: 113, textColor: "black", font: qx.bom.Font.fromString("9px tahoma"), backgroundColor: "white", decorator: "main"});
+        pbContainer.add(pb);
+    }
+    pb.set({value: `${pbIndex} / ${pbLength} ${pbName}`, width: pbIndex / pbLength * pb.getMaxWidth()});
+    pbIndex === pbLength ? pbContainer.getLayoutParent().remove(pbContainer) : null;
+}
+// Convert milliseconds to time format "hh:mm:ss:mmm"
+function msToTime(milliseconds) {
+    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+    const millisecondsLeft = Math.floor(milliseconds % 1000);
+    return `${hours.toString().padStart(2, '0')}h:${minutes.toString().padStart(2, '0')}m:${seconds.toString().padStart(2, '0')}s:${millisecondsLeft.toString().padStart(3, '0')}ms`;
+}
+// Returns angle, distance, clock position (the relative direction of your object coords (1st and 2nd arguments) described using the analogy of a 12-hour clock to describe angles and directions) or sector between 2 points... The 2nd point (4th and 5th arguments) is the center by default... can be replaced with any other object coords. Example usage: calculateMetric(407, 390, 'clock', 400, 400); or calculateMetric(407, 390, 'sector');
+function calculateMetric(xB, yB, metricType, xA = centerX, yA = centerY) {
+    const deltaX = xB - xA;
+    const deltaY = yB - yA;
+    const calculations = {
+        angle: () => (360 + Math.atan2(deltaY, deltaX) * (180 / Math.PI)) % 360,
+        distance: () => Math.hypot(deltaX, deltaY),
+        sector: () => {
+            if (xA !== centerX || yA !== centerY) {throw new Error("The 'sector' metric can only be calculated from the default center coordinates.")}
+            const angle = (Math.atan2(centerX - xB, yB - centerY) * sectorNames.length) / (2 * Math.PI) + sectorNames.length + 0.5;
+            return qxApp.tr(`tnf:${sectorNames[Math.floor(angle) % sectorNames.length]} abbr`);
+        },
+        clock: () => {
+            const angle = Math.atan2(yA - yB, xA - xB);
+            const normalizedAngle = (angle * 180 / Math.PI + 90 + 360) % 360; // Shift by 90 degrees for clock alignment
+            const clockIndex = Math.round((normalizedAngle / 360) * 12) % 12;
+            return clockPositions[clockIndex];
+        }
+    };
+    if (!calculations[metricType]) {throw new Error("Invalid metricType. Use 'angle', 'distance', 'sector', or 'clock'.")}
+    return calculations[metricType]();
+}
+function getPollFunction() {
+    const proto = ClientLib.Net.CommunicationManager.prototype;
+    for (const key of Object.keys(proto)) {
+        const fn = proto[key];
+        if (typeof fn === 'function' && fn.toString().includes('"Poll"')) {
+            // Attach to prototype for easy use
+            if (typeof communicationManager.$Poll !== 'function') {
+                Object.defineProperty(ClientLib.Net.CommunicationManager.prototype, '$Poll', {
+                    configurable: true,
+                    get: () => {return this[key]} // This is the obfuscated name for "Poll"
                 });
-
-                return result;
-            });
-        }
-        // Array formatter to TSV file download
-        function getTSV(data, name) {
-            if (!data || data.length === 0) {
-                console.warn("No data available for TSV export.");
-                return;
+                console.info(`%cPoll function name: ${key}`, "overflow: hidden; color: #fff; background-color: #000; background-image: linear-gradient(black, grey); padding: 3px; border: 1px solid black; border-radius: 5px;");
             }
-            const flattenValue = (value) => {// Recursively process objects/arrays to a flat TSV-safe string
-                if (Array.isArray(value)) {// Process sub-arrays recursively
-                    return value.map(flattenValue).join("‖"); // Unicode separator for sub-arrays
-                } else if (value && typeof value === "object") {// Process objects as key-value pairs
-                    return Object.entries(value).map(([key, val]) => `${key}:${flattenValue(val)}`).join("¦"); // Unicode separator for object key-values
-                } else {// Replace tabs in raw values to avoid breaking TSV
-                    return String(value || "").replace(/\t/g, " ");
-                }
-            }
-            const headers = Object.keys(data[0]).join("\t");
-            const rows = data.map(item => Object.values(item).map(flattenValue).join("\t")).join("\n");
-            const tsvContent = `data:text/tab-separated-values;charset=utf-8,${headers}\n${rows}`;
-            const encodedUri = encodeURI(tsvContent);
-            const downloadLink = document.createElement("a");
-            downloadLink.href = encodedUri;
-            downloadLink.download = `${new Date().toISOString().slice(0, 10)}_${wid}_${name}.tsv`;
-            downloadLink.dispatchEvent(new MouseEvent("click"));
+            return fn; // This is the "Poll" function reference
         }
-
-        // Progress bar
-        function progressBar(pbIndex, pbLength, pbName, targetContainer = null) {
-            const optionsBar = qxApp.getOptionsBar().getLayoutParent().getChildren()[0].getChildren()[2];
-            const container = targetContainer ? targetContainer : optionsBar;
-            let pbContainer = container.getChildren().find(child => child.getUserData("pbContainer"));
-            if (!pbContainer) {
-                pbContainer = new qx.ui.container.Composite(new qx.ui.layout.HBox()).set({padding: 0, width: 115, decorator: new qx.ui.decoration.Decorator().set({width: 1, style: "solid", color: "black", backgroundColor: "transparent"})});
-                pbContainer.setUserData("pbContainer", true);
-                targetContainer ? container.add(pbContainer) : optionsBar.addAt(pbContainer, 1);
-            }
-            let pb = pbContainer.getChildren()[0];
-            if (!pb) {
-                pb = new qx.ui.basic.Label();
-                pb.set({value: `${pbIndex} / ${pbLength} ${pbName}`, width: 0, height: 11, maxWidth: 113, textColor: "black", font: qx.bom.Font.fromString("9px tahoma"), backgroundColor: "white", decorator: "main"});
-                pbContainer.add(pb);
-            }
-            pb.set({value: `${pbIndex} / ${pbLength} ${pbName}`, width: pbIndex / pbLength * pb.getMaxWidth()});
-            pbIndex === pbLength ? pbContainer.getLayoutParent().remove(pbContainer) : null;
-        }
-        // Convert milliseconds to time format "hh:mm:ss:mmm"
-        function msToTime(milliseconds) {
-            const hours = Math.floor(milliseconds / (1000 * 60 * 60));
-            const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
-            const millisecondsLeft = Math.floor(milliseconds % 1000);
-            return `${hours.toString().padStart(2, '0')}h:${minutes.toString().padStart(2, '0')}m:${seconds.toString().padStart(2, '0')}s:${millisecondsLeft.toString().padStart(3, '0')}ms`;
-        }
-        // Returns angle, distance, clock position (the relative direction of your object coords (1st and 2nd arguments) described using the analogy of a 12-hour clock to describe angles and directions) or sector between 2 points... The 2nd point (4th and 5th arguments) is the center by default... can be replaced with any other object coords. Example usage: calculateMetric(407, 390, 'clock', 400, 400); or calculateMetric(407, 390, 'sector');
-        function calculateMetric(xB, yB, metricType, xA = centerX, yA = centerY) {
-            const deltaX = xB - xA;
-            const deltaY = yB - yA;
-            const calculations = {
-                angle: () => (360 + Math.atan2(deltaY, deltaX) * (180 / Math.PI)) % 360,
-                distance: () => Math.hypot(deltaX, deltaY),
-                sector: () => {
-                    if (xA !== centerX || yA !== centerY) {throw new Error("The 'sector' metric can only be calculated from the default center coordinates.")}
-                    const angle = (Math.atan2(centerX - xB, yB - centerY) * sectorNames.length) / (2 * Math.PI) + sectorNames.length + 0.5;
-                    return qxApp.tr(`tnf:${sectorNames[Math.floor(angle) % sectorNames.length]} abbr`);
-                },
-                clock: () => {
-                    const angle = Math.atan2(yA - yB, xA - xB);
-                    const normalizedAngle = (angle * 180 / Math.PI + 90 + 360) % 360; // Shift by 90 degrees for clock alignment
-                    const clockIndex = Math.round((normalizedAngle / 360) * 12) % 12;
-                    return clockPositions[clockIndex];
-                }
-            };
-            if (!calculations[metricType]) {throw new Error("Invalid metricType. Use 'angle', 'distance', 'sector', or 'clock'.")}
-            return calculations[metricType]();
-        }
-        function getPollFunction() {
-            const proto = ClientLib.Net.CommunicationManager.prototype;
-            for (const key of Object.keys(proto)) {
-                const fn = proto[key];
-                if (typeof fn === 'function' && fn.toString().includes('"Poll"')) {
-                    // Attach to prototype for easy use
-                    if (typeof communicationManager.$Poll !== 'function') {
-                        Object.defineProperty(ClientLib.Net.CommunicationManager.prototype, '$Poll', {
-                            configurable: true,
-                            get: () => {return this[key]} // This is the obfuscated name for "Poll"
-                        });
-                        console.info(`%cPoll function name: ${key}`, "overflow: hidden; color: #fff; background-color: #000; background-image: linear-gradient(black, grey); padding: 3px; border: 1px solid black; border-radius: 5px;");
-                    }
-                    return fn; // This is the "Poll" function reference
-                }
-            }
-            return null;
-        }
-        /*
+    }
+    return null;
+}
+/*
          * Initialization logic
          */
-        // Add Scripts menu entries
-        function init() {
-            const scriptsButton = qxApp.getMenuBar().getScriptsButton();
-            const listerMenuItem = scriptsButton.Add("Lister UI - Harzi Edition", Icons.Lister);
-            const listerItem = scriptsButton.getMenu().getChildren().find(item => item.getLabel() === "Lister UI - Harzi Edition");
-            listerItem.set({
-                toolTip: (new qx.ui.tooltip.ToolTip(
-                    `CnC-TA Lister UI - Harzi Edition<br>` +
-                    `Original by <a target="_blank" href="https://github.com/ffi82/CnC-TA" style="color:white">ffi82</a><br>` +
-                    `Further developed by <b>Harzi66</b>`
+// Add Scripts menu entries
+function init() {
+    const scriptsButton = qxApp.getMenuBar().getScriptsButton();
+    const listerMenuItem = scriptsButton.Add("Lister UI - Harzi Edition", Icons.Lister);
+    const listerItem = scriptsButton.getMenu().getChildren().find(item => item.getLabel() === "Lister UI - Harzi Edition");
+    listerItem.set({
+        toolTip: (new qx.ui.tooltip.ToolTip(
+            `CnC-TA Lister UI - Harzi Edition<br>` +
+            `Original by <a target="_blank" href="https://github.com/ffi82/CnC-TA" style="color:white">ffi82</a><br>` +
+            `Further developed by <b>Harzi66</b>`
     )).set({ rich: true }),
                 blockToolTip: false
             });
             listerItem.addListener('execute', mainUI);
             console.log(`%c${scriptName} loaded`, 'background: #c4e2a0; color: darkred; font-weight:bold; padding: 3px; border: 1px solid black; border-radius: 5px;');
         }
-        init();
-    }
-    ListerUIScript();
+init();
+}
+ListerUIScript();
 })();
