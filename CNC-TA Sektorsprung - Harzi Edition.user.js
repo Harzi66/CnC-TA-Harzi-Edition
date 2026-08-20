@@ -1,10 +1,811 @@
 // ==UserScript==
-// @name           CnC-TA Sektorsprung - HE
+// @name           CnC-TA-Sektorsprung - HE
 // @namespace      https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
 // @version        0.1.5.0-Beta
-// @description    Erweiterte Version des Sektorsprung-Scripts
-// @author         Harzi
-// @match          https://*.alliances.commandandconquer.com/*/index.aspx*
-// @require        https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/CnC-TA-Sektorsprung-Harzi-Edition-0.1.5.0-Beta.user.js
+// @description    Erweiterte Version des Toolbox_Addon_Sektorsprung
+// @description    Original by Trinitroglycerol, leo7044, further developed by Harzi66.
+// @description    Landepunkt für Spieler berechnen
+// @author         Trinitroglycerol
+// @contributor    leo7044 (https://github.com/leo7044)
+// @contributor    Harzi66
+// @match          https://cncapp*.alliances.commandandconquer.com/*/index.aspx*
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/CnC-TA-Sektorsprung-Harzi-Edition-0.1.5.0-Beta.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/CnC-TA-Sektorsprung-Harzi-Edition-0.1.5.0-Beta.user.js
+// @icon           https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Sektorsprung-Icon.png
 // @grant          none
 // ==/UserScript==
+
+// Changelog Harzi66
+//  0.1.4.0 Beta
+//  Neu
+// - Hinzufügen der Ausgabeoption "Weltkarte"
+//  0.1.5.0 Beta
+//  Neu
+// - Entkoppeln von "Toolbox Main"
+// - Script ist jetzt Eigenständig unter "Scripte" zu finden
+
+(function(){
+    var injectFunction = function()
+    {
+        function createClass()
+        {
+            qx.Class.define("ToolBox_Addon_Sektorsprung",
+                            {
+                type: "singleton",
+                extend: qx.core.Object,
+
+                construct: function()
+                {
+                    try
+                    {
+                        var app = qx.core.Init.getApplication();
+                        var chat = ClientLib.Data.MainData.GetInstance().get_Chat();
+                        var server = ClientLib.Data.MainData.GetInstance().get_Server();
+                        var erneuern = true;
+                        var chatkanal = "/a ";
+                        var modus = "karte";
+                        var scriptsButton = qx.core.Init.getApplication().getMenuBar().getScriptsButton();
+
+                        scriptsButton.Add("Sektorsprung", "");
+
+                        var children = scriptsButton.getMenu().getChildren();
+                        var lastChild = children[children.length - 1];
+
+                        lastChild.addListener("execute", function () {
+                            if(SektorsprungFenster.getVisibility() == "hidden") {
+                                SektorsprungFenster.setVisibility("visible");
+                                SektorsprungFenster.setActive(true);
+                                SektorsprungFenster.setAlwaysOnTop(true);
+                            } else {
+                                SektorsprungFenster.setVisibility("hidden");
+                                SektorsprungFenster.setActive(false);
+                                SektorsprungFenster.setAlwaysOnTop(false);
+                            }
+                        }, this);
+
+                        var SektorsprungFenster = new qx.ui.window.Window("Sektorsprung").set({
+                            showMaximize: false,
+                            showMinimize: false,
+                            showClose: true,
+                            allowClose: true,
+                            resizable: false,
+                            width: 670
+                        });
+                        SektorsprungFenster.setLayout(new qx.ui.layout.Flow());
+                        SektorsprungFenster.setTextColor("#FFFFFF");
+                        SektorsprungFenster.setVisibility("hidden");
+                        app.getDesktop().add(SektorsprungFenster, {
+                            left: 130,
+                            top: 150
+                        });
+
+                        var NameLable = new qx.ui.basic.Label("Name: ").set({
+                            margin : 5,
+                            width: 45,
+                            minWidth: 45,
+                            maxWidth: 45,
+                        });
+                        SektorsprungFenster.add(NameLable);
+                        var Name = new qx.ui.form.TextField("").set({
+                            width: 150,
+                            minWidth: 150,
+                            maxWidth: 150,
+                        });
+                        SektorsprungFenster.add(Name);
+                        var spielernamen = [];
+                        var anzahl = 0;
+                        var text = "";
+                        var starten = new qx.ui.form.Button("Suche starten").set({
+                            toolTipText: "Suche starten",
+                            width: 100,
+                            height: 25,
+                            maxWidth: 100,
+                            maxHeight: 25,
+                            marginLeft: 5
+                        });
+                        starten.addListener("click", function (e) {
+                            if (erneuern) {
+                                ClientLib.Net.CommunicationManager.GetInstance().SendSimpleCommand("RankingGetCount", {
+                                    view: ClientLib.Data.Ranking.EViewType.Player,
+                                    rankingType: ClientLib.Data.Ranking.ERankingType.Score
+                                }, webfrontend.phe.cnc.Util.createEventDelegate(ClientLib.Net.CommandResult, this, anzahlerneuern), null);
+                            } else {
+                                spielerfinden(spielernamen);
+                            }
+                        }, this);
+                        var anzahlerneuern = function(context, data) {
+                            anzahl = data;
+                            ClientLib.Net.CommunicationManager.GetInstance().SendSimpleCommand("RankingGetData", {
+                                ascending: ClientLib.Data.Ranking.ESortDirection.Ascending,
+                                firstIndex: 0,
+                                lastIndex: anzahl,
+                                rankingType: ClientLib.Data.Ranking.ERankingType.Score,
+                                sortColumn: ClientLib.Data.Ranking.ESortColumn.PlayerName,
+                                view: ClientLib.Data.Ranking.EViewType.Player
+                            }, webfrontend.phe.cnc.Util.createEventDelegate(ClientLib.Net.CommandResult, this, ranglistennamen), null);
+                        };
+                        var ranglistennamen = function(context, data) {
+                            for (var k = 0; k < data.p.length; k++) {
+                                spielernamen.push(data.p[k].pn);
+                            }
+                            spielerfinden(spielernamen);
+                        };
+                        var spielerfinden = function(spielernamen) {
+                            var gefSpieler = "";
+                            erneuern = false;
+                            if (spielernamen.length > 0 && Name.getValue() !== "") {
+                                for (var l = 0; l < spielernamen.length; l++) {
+                                    var regexname = new RegExp(Name.getValue().toLowerCase(), "g");
+                                    if(regexname.test(spielernamen[l].toLowerCase())) {
+                                        if (gefSpieler === "") {
+                                            gefSpieler = spielernamen[l];
+                                        } else if (spielernamen[l].length < gefSpieler.length) {
+                                            gefSpieler = spielernamen[l];
+                                        }
+                                    }
+                                }
+                            } else {
+                                gefSpieler = "";
+                            }
+                            if (gefSpieler !== "") {
+                                berechnen.setEnabled(true);
+                                Spieler.setValue(gefSpieler);
+                            } else {
+                                berechnen.setEnabled(false);
+                                Spieler.setValue("");
+                            }
+                        };
+                        SektorsprungFenster.add(starten);
+
+                        // -------------------------------------------------
+                        // Auswahlmodus
+                        // -------------------------------------------------
+
+                        var Allichat =
+                            new qx.ui.form.RadioButton(
+                                "Allianzchat"
+                            ).set({
+                                width: 100,
+                                minWidth: 100,
+                                maxWidth: 100
+                            });
+
+                        Allichat.addListener(
+                            "click",
+                            function () {
+                                chatkanal = "/a ";
+                                modus = "allianz";
+                            },
+                            this
+                        );
+
+
+                        var Offichat =
+                            new qx.ui.form.RadioButton(
+                                "Offizierschat"
+                            ).set({
+                                width: 100,
+                                minWidth: 100,
+                                maxWidth: 100
+                            });
+
+                        Offichat.addListener(
+                            "click",
+                            function () {
+                                chatkanal = "/o ";
+                                modus = "offizier";
+                            },
+                            this
+                        );
+
+
+                        var Kartenmodus =
+                            new qx.ui.form.RadioButton(
+                                "Weltkarte"
+                            ).set({
+                                width: 100,
+                                minWidth: 100,
+                                maxWidth: 100
+                            });
+
+                        Kartenmodus.addListener(
+                            "click",
+                            function () {
+                                modus = "karte";
+                            },
+                            this
+                        );
+
+
+                        // -------------------------------------------------
+                        // Gemeinsame Zeile für die drei Auswahlbuttons
+                        // -------------------------------------------------
+
+                        var modusContainer =
+                            new qx.ui.container.Composite(
+                                new qx.ui.layout.HBox(10)
+                            );
+
+                        modusContainer.add(
+                            Allichat
+                        );
+
+                        modusContainer.add(
+                            Offichat
+                        );
+
+                        modusContainer.add(
+                            Kartenmodus
+                        );
+
+                        SektorsprungFenster.add(
+                            modusContainer,
+                            {
+                                lineBreak: true
+                            }
+                        );
+
+
+                        // -------------------------------------------------
+                        // Gefundener Spieler
+                        // -------------------------------------------------
+
+                        var SpielerLable =
+                            new qx.ui.basic.Label(
+                                "gefundener Spieler: "
+                            ).set({
+                                margin: 5,
+                                width: 115,
+                                minWidth: 115,
+                                maxWidth: 115
+                            });
+
+                        SektorsprungFenster.add(
+                            SpielerLable
+                        );
+
+
+                        var Spieler =
+                            new qx.ui.form.TextField(
+                                ""
+                            ).set({
+                                width: 150,
+                                minWidth: 150,
+                                maxWidth: 150,
+                                readOnly: true
+                            });
+
+                        SektorsprungFenster.add(
+                            Spieler
+                        );
+
+
+                        // -------------------------------------------------
+                        // Landepunkte berechnen
+                        // -------------------------------------------------
+
+                        var berechnen =
+                            new qx.ui.form.Button(
+                                "Landepunkte berechnen"
+                            ).set({
+                                toolTipText:
+                                "Berechnen der Landepunkte für den gefundenen Spieler",
+
+                                width: 150,
+                                height: 25,
+
+                                maxWidth: 150,
+                                maxHeight: 25,
+
+                                marginLeft: 5,
+
+                                enabled: false
+                            });
+
+                        berechnen.addListener(
+                            "click",
+                            function (e) {
+
+                                if (
+                                    Spieler.getValue() !== ""
+                                ) {
+
+                                    ClientLib.Net.CommunicationManager
+                                        .GetInstance()
+                                        .SendSimpleCommand(
+                                        "GetPublicPlayerInfoByName",
+                                        {
+                                            name: Spieler.getValue()
+                                        },
+                                        webfrontend.phe.cnc.Util.createEventDelegate(
+                                            ClientLib.Net.CommandResult,
+                                            this,
+                                            landepunktbestimmung
+                                        ),
+                                        null
+                                    );
+                                }
+
+                            },
+                            this
+                        );
+
+                        SektorsprungFenster.add(
+                            berechnen
+                        );
+
+
+                        // -------------------------------------------------
+                        // RadioGroup
+                        // -------------------------------------------------
+
+                        var RadioGroup =
+                            new qx.ui.form.RadioGroup();
+
+                        RadioGroup.add(
+                            Allichat,
+                            Offichat,
+                            Kartenmodus
+                        );
+
+
+                        // -------------------------------------------------
+                        // Weltkarte standardmäßig auswählen
+                        // -------------------------------------------------
+
+                        RadioGroup.setSelection([
+                            Kartenmodus
+                        ]);
+
+                        RadioGroup.setSelection([
+                            Kartenmodus
+
+                        ]);
+                        var landepunktbestimmung = function(context, data) {
+                            var Mx = textfields[8].getValue();
+                            var My = textfields[9].getValue();
+                            var distanz = 0;
+                            var sektorwinkel = 0;
+                            for (var i = 0; i < data.c.length; i++) {
+                                distanz += Math.sqrt(Math.pow(Math.abs(data.c[i].x-Mx),2) + Math.pow(Math.abs(data.c[i].y-My),2));
+                            }
+                            distanz = (distanz/data.c.length)+30;
+                            for (var j = 0; j < 8; j++)
+                            {
+                                var x = parseInt(Mx) + Math.sin(sektorwinkel*(Math.PI/180))*distanz;
+                                var y = parseInt(My) - Math.cos(sektorwinkel*(Math.PI/180))*distanz;
+                                textfields[j].setValue(x.toFixed(0) + ":" + y.toFixed(0));
+                                sektorwinkel += 45;
+                            }
+                        };
+                        var buttons = [];
+                        var sektornamen =
+                            [
+                                "Norden",
+                                "Nord-Osten",
+                                "Osten",
+                                "Süd-Osten",
+                                "Süden",
+                                "Süd-Westen",
+                                "Westen",
+                                "Nord-Westen",
+                                "Mitte"
+                            ];
+                        for (var i = 0; i < 9; i++)
+                        {
+                            buttons.push(new qx.ui.form.Button().set({
+                                width: 150,
+                                height: 25,
+                                maxWidth: 150,
+                                maxHeight: 25,
+                                label: sektornamen[i]
+                            })
+                                        );
+                        }
+                        var textfields = [];
+                        for (var j = 0; j < 10; j++) {
+                            textfields.push(new qx.ui.form.TextField().set({
+                                width: 150,
+                                height: 25,
+                                maxWidth: 150,
+                                maxHeight: 25,
+                                textAlign: "center",
+                                readOnly: true,
+                                value: "N/A"
+                            }));
+                            if (j == 8 || j == 9) {
+                                var mitteX = (server.get_WorldWidth()/2) + "";
+                                var mitteY = (server.get_WorldHeight()/2) + "";
+                                textfields[j].setReadOnly(false);
+                                textfields[j].setMaxLength(3);
+                                textfields[j].setFilter(/[0-9]/);
+                                if (j == 8) {
+                                    textfields[j].setValue(mitteX);
+                                } else {
+                                    textfields[j].setValue(mitteY);
+                                }
+                            }
+                        }
+                        buttons[0].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[0].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[0].getLabel() +
+                                    ": [coords]" +
+                                    textfields[0].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[1].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[1].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[1].getLabel() +
+                                    ": [coords]" +
+                                    textfields[1].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[2].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[2].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[2].getLabel() +
+                                    ": [coords]" +
+                                    textfields[2].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[3].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[3].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[3].getLabel() +
+                                    ": [coords]" +
+                                    textfields[3].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[4].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[4].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[4].getLabel() +
+                                    ": [coords]" +
+                                    textfields[4].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[5].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[5].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[5].getLabel() +
+                                    ": [coords]" +
+                                    textfields[5].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[6].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[6].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[6].getLabel() +
+                                    ": [coords]" +
+                                    textfields[6].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[7].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                var c = textfields[7].getValue().split(":");
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(c[0], 10),
+                                    parseInt(c[1], 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Vorraussichtlicher Landepunkt von [player]" +
+                                    Spieler.getValue() +
+                                    "[/player] im " +
+                                    buttons[7].getLabel() +
+                                    ": [coords]" +
+                                    textfields[7].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+                        buttons[8].addListener("click", function () {
+
+                            if (modus === "karte") {
+
+                                webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(
+                                    parseInt(textfields[8].getValue(), 10),
+                                    parseInt(textfields[9].getValue(), 10)
+                                );
+
+                            } else {
+
+                                chat.AddMsg(
+                                    chatkanal +
+                                    "Mitte: [coords]" +
+                                    textfields[8].getValue() +
+                                    ":" +
+                                    textfields[9].getValue() +
+                                    "[/coords]"
+                                );
+
+                            }
+
+                        }, this);
+
+                        var layout = new qx.ui.layout.Grid();
+                        layout.setColumnWidth(0, 75);
+                        layout.setColumnWidth(1, 100);
+                        layout.setColumnWidth(2, 50);
+                        layout.setColumnWidth(3, 100);
+                        layout.setColumnWidth(4, 50);
+                        layout.setColumnWidth(5, 100);
+                        layout.setColumnWidth(6, 75);
+                        var container = new qx.ui.container.Composite(layout).set({
+                            marginTop: 5,
+                            marginBottom: 5
+                        });
+                        container.add(buttons[0], { row: 0, column: 3 });
+
+                        container.add(buttons[7], { row: 1, column: 1 });
+                        container.add(textfields[0], { row: 1, column: 3 });
+                        container.add(buttons[1], { row: 1, column: 5 });
+
+                        container.add(textfields[7], { row: 2, column: 1 });
+                        container.add(textfields[1], { row: 2, column: 5 });
+
+                        container.add(textfields[8], { row: 3, column: 3 });
+
+                        container.add(buttons[6], { row: 4, column: 0 });
+                        container.add(textfields[6], { row: 4, column: 1 });
+                        container.add(buttons[8], { row: 4, column: 3 });
+                        container.add(textfields[2], { row: 4, column: 5 });
+                        container.add(buttons[2], { row: 4, column: 6 });
+
+                        container.add(textfields[9], { row: 5, column: 3 });
+
+                        container.add(textfields[5], { row: 6, column: 1 });
+                        container.add(textfields[3], { row: 6, column: 5 });
+
+                        container.add(buttons[5], { row: 7, column: 1 });
+                        container.add(textfields[4], { row: 7, column: 3 });
+                        container.add(buttons[3], { row: 7, column: 5 });
+
+                        container.add(buttons[4], { row: 8, column: 3 });
+
+                        SektorsprungFenster.add(container, {lineBreak: true});
+                        var statuslabel = new qx.ui.basic.Label("Status: ").set({
+                            margin : 5,
+                            width: 45,
+                            minWidth: 45,
+                            maxWidth: 45,
+                        });
+                        //SektorsprungFenster.add(statuslabel);
+                        var status = new qx.ui.form.TextField("").set({
+                            width: 450,
+                            minWidth: 450,
+                            maxWidth: 450,
+                            //height: 300,
+                            readOnly: true,
+                        });
+                        //SektorsprungFenster.add(status);
+
+                    }
+                    catch (e)
+                    {
+                        console.log("ToolBox_Addon_Sektorsprung Fehler: ");
+                        console.log(e.toString());
+                    }
+                    console.log("ToolBox_Addon_Sektorsprung erfolgreich geladen");
+                },
+
+                destruct: function()
+                {
+
+                },
+
+                members:
+                {
+
+                }
+            });
+
+        }
+        function waitForGame()
+        {
+            try
+            {
+                if (typeof qx != 'undefined' && typeof qx.core != 'undefined' && typeof qx.core.Init != 'undefined' && qx.core.Init.getApplication() !== null)
+                {
+                    var app = qx.core.Init.getApplication();
+                    if (app.initDone === true)
+                    {
+                        try
+                        {
+                            createClass();
+
+                            //console.log("Creating webfrontend.phe.cnc function wraps");
+
+                            if (typeof webfrontend.phe.cnc.Util.attachNetEvent == 'undefined')
+                            {
+                                ToolBox_Addon_Sektorsprung.getInstance().attachNetEvent = webfrontend.gui.Util.attachNetEvent;
+                                ToolBox_Addon_Sektorsprung.getInstance().detachNetEvent = webfrontend.gui.Util.detachNetEvent;
+                            }
+                            else
+                            {
+                                ToolBox_Addon_Sektorsprung.getInstance().attachNetEvent = webfrontend.phe.cnc.Util.attachNetEvent;
+                                ToolBox_Addon_Sektorsprung.getInstance().detachNetEvent = webfrontend.phe.cnc.Util.detachNetEvent;
+                            }
+
+                            if (typeof webfrontend.phe.cnc.gui.util == 'undefined')
+                                ToolBox_Addon_Sektorsprung.getInstance().formatNumbersCompact = webfrontend.gui.Util.formatNumbersCompact;
+                            else
+                                ToolBox_Addon_Sektorsprung.getInstance().formatNumbersCompact = webfrontend.phe.cnc.gui.util.Numbers.formatNumbersCompact;
+
+                            ToolBox_Addon_Sektorsprung.getInstance();
+                        }
+                        catch(e)
+                        {
+                            console.log("ToolBox_Addon_Sektorsprung waitforgame Fehler:");
+                            console.log(e);
+                        }
+                    }
+                    else
+                        window.setTimeout(waitForGame, 1000);
+                }
+                else
+                {
+                    window.setTimeout(waitForGame, 1000);
+                }
+            }
+            catch (e)
+            {
+                if (typeof console != 'undefined') console.log(e);
+                else if (window.opera) opera.postError(e);
+                else GM_log(e);
+            }
+        }
+
+        window.setTimeout(waitForGame, 1000);
+    };
+
+    var script = document.createElement("script");
+    var txt = injectFunction.toString();
+    script.innerHTML = "(" + txt + ")();";
+    script.type = "text/javascript";
+
+    document.getElementsByTagName("head")[0].appendChild(script);
+})();
