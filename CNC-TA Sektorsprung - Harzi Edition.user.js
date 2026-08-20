@@ -8,10 +8,10 @@
 // @author         Trinitroglycerol
 // @contributor    leo7044 (https://github.com/leo7044)
 // @contributor    Harzi66
-// @match          https://cncapp*.alliances.commandandconquer.com/*/index.aspx*
+// @match          https://*.alliances.commandandconquer.com/*/index.aspx*
 // @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/CnC-TA-Sektorsprung-Harzi-Edition-0.1.5.0-Beta.user.js
 // @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/CnC-TA-Sektorsprung-Harzi-Edition-0.1.5.0-Beta.user.js
-// @icon           https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Sektorsprung-Icon.png
+// @icon           https://raw.githubusercontent.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition/main/Icon.png
 // @grant          none
 // ==/UserScript==
 
@@ -46,7 +46,10 @@
                         var modus = "karte";
                         var scriptsButton = qx.core.Init.getApplication().getMenuBar().getScriptsButton();
 
-                        scriptsButton.Add("Sektorsprung", "");
+                        var Icons = {
+                            Sektorsprung: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAADcklEQVR42i3BT2gcVRwH8O/vzduZndl/3d1J0k02aVITU5JKQVOqkkr1UiSWFip6EKkXixR6EK9exJNnRRD/01s8lByK9I+UoqFt3IBYTUzdkGyaTdzE7L+Z3fmz897z4udDADD/2ZUkjZy/dPPWfcvV48TiBgESSiNSSpHohcRkBIiATCJ6aXrMb1R+/OaDj36o052FLwd+XqGFn24tn9qChnZjD0r0IGMGhGAgroObJqAnIDULXDIcy+cweyL529F4+TVt8uTFL76eX3z1Uc72J86eU7X8kHSWSiKKDGEUJqRihnAe10RQd0QYKwhfL4jt9f2w1vCHrXSmTzOM4avl5MhIceoECislxkSCsdOXGY4eZ7m519no+3Ps7Tdn2cbSHrmtGiN3h6G1QirwaHDA3tdyhYm3XP7UeBqQ6XCbfJgkYoNw//hdueV9bD1wMfP80/TeK8fpbllH+nAK8Ouq13jC8/lDa8xI5qj2yzWsbhyg/cwcbR57Dpury8rzGtC8Muive/j8kxVVnMzgzKk+ancCsBfehfXiOyAC8dDvyXhSh0wYKFW4iu+UMOpUYXEJHumIDIGoeQf3Ho1jJrWIs8Of0ofrF9DOn4OQf4OzeBps5gom1L+Y2rmBpaZEjyR2WRy+LxC1W0j7At9//C2ezZdwUq8Dbh1h6y7CgQCspwz4u+swgxr2ugHtGynsdiMYiRTIb1Iv9OBKhWExjzPxhyiO2bh4ZBV2dxVe11M88FpKugKlxBBkaCFlGiSVpTxPIdE3onxVR7/6B+NjWVR4F7IDSOHCCrYgwzzxsZEEJY19ON0VIp3BRwqsXyPAhQJXMdNDp9HBzcUdxLgJKVx47RbsYhGprKE4eo6cHk3BzhbhOE0opZBIJqHHYjDiBjUbTeTsMUSSYfvJFuy8DY1ptLZRxWa1ppjTCY1ytS5l5jCQGkTdY6jstqCsftRdDpk5grXKARpOADM7BJbqRyxfRLPjSxUFce75wbJlmi/fvr4Q7bQDVePjgD0NOByYnAJkGnhYBSwJNP9En/8Y/dmMKgyPchD9SgDM2bnL3zkt741MxkCoJdDjKcC0gHwW4DpoqwIlJfSwDi3y0XYjJEw1f//2tUuE/52+cPV8N4zsLO9IHnYIUkA6PgAJlUkShECkJ5UrDzGNBQcPbnx1HQD+A4a5qgk9dYKLAAAAAElFTkSuQmCC'
+                        };
+                        scriptsButton.Add("Sektorsprung", Icons.Sektorsprung);
 
                         var children = scriptsButton.getMenu().getChildren();
                         var lastChild = children[children.length - 1];
