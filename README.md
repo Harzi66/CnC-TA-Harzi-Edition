@@ -85,16 +85,16 @@ Spieler- und Allianz-Ranking für C&C: Tiberium Alliances.
 
 ### Funktionen
 
-- Spieler-Ranking mit frei einstellbarem Rangbereich
-- Rangbereich bis maximal 1000
+- Spieler-Ranking mit frei einstellbarem Rangbereich 1 - 1000
+- Frei einstellbarer Name bei Spielerranking
+- Sprungfunktion zum eingestellten Spielername bei Start
 - Spielersuche mit automatischem Anspringen
 - Anzeige der Punktentwicklung
 - Farbliche Punktetendenzen
-- Allianz-Ranking
-- Top-40-Punkte der Allianzen
-- Gesamtpunkte der Allianzen
+- Allianz-Ranking - Top-40-Punkte der Allianzen
 - Speicherung der Rang-Einstellungen
-- Läuft unabhängig von der Toolbox
+- Automatische & Manuelle Snapshot Erstellung
+- Mehrsprachig einstellbar
 
 ➡️ **Repository:**
 
