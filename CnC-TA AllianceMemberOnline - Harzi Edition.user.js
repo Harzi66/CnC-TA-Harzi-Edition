@@ -14,8 +14,8 @@
 // @grant       GM_updatingEnabled
 // @grant       unsafeWindow
 // @grant       metadata
-// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-AllianceMemberOnline-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
-// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-AllianceMemberOnline-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
+// @downloadURL  https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/AllianceMemberOnline.user.js
+// @updateURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/AllianceMemberOnline.user.js
 // ==/UserScript==
 
 // Changelog Harzi Edition
