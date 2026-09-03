@@ -57,6 +57,31 @@ https\://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
 
 ---
 
+# AllianceMemberOnline - HE
+
+Ein Userscript für **C&C Tiberium Alliances**, das eine Übersicht der Allianzmitglieder anzeigt.
+
+## Funktionen
+
+- Anzeige der Allianzmitglieder
+- Sortierung nach Mitgliederstatus
+- Anzeige von **Online** und **Abwesend**
+- Automatische Anpassung der Fenstergröße
+- Beim Überfahren eines Spielernamens werden dessen Basen angezeigt
+- Basen können direkt angeklickt werden
+- Die ausgewählte Basis wird aktiviert und die Weltkarte automatisch auf die Basis zentriert
+
+## Installation
+
+Das Script kann über **Tampermonkey** installiert werden.
+
+## Credits
+
+Original von **f@nTisi**  
+Weiterentwicklung: **f@nTisi & Harzi**
+
+---
+
 ## 🎯 Raidhelper – HE
 
 Erweiterte Version des C&C TA Raidhelper-Scripts.
