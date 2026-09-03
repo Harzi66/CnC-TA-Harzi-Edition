@@ -14,8 +14,8 @@
 // @grant       GM_updatingEnabled
 // @grant       unsafeWindow
 // @grant       metadata
-// @downloadURL https://update.greasyfork.org/scripts/35136/AllianceMemberOnline.user.js
-// @updateURL https://update.greasyfork.org/scripts/35136/AllianceMemberOnline.meta.js
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-AllianceMemberOnline-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-AllianceMemberOnline-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
 // ==/UserScript==
 
 // Changelog Harzi Edition
