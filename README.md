@@ -1,19 +1,20 @@
 # CnC-TA-Harzi-Edition
 
-Collection of Command & Conquer: Tiberium Alliances scripts by Harzi. 
+Collection of Command & Conquer: Tiberium Alliances scripts by Harzi.
 
 # Installation
 
-Zur Installation oben auf das jeweilige Script klicken oder den Ordner "Weitere C&C TA Scripts" auswählen und anschließend rechts oben auf "Raw" klicken! Voraussetzung für alle Scripte ist "Tempermonkey" und das Script "infernal wrapper"
+Zur Installation oben auf das jeweilige Script klicken oder den Ordner **"Weitere C&C TA Scripts"** auswählen und anschließend rechts oben auf **"Raw"** klicken.
+
+Voraussetzung für alle Scripts ist **Tampermonkey** und das Script **Infernal Wrapper**.
 
 # C&C: Tiberium Alliances – Harzi Edition
 
 Willkommen bei der **Harzi Edition**.
 
-Hier findest du alle meine Erweiterungen und Werkzeuge für
-**Command & Conquer: Tiberium Alliances**.
+Hier findest du alle meine Erweiterungen und Werkzeuge für **Command & Conquer: Tiberium Alliances**.
 
-Weitere sinnvolle Scripts von anderen Entwicklern findest du im Ordner "Weitere C&C TA Scripts"
+Weitere sinnvolle Scripts von anderen Entwicklern findest du im Ordner **"Weitere C&C TA Scripts"**:
 
 https://github.com/Harzi66/CnC-TA-Harzi-Edition/tree/main/Weitere%20C%26C%20TA%20Scripts
 
@@ -34,7 +35,7 @@ Erweiterte Spieler- und Allianzlisten.
 
 ➡ Repository:
 
-https\://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
+https://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
 
 ---
 
@@ -53,15 +54,15 @@ Erweiterte Version des Sektorsprung-Scripts.
 
 ➡ Repository:
 
-https\://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
+https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
 
 ---
 
-# AllianceMemberOnline - HE
+## 👥 AllianceMemberOnline – HE
 
 Ein Userscript für **C&C Tiberium Alliances**, das eine Übersicht der Allianzmitglieder anzeigt.
 
-## Funktionen
+**Funktionen**
 
 - Anzeige der Allianzmitglieder
 - Sortierung nach Mitgliederstatus
@@ -71,14 +72,14 @@ Ein Userscript für **C&C Tiberium Alliances**, das eine Übersicht der Allianzm
 - Basen können direkt angeklickt werden
 - Die ausgewählte Basis wird aktiviert und die Weltkarte automatisch auf die Basis zentriert
 
-## Installation
-
-Das Script kann über **Tampermonkey** installiert werden.
-
-## Credits
+**Credits**
 
 Original von **f@nTisi**  
 Weiterentwicklung: **f@nTisi & Harzi**
+
+➡ Repository:
+
+https://github.com/Harzi66/CnC-TA-AllianceMemberOnline-Harzi-Edition
 
 ---
 
@@ -100,7 +101,7 @@ Erweiterte Version des C&C TA Raidhelper-Scripts.
 
 ➡ Repository:
 
-https\://github.com/Harzi66/CnC-TA-Raidhelper-HE
+https://github.com/Harzi66/CnC-TA-Raidhelper-HE
 
 ---
 
@@ -108,20 +109,20 @@ https\://github.com/Harzi66/CnC-TA-Raidhelper-HE
 
 Spieler- und Allianz-Ranking für C&C: Tiberium Alliances.
 
-### Funktionen
+**Funktionen**
 
-- Spieler-Ranking mit frei einstellbarem Rangbereich 1 - 1000
+- Spieler-Ranking mit frei einstellbarem Rangbereich 1–1000
 - Frei einstellbarer Name bei Spielerranking
-- Sprungfunktion zum eingestellten Spielername bei Start
+- Sprungfunktion zum eingestellten Spielernamen bei Start
 - Spielersuche mit automatischem Anspringen
 - Anzeige der Punktentwicklung
 - Farbliche Punktetendenzen
-- Allianz-Ranking - Top-40-Punkte der Allianzen
+- Allianz-Ranking mit Top-40-Punkten der Allianzen
 - Speicherung der Rang-Einstellungen
-- Automatische & Manuelle Snapshot Erstellung
+- Automatische und manuelle Snapshot-Erstellung
 - Mehrsprachig einstellbar
 
-➡️ **Repository:**
+➡️ Repository:
 
 https://github.com/Harzi66/CnC-TA-RankingTool-HE
 
@@ -131,7 +132,7 @@ https://github.com/Harzi66/CnC-TA-RankingTool-HE
 
 Automatische Verwaltung der Spielervertretung (UV) für C&C Tiberium Alliances.
 
-### Funktionen
+**Funktionen**
 
 - 🌍 Automatische Erkennung von Welt und Allianz
 - 👤 Zielspieler für die UV festlegen
@@ -144,21 +145,74 @@ Automatische Verwaltung der Spielervertretung (UV) für C&C Tiberium Alliances.
 - 🚫 Keine permanente Prüfung und keine unnötigen Serveranfragen
 - ⚙️ Läuft unabhängig von der Toolbox
 
+➡️ Repository:
+
+https://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
+
+---
+
+## 🧮 Umsiedlungsrechner – Harzi Edition
+
+Ein Rechner für die Umsiedlungsstufe bei Sektorwechseln.
+
+**Funktionen**
+
+- Eingabe der letzten vier Sektorwechsel
+- Berechnung der aktuellen Umsiedlungsstufe
+- Berechnung des nächsten möglichen Sektorwechsels
+- Anzeige des Stufenabbaus
+- Automatische Prüfung der eingegebenen Daten
+- Warnung bei ungültiger Reihenfolge oder zu frühem Sektorwechsel
+- Lokale Speicherung der Sektorwechsel
+- Mehrsprachige Oberfläche
+- Unterstützt Deutsch, Englisch, Spanisch und Französisch
+
 ➡️ **Repository:**
 
-https\://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
+https://github.com/Harzi66/CnC-TA-Umsiedlungsrechner-Harzi-Edition
+
+---
+
+## 🎯 OFF-Finder – HE
+
+Findet die stärksten Basen der Mitglieder ausgewählter Allianzen und hebt die gefundenen Basen auf der Weltkarte hervor.
+
+**Funktionen**
+
+- Allianz aus dem Ranking auswählen
+- Allianz direkt über Name oder Kürzel suchen
+- Frei einstellbarer Rankingbereich
+- Auswahl der stärksten 1, 2 oder mehr Basen je Spieler
+- Gefundene Basen auf der Weltkarte hervorheben
+- Mehrere Allianzen können gesucht werden
+- Suchergebnisse löschen und erneut ermitteln
+- Einstellungen werden gespeichert
+- Mehrsprachige Oberfläche
+
+**Wichtiger Hinweis:**
+
+**Nur die stärkste Basis (Top 1) ist garantiert eine Off.**
+
+Je mehr Basen pro Spieler berücksichtigt werden, desto höher ist die Fehlerquote.
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-Off-Finder-Harzi-Edition
 
 ---
 
 # Aktuelle Projekte
 
-| Projekt      | Status         |
-| ------------ | -------------- |
-| Lister       | ✅ Aktiv        |
-| Sektorsprung | ✅ Aktiv        |
-| Raidhelper   | ✅ Aktiv        |
-| SubSender    | ✅ Aktiv        |
-| Rankingtool  | ✅ Aktiv        |
+| Projekt | Status |
+|---|---|
+| Lister | ✅ Aktiv |
+| Sektorsprung | ✅ Aktiv |
+| AllianceMemberOnline | ✅ Aktiv |
+| Raidhelper | ✅ Aktiv |
+| SubSender | ✅ Aktiv |
+| RankingTool | ✅ Aktiv |
+| Umsiedlungsrechner | ✅ Aktiv |
+| OFF-Finder | ✅ Aktiv |
 
 ---
 
