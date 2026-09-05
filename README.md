@@ -173,6 +173,29 @@ https://github.com/Harzi66/CnC-TA-Umsiedlungsrechner-Harzi-Edition
 
 ---
 
+## ⚔️ Kampfsimulator Auswahl – Harzi Edition
+
+Auswahlmenü für die beiden Kampfsimulatoren **TACS** und **TABS V2**.
+
+**Funktionen**
+
+- ⚔️ Auswahl zwischen **TACS** und **TABS V2**
+- 🔄 Der ausgewählte Simulator wird automatisch aktiviert
+- 💾 Auswahl wird gespeichert
+- 🎮 Zugriff direkt über das Scripts-Menü im Spiel
+- 🔁 Wechsel zwischen TACS und TABS V2 jederzeit möglich
+- 🖼️ Eigenes Auswahlfenster mit Hintergrundgrafik
+- 📦 Beide Simulatoren sind direkt im Script integriert
+- 🚫 Kein separates Starten der jeweiligen Simulator-Scripts erforderlich
+
+Das Script merkt sich den zuletzt ausgewählten Kampfsimulator und verwendet ihn beim nächsten Spielstart automatisch.
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-Kampfsimulator-HE
+
+---
+
 ## 🎯 OFF-Finder – HE
 
 Findet die stärksten Basen der Mitglieder ausgewählter Allianzen und hebt die gefundenen Basen auf der Weltkarte hervor.
@@ -209,9 +232,10 @@ https://github.com/Harzi66/CnC-TA-Off-Finder-Harzi-Edition
 | Sektorsprung | ✅ Aktiv |
 | AllianceMemberOnline | ✅ Aktiv |
 | Raidhelper | ✅ Aktiv |
-| SubSender | ✅ Aktiv |
 | RankingTool | ✅ Aktiv |
+| SubSender | ✅ Aktiv |
 | Umsiedlungsrechner | ✅ Aktiv |
+| Kampfsimulator Auswahl | ✅ Aktiv |
 | OFF-Finder | ✅ Aktiv |
 
 ---
