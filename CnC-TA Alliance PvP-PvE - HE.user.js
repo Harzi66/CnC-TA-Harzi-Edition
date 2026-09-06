@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         CnC-TA Allianz PvP-PvE - HE
+// @name         CnC-TA Alliance PvP-PvE - HE
 // @namespace    https://github.com/Harzi66/CnC-TA-Harzi-Edition
 // @version      0.6.0
 // @description  Zeigt PvP- und PvE-Ergebnisse der Mitglieder der eigenen Allianz im Allianzfenster.
 // @author       Harzi
 // @match        https://*.alliances.commandandconquer.com/*/index.aspx*
-// @downloadURL  https://raw.githubusercontent.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/main/CnC-TA%20Allianz%20PvP-PvE%20-%20HE.user.js
-// @updateURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/main/CnC-TA%20Allianz%20PvP-PvE%20-%20HE.user.js
+// @downloadURL  https://raw.githubusercontent.com/Harzi66/CnC-TA-Alliance-PvP-PvE-HE/main/CnC-TA%20Allianz%20PvP-PvE%20-%20HE.user.js
+// @updateURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Alliance-PvP-PvE-HE/main/CnC-TA%20Allianz%20PvP-PvE%20-%20HE.user.js
 // @grant        none
 // ==/UserScript==
 
