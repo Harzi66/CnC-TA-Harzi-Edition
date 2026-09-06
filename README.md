@@ -277,24 +277,6 @@ Das Script erweitert sowohl das kleine Allianz-Infofenster als auch das große A
 - Fremde Allianzen bleiben ohne die zusätzlichen PvE-/PvP-Reiter
 - Daten werden direkt aus den öffentlichen Spielerdaten von C&C TA abgerufen
 
-### PvE
-
-Zeigt die Mitglieder der eigenen Allianz nach ihrem **PvE-Ergebnis** sortiert.
-
-![PvE im Allianzfenster](https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/blob/main/Screenshot_1.png)
-
-### PvP
-
-Zeigt die Mitglieder der eigenen Allianz nach ihrem **PvP-Ergebnis** sortiert.
-
-![PvP im Allianzfenster](https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/blob/main/Screenshot_2.png)
-
-### Allianzansicht
-
-Die zusätzlichen Reiter werden sowohl im kleinen als auch im großen Allianzfenster integriert.
-
-![Allianz PvP/PvE](https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/blob/main/Screenshot_3.png)
-
 ➡️ **Repository:**
 
 https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE
