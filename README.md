@@ -1,91 +1,226 @@
-CnC-TA-Ghostfinder-HE
-Ghostfinder - HE
-Der Ghostfinder - HE ist ein Userscript für Command & Conquer: Tiberium Alliances, mit dem schwebende bzw. verlassene Basen einer Allianz auf der Karte sichtbar gemacht werden können.
-Das Script basiert auf dem CnCTA Base Finder und wurde für die Harzi-Edition mit einem eigenen Ghost-Renderer und einer eigenen Darstellung weiterentwickelt. Die Grundlage und ursprünglichen Beiträge stammen von bloofi und ffi82.
+# CnC-TA-Harzi-Edition
+
+Collection of Command & Conquer: Tiberium Alliances scripts by Harzi.
+
+# Installation
+
+Zur Installation oben auf das jeweilige Script klicken oder den Ordner **"Weitere C&C TA Scripts"** auswählen und anschließend rechts oben auf **"Raw"** klicken.
+
+Voraussetzung für alle Scripts ist **Tampermonkey** und das Script **Infernal Wrapper**.
+
+# C&C: Tiberium Alliances – Harzi Edition
+
+Willkommen bei der **Harzi Edition**.
+
+Hier findest du alle meine Erweiterungen und Werkzeuge für **Command & Conquer: Tiberium Alliances**.
+
+Weitere sinnvolle Scripts von anderen Entwicklern findest du im Ordner **"Weitere C&C TA Scripts"**:
+
+https://github.com/Harzi66/CnC-TA-Harzi-Edition/tree/main/Weitere%20C%26C%20TA%20Scripts
+
 ---
-✨ Funktionen
-Auswahl einer Allianz aus der vorhandenen Allianzliste
-Allianz zusätzlich über den Namen suchen
-Favoriten für häufig verwendete Allianzen
-Aktualisieren der Allianz-Daten
-Anzeige schwebender Basen direkt auf der Spielkarte
-Eigener Ghost-Renderer
-Transparente rote Ghost-Kreise
-Mehrere Ghosts gleichzeitig darstellbar
-Basisname und Besitzer werden am Ghost angezeigt
-Ghost-Marker können wieder vollständig entfernt werden
-Auswahl der anzuzeigenden Ghost-Basen:
-Alle schwebenden Basen
-Nur Main-Basen
-Main + zweitbeste Ghost-Basen
-Mehrsprachige Benutzeroberfläche:
-🇩🇪 Deutsch
-🇬🇧 English
-🇫🇷 Français
-🇪🇸 Español
-Die gewählte Sprache wird pro Spielwelt gespeichert
+
+# Verfügbare Projekte
+
+## 📋 Lister – Harzi Edition
+
+Erweiterte Spieler- und Allianzlisten.
+
+**Funktionen**
+
+- Erweiterte Listen
+- Zusätzliche Sortierungen
+- Komfortfunktionen
+- Laufende Weiterentwicklung
+
+➡ Repository:
+
+https://github.com/Harzi66/CnC-TA-Lister-UI-Harzi-Edition
+
 ---
-🖥️ Oberfläche
-Ghostfinder öffnen
-Das Script wird über das Scripte-Menü im Spiel geöffnet.
-![Ghostfinder Oberfläche](Screenshot_1.png)
+
+## 🎯 Sektorsprung – Harzi Edition
+
+Erweiterte Version des Sektorsprung-Scripts.
+
+**Funktionen**
+
+- Spieler anhand des Namens suchen
+- Berechnung der voraussichtlichen Landepunkte
+- Ausgabe im Allianzchat
+- Ausgabe im Offizierschat
+- Weltkarte direkt auf den gewählten Landepunkt zentrieren
+- Läuft ohne "Toolbox Main"
+
+➡ Repository:
+
+https://github.com/Harzi66/CnC-TA-Sektorsprung-Harzi-Edition
+
 ---
-Ghost-Auswahl
-Über Ghost-Auswahl kann festgelegt werden, welche schwebenden Basen angezeigt werden sollen.
-![Ghost-Auswahl](Screenshot_2.png)
-Die drei verfügbaren Varianten sind:
-Auswahl	Funktion
-Alle schwebenden Basen	Zeigt alle gefundenen schwebenden Basen der ausgewählten Allianz.
-Nur Main-Basen	Zeigt nur die jeweils stärksten/Main-Basen der Spieler.
-Main + zweitbeste Ghost-Basen	Berücksichtigt neben der Main-Basis auch die zweitbeste Ghost-Basis entsprechend der Auswahl.
+
+## 👥 AllianceMemberOnline – HE
+
+Ein Userscript für **C&C Tiberium Alliances**, das eine Übersicht der Allianzmitglieder anzeigt.
+
+**Funktionen**
+
+- Anzeige der Allianzmitglieder
+- Sortierung nach Mitgliederstatus
+- Anzeige von **Online** und **Abwesend**
+- Automatische Anpassung der Fenstergröße
+- Beim Überfahren eines Spielernamens werden dessen Basen angezeigt
+- Basen können direkt angeklickt werden
+- Die ausgewählte Basis wird aktiviert und die Weltkarte automatisch auf die Basis zentriert
+
+**Credits**
+
+Original von **f@nTisi**  
+Weiterentwicklung: **f@nTisi & Harzi**
+
+➡ Repository:
+
+https://github.com/Harzi66/CnC-TA-AllianceMemberOnline-Harzi-Edition
+
 ---
-Ghosts auf der Karte
-Die gefundenen Basen werden direkt auf der Karte dargestellt. Die roten Kreise markieren die Ghost-Basen; zusätzlich werden Basisname und Besitzer angezeigt.
-![Ghosts auf der Karte](Screenshot_3.png)
+
+## 🎯 Raidhelper – HE
+
+Erweiterte Version des C&C TA Raidhelper-Scripts.
+
+**Funktionen**
+
+- Frei einstellbare Lower Range
+- Berücksichtigung von Offensivstufe und Deffhöhe
+- Der höhere Wert wird als Grundlage verwendet
+- Anzeige der erwarteten Zielhöhe
+- Zielhöhe wird bei Änderung der Lower Range automatisch aktualisiert
+- Lager außerhalb des gewünschten Bereichs ausblenden
+- Spielerinformationen und Points of Interest ausblenden
+- Anzeige jederzeit über **Show All** wiederherstellen
+- Läuft unabhängig von der Toolbox
+
+➡ Repository:
+
+https://github.com/Harzi66/CnC-TA-Raidhelper-HE
+
 ---
-🌐 Sprache
-Die Sprache kann direkt im Ghostfinder über die Sprachauswahl geändert werden.
-Die Auswahl wird automatisch gespeichert und beim nächsten Öffnen wieder verwendet.
+
+## 🏆 RankingTool – HE
+
+Spieler- und Allianz-Ranking für C&C: Tiberium Alliances.
+
+**Funktionen**
+
+- Spieler-Ranking mit frei einstellbarem Rangbereich 1–1000
+- Frei einstellbarer Name bei Spielerranking
+- Sprungfunktion zum eingestellten Spielernamen bei Start
+- Spielersuche mit automatischem Anspringen
+- Anzeige der Punktentwicklung
+- Farbliche Punktetendenzen
+- Allianz-Ranking mit Top-40-Punkten der Allianzen
+- Speicherung der Rang-Einstellungen
+- Automatische und manuelle Snapshot-Erstellung
+- Mehrsprachig einstellbar
+
+➡️ Repository:
+
+https://github.com/Harzi66/CnC-TA-RankingTool-HE
+
 ---
-📥 Installation
-Das Script benötigt Tampermonkey.
-Tampermonkey installieren und aktivieren.
-Die Datei `CnC-TA-Ghostfinder-HE.user.js` öffnen.
-In GitHub auf Raw klicken.
-Tampermonkey öffnet die Installationsseite.
-Script installieren.
-C&C Tiberium Alliances neu laden bzw. das Spiel öffnen.
-Das Script anschließend über das Scripte-Menü starten.
-Direkte Installation / Update
-Das Script enthält eine `@downloadURL` und `@updateURL`, sodass Tampermonkey die aktuelle Version direkt von diesem Repository beziehen kann.
+
+## 🤖 SubSender – Harzi Edition
+
+Automatische Verwaltung der Spielervertretung (UV) für C&C Tiberium Alliances.
+
+**Funktionen**
+
+- 🌍 Automatische Erkennung von Welt und Allianz
+- 👤 Zielspieler für die UV festlegen
+- 🔄 UV manuell senden
+- ↩️ UV manuell zurückrufen
+- 🤖 Automatische UV-Verwaltung beim Login
+- 💾 Einstellungen automatisch speichern
+- 🌐 Einstellungen getrennt nach Welt und Allianz
+- 🖥 Mehrere Welten und Tabs unabhängig voneinander
+- 🚫 Keine permanente Prüfung und keine unnötigen Serveranfragen
+- ⚙️ Läuft unabhängig von der Toolbox
+
+➡️ Repository:
+
+https://github.com/Harzi66/CnC-TA-SubSender-Harzi-Edition
+
 ---
-🔧 Technischer Hintergrund
-Der Ghostfinder verwendet für die Darstellung keinen normalen QX-Overlay-Marker. Stattdessen wird der vorhandene C&C-TA-Renderbaum genutzt.
-Der eigene Renderer basiert unter anderem auf VKVAYK und bindet die Ghost-Darstellung direkt in die Karten-Renderstruktur ein.
-Dadurch können mehrere Ghosts gleichzeitig dargestellt und anschließend gezielt wieder entfernt werden.
+
+## 🧮 Umsiedlungsrechner – Harzi Edition
+
+Ein Rechner für die Umsiedlungsstufe bei Sektorwechseln.
+
+**Funktionen**
+
+- Eingabe der letzten vier Sektorwechsel
+- Berechnung der aktuellen Umsiedlungsstufe
+- Berechnung des nächsten möglichen Sektorwechsels
+- Anzeige des Stufenabbaus
+- Automatische Prüfung der eingegebenen Daten
+- Warnung bei ungültiger Reihenfolge oder zu frühem Sektorwechsel
+- Lokale Speicherung der Sektorwechsel
+- Mehrsprachige Oberfläche
+- Unterstützt Deutsch, Englisch, Spanisch und Französisch
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-Umsiedlungsrechner-Harzi-Edition
+
 ---
-📜 Grundlage / Credits
-Weiterentwicklung: Harzi  
-Original: CnCTA Base Finder  
-Original Author: bloofi  
-Contributor: ffi82
-Die Weiterentwicklung umfasst insbesondere:
-eigenen Ghost-Renderer
-eigene Ghost-Darstellung
-transparente rote Ghost-Kreise
-Beschriftung von Basis und Besitzer
-Mehrfachdarstellung von Ghosts
-Ghost-Auswahlfilter
-mehrsprachige Benutzeroberfläche
+
+## ⚔️ Kampfsimulator Auswahl – Harzi Edition
+
+Auswahlmenü für die beiden Kampfsimulatoren **TACS** und **TABS V2**.
+
+**Funktionen**
+
+- ⚔️ Auswahl zwischen **TACS** und **TABS V2**
+- 🔄 Der ausgewählte Simulator wird automatisch aktiviert
+- 💾 Auswahl wird gespeichert
+- 🎮 Zugriff direkt über das Scripts-Menü im Spiel
+- 🔁 Wechsel zwischen TACS und TABS V2 jederzeit möglich
+- 🖼️ Eigenes Auswahlfenster mit Hintergrundgrafik
+- 📦 Beide Simulatoren sind direkt im Script integriert
+- 🚫 Kein separates Starten der jeweiligen Simulator-Scripts erforderlich
+
+Das Script merkt sich den zuletzt ausgewählten Kampfsimulator und verwendet ihn beim nächsten Spielstart automatisch.
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-Kampfsimulator-HE
+
 ---
-📌 Hinweis
-Der Ghostfinder ist für C&C: Tiberium Alliances entwickelt und greift auf interne Strukturen des Spiels zu. Änderungen am Spiel können deshalb dazu führen, dass einzelne Funktionen angepasst werden müssen.
----
-📁 Repository
-GitHub:  
-https://github.com/Harzi66/CnC-TA-Ghostfinder-HE
-Userscript:  
-`CnC-TA-Ghostfinder-HE.user.js`
+
+## 🎯 OFF-Finder – HE
+
+Findet die stärksten Basen der Mitglieder ausgewählter Allianzen und hebt die gefundenen Basen auf der Weltkarte hervor.
+
+**Funktionen**
+
+- Allianz aus dem Ranking auswählen
+- Allianz direkt über Name oder Kürzel suchen
+- Frei einstellbarer Rankingbereich
+- Auswahl der stärksten 1, 2 oder mehr Basen je Spieler
+- Gefundene Basen auf der Weltkarte hervorheben
+- Mehrere Allianzen können gesucht werden
+- Suchergebnisse löschen und erneut ermitteln
+- Einstellungen werden gespeichert
+- Mehrsprachige Oberfläche
+
+**Wichtiger Hinweis:**
+
+**Nur die stärkste Basis (Top 1) ist garantiert eine Off.**
+
+Je mehr Basen pro Spieler berücksichtigt werden, desto höher ist die Fehlerquote.
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-Off-Finder-Harzi-Edition
 
 ---
 
@@ -105,7 +240,7 @@ Findet schwebende Ghost-Basen der ausgewählten Allianz und stellt sie direkt au
 - Mehrere Ghosts gleichzeitig anzeigen
 - Basisname und Besitzer am Ghost anzeigen
 - Ghost-Marker wieder vollständig löschen
-- Auswahl zwischen:
+- Auswahl der anzuzeigenden Ghost-Basen:
   - **Alle schwebenden Basen**
   - **Nur Main-Basen**
   - **Main + zweitbeste Ghost-Basen**
@@ -120,3 +255,29 @@ Der Ghostfinder verwendet einen eigenen Renderer innerhalb des C&C-TA-Renderbaum
 ➡️ **Repository:**
 
 https://github.com/Harzi66/CnC-TA-Ghostfinder-HE
+
+---
+
+# Aktuelle Projekte
+
+| Projekt | Status |
+|---|---|
+| Lister | ✅ Aktiv |
+| Sektorsprung | ✅ Aktiv |
+| AllianceMemberOnline | ✅ Aktiv |
+| Raidhelper | ✅ Aktiv |
+| RankingTool | ✅ Aktiv |
+| SubSender | ✅ Aktiv |
+| Umsiedlungsrechner | ✅ Aktiv |
+| Kampfsimulator Auswahl | ✅ Aktiv |
+| OFF-Finder | ✅ Aktiv |
+| Ghostfinder | ✅ Aktiv |
+
+---
+
+Vielen Dank an alle ursprünglichen Autoren der Originalscripts.
+
+- leo7044
+- alexos75
+- ffi82
+- Trinitroglycerol
