@@ -258,6 +258,49 @@ https://github.com/Harzi66/CnC-TA-Ghostfinder-HE
 
 ---
 
+## ⚔️ Allianz PvP-PvE – HE
+
+Zeigt die **PvP- und PvE-Ergebnisse der Mitglieder der eigenen Allianz** direkt in den Allianzfenstern von C&C Tiberium Alliances.
+
+Das Script erweitert sowohl das kleine Allianz-Infofenster als auch das große Allianzfenster.
+
+**Funktionen**
+
+- Anzeige eines zusätzlichen **PvE-Reiters**
+- Anzeige eines zusätzlichen **PvP-Reiters**
+- Mitglieder der eigenen Allianz werden automatisch ermittelt
+- PvE-Mitglieder nach ihrem Ergebnis sortiert
+- PvP-Mitglieder nach ihrem Ergebnis sortiert
+- Anzeige der Ergebnisse direkt im Allianzfenster
+- Funktioniert im kleinen Allianz-Infofenster
+- Funktioniert im großen Allianzfenster aus dem Hauptmenü
+- Fremde Allianzen bleiben ohne die zusätzlichen PvE-/PvP-Reiter
+- Daten werden direkt aus den öffentlichen Spielerdaten von C&C TA abgerufen
+
+### PvE
+
+Zeigt die Mitglieder der eigenen Allianz nach ihrem **PvE-Ergebnis** sortiert.
+
+![PvE im Allianzfenster](https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/blob/main/Screenshot_1.png)
+
+### PvP
+
+Zeigt die Mitglieder der eigenen Allianz nach ihrem **PvP-Ergebnis** sortiert.
+
+![PvP im Allianzfenster](https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/blob/main/Screenshot_2.png)
+
+### Allianzansicht
+
+Die zusätzlichen Reiter werden sowohl im kleinen als auch im großen Allianzfenster integriert.
+
+![Allianz PvP/PvE](https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE/blob/main/Screenshot_3.png)
+
+➡️ **Repository:**
+
+https://github.com/Harzi66/CnC-TA-Allianz-PvP-PvE-HE
+
+---
+
 # Aktuelle Projekte
 
 | Projekt | Status |
@@ -272,6 +315,7 @@ https://github.com/Harzi66/CnC-TA-Ghostfinder-HE
 | Kampfsimulator Auswahl | ✅ Aktiv |
 | OFF-Finder | ✅ Aktiv |
 | Ghostfinder | ✅ Aktiv |
+| Allianz PvP-PvE | ✅ Aktiv |
 
 ---
 
