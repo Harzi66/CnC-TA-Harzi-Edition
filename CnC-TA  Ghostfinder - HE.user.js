@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ghostfinder - HE
 // @namespace    https://github.com/Harzi66/CnC-TA-Harzi-Edition
-// @version      1.8.0
+// @version      1.8.4
 // @description  Weiterentwicklung des CnCTA Base Finder mit eigenem Geisterbasen-Renderer.
 // @author       Harzi
 // @contributor  bloofi
@@ -232,9 +232,13 @@
                     favorites: [],
                     listAlliances: [],
                     selectedAlliance: null,
+                    selectedAlliances: [],
+                    autoShowMainAfterReload: false,
 
                     players: {},
                     bases: {},
+                    allianceData: {},
+
 
                     //////////////////////////////////////////////////////////////////
                     // UI
@@ -251,6 +255,8 @@
                     languageLabel: null,
 
                     buttonFetch: null,
+                    buttonAddAlliance: null,
+                    selectedAllianceList: null,
 
                     favoriteCheckbox: null,
 
@@ -478,8 +484,15 @@
                             this.selectAllianceLabel
                         );
 
+                        const allianceSelectRow =
+                              new qx.ui.container.Composite(
+                                  new qx.ui.layout.HBox(5)
+                              );
+
                         this.allianceSelect =
-                            new qx.ui.form.SelectBox();
+                            new qx.ui.form.SelectBox().set({
+                            width: 205
+                        });
 
                         this.allianceSelect.addListener(
                             'changeSelection',
@@ -487,8 +500,42 @@
                             this
                         );
 
+                        allianceSelectRow.add(
+                            this.allianceSelect,
+                            {
+                                flex: 1
+                            }
+                        );
+
+                        this.buttonAddAlliance =
+                            new qx.ui.form.Button(
+                            'Hinzufügen'
+                        );
+
+                        this.buttonAddAlliance.addListener(
+                            'execute',
+                            this.onButtonAddAlliance,
+                            this
+                        );
+
+                        allianceSelectRow.add(
+                            this.buttonAddAlliance
+                        );
+
                         this.mainWindow.add(
-                            this.allianceSelect
+                            allianceSelectRow
+                        );
+
+                        this.selectedAllianceList =
+                            new qx.ui.container.Composite(
+                            new qx.ui.layout.VBox(2)
+                        ).set({
+                            width: 300,
+                            minHeight: 0
+                        });
+
+                        this.mainWindow.add(
+                            this.selectedAllianceList
                         );
 
                         this.orTypeAllianceLabel =
@@ -987,6 +1034,7 @@
                               );
 
                         mainBaseTop2.setUserData(
+                            'mainBaseFilter',
                             'mainTop2'
                         );
 
@@ -996,6 +1044,7 @@
                               );
 
                         mainBaseTop3.setUserData(
+                            'mainBaseFilter',
                             'mainTop3'
                         );
 
@@ -1498,6 +1547,157 @@
                     // ALLIANZ AUSWÄHLEN
                     //////////////////////////////////////////////////////////////////
 
+                    onButtonAddAlliance: function () {
+
+                        const selectA =
+                              this.allianceSelect
+                        .getModelSelection()
+                        .getItem(0);
+
+                        if (
+                            !selectA ||
+                            !selectA.id ||
+                            selectA.id <= 0
+                        ) {
+                            return;
+                        }
+
+                        if (
+                            this.selectedAlliances.some(
+                                a => a.id === selectA.id
+                            )
+                        ) {
+                            return;
+                        }
+
+                        this.selectedAlliances.push({
+                            id: selectA.id,
+                            name: selectA.name
+                        });
+
+                        ClientLib.Net.CommunicationManager
+                            .GetInstance()
+                            .SendSimpleCommand(
+                            'GetPublicAllianceInfo',
+                            {
+                                id: selectA.id
+                            },
+                            webfrontend.phe.cnc.Util.createEventDelegate(
+                                ClientLib.Net.CommandResult,
+                                this,
+                                this.onGetPublicAllianceInfo
+                            ),
+                            null
+                        );
+
+                        this.selectedAllianceList.removeAll();
+
+                        this.selectedAlliances.forEach(
+                            alliance => {
+
+                                const row =
+                                      new qx.ui.container.Composite(
+                                          new qx.ui.layout.HBox(5)
+                                      );
+
+                                const label =
+                                      new qx.ui.basic.Label(
+                                          '• ' + alliance.name
+                                      ).set({
+                                          textColor: 'white',
+                                          width: 220
+                                      });
+
+                                const buttonRemove =
+                                      new qx.ui.form.Button(
+                                          'Löschen'
+                                      );
+
+                                buttonRemove.addListener(
+                                    'execute',
+                                    function () {
+
+                                        this.selectedAlliances =
+                                            this.selectedAlliances.filter(
+                                            a => a.id !== alliance.id
+                                        );
+
+                                        this.selectedAllianceList.remove(
+                                            row
+                                        );
+
+                                        this.removeGhostMarkers();
+                                        this.removeMainMarkers();
+
+                                        this.players = {};
+                                        this.bases = {};
+                                        this.autoShowMainAfterReload = true;
+
+                                        this.selectedAlliance = null;
+
+                                        this.selectedAlliances.forEach(
+                                            a => {
+
+                                                ClientLib.Net.CommunicationManager
+                                                    .GetInstance()
+                                                    .SendSimpleCommand(
+                                                    'GetPublicAllianceInfo',
+                                                    {
+                                                        id: a.id
+                                                    },
+                                                    webfrontend.phe.cnc.Util.createEventDelegate(
+                                                        ClientLib.Net.CommandResult,
+                                                        this,
+                                                        this.onGetPublicAllianceInfo
+                                                    ),
+                                                    null
+                                                );
+                                            }
+                                        );
+
+                                        this.refreshWindow();
+
+                                        console.log(
+                                            '%c[Ghostfinder MULTI]',
+                                            'color:#ff8800;font-weight:bold',
+                                            'Allianz entfernt:',
+                                            alliance.name,
+                                            '| Verbleibend:',
+                                            this.selectedAlliances.length
+                                        );
+
+                                    },
+                                    this
+                                );
+
+                                row.add(
+                                    label,
+                                    {
+                                        flex: 1
+                                    }
+                                );
+
+                                row.add(
+                                    buttonRemove
+                                );
+
+                                this.selectedAllianceList.add(
+                                    row
+                                );
+                            }
+                        );
+
+                        console.log(
+                            '%c[Ghostfinder MULTI]',
+                            'color:#00aaff;font-weight:bold',
+                            'Allianz hinzugefügt:',
+                            selectA.name,
+                            '| ID:',
+                            selectA.id,
+                            '| Gesamt:',
+                            this.selectedAlliances.length
+                        );
+                    },
                     onSelectAlliance: function () {
 
                         const selectA =
@@ -1505,7 +1705,7 @@
                         .getModelSelection()
                         .getItem(0);
 
-                        this.resetAlliance();
+
 
                         this.allianceTextfield.setValue('');
 
@@ -2065,7 +2265,7 @@
                                          */
 
                                     ctx.globalAlpha =
-                                        0.55;
+                                        1;
 
                                     ctx.fillStyle =
                                         '#ff0000';
@@ -2081,6 +2281,9 @@
                                     );
 
                                     ctx.fill();
+
+                                    ctx.restore();
+                                    return;
 
                                     /*
                                          * --------------------------------------
@@ -3356,6 +3559,12 @@
                     ) {
 
                         if (
+                            !this.players[`pid-${data.i}`]
+                        ) {
+                            return;
+                        }
+
+                        if (
                             data &&
                             data.c
                         ) {
@@ -3491,6 +3700,40 @@
                             );
 
                             this.refreshWindow();
+
+                            const totalPlayers =
+                                  Object.keys(this.players).length;
+
+                            const totalPlayersFetched =
+                                  Object.values(this.players)
+                            .filter(m => m.isFetched)
+                            .length;
+
+                            const totalBases =
+                                  Object.keys(this.bases).length;
+
+                            const totalBasesFetched =
+                                  Object.values(this.bases)
+                            .filter(b => b.isFetched)
+                            .length;
+
+                            if (
+                                this.autoShowMainAfterReload &&
+                                totalPlayers > 0 &&
+                                totalPlayersFetched === totalPlayers &&
+                                totalBases > 0 &&
+                                totalBasesFetched === totalBases
+                            ) {
+                                this.autoShowMainAfterReload = false;
+
+                                console.log(
+                                    '%c[Ghostfinder MAIN AUTO]',
+                                    'color:#00aaff;font-weight:bold',
+                                    'Neuaufbau vollständig – Main wird angezeigt.'
+                                );
+
+                                this.onButtonShowMain();
+                            }
                         }
                     },
 
@@ -3502,6 +3745,7 @@
                     function () {
 
                         this.removeGhostMarkers();
+                        this.removeMainMarkers();
 
                         this.players = {};
                         this.bases = {};
@@ -3615,21 +3859,21 @@
                                 ] || [];
                     },
 
-                        saveStorage:
-function () {
+                    saveStorage:
+                    function () {
 
-    const storage =
-          JSON.parse(
-              localStorage.getItem(
-                  storageKey
-              ) || '{}'
-          ) || {};
+                        const storage =
+                              JSON.parse(
+                                  localStorage.getItem(
+                                      storageKey
+                                  ) || '{}'
+                              ) || {};
 
-    storage[
-        `wid-${ClientLib.Data.MainData
-        .GetInstance()
-        .get_Server()
-        .get_WorldId()}`
+                        storage[
+                            `wid-${ClientLib.Data.MainData
+                            .GetInstance()
+                            .get_Server()
+                            .get_WorldId()}`
                             ] =
                             this.favorites;
 
@@ -3640,55 +3884,55 @@ function () {
                             )
                         );
                     }
-}
-});
+                }
+            });
 
-Main.getInstance().initialize();
-};
+            Main.getInstance().initialize();
+        };
 
-//////////////////////////////////////////////////////////////////
-// GAME LOAD CHECK
-//////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////
+        // GAME LOAD CHECK
+        //////////////////////////////////////////////////////////////////
 
-function checkForInit() {
+        function checkForInit() {
 
-    try {
+            try {
 
-        if (
-            typeof qx === 'undefined' ||
-            typeof qx.core?.Init?.getApplication !==
-            'function' ||
-            !qx.core.Init
-            .getApplication()
-            ?.initDone
-        ) {
+                if (
+                    typeof qx === 'undefined' ||
+                    typeof qx.core?.Init?.getApplication !==
+                    'function' ||
+                    !qx.core.Init
+                    .getApplication()
+                    ?.initDone
+                ) {
 
-            return setTimeout(
-                checkForInit,
-                1000
-            );
+                    return setTimeout(
+                        checkForInit,
+                        1000
+                    );
+                }
+
+                init();
+
+                console.log(
+                    `%c${scriptName} loaded`,
+                    'background: #c4e2a0; color: darkred; font-weight:bold; padding: 3px; border-radius: 5px;'
+                );
+
+            } catch (e) {
+
+                console.error(
+                    `%c${scriptName} error`,
+                    'background: black; color: pink; font-weight:bold; padding: 3px; border-radius: 5px;',
+                    e
+                );
+            }
         }
 
-        init();
+        checkForInit();
+    };
 
-        console.log(
-            `%c${scriptName} loaded`,
-            'background: #c4e2a0; color: darkred; font-weight:bold; padding: 3px; border-radius: 5px;'
-        );
-
-    } catch (e) {
-
-        console.error(
-            `%c${scriptName} error`,
-            'background: black; color: pink; font-weight:bold; padding: 3px; border-radius: 5px;',
-            e
-        );
-    }
-}
-
-checkForInit();
-};
-
-GhostfinderScript();
+    GhostfinderScript();
 
 })();
