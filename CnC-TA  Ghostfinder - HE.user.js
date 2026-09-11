@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ghostfinder - HE
 // @namespace    https://github.com/Harzi66/CnC-TA-Harzi-Edition
-// @version      1.8.4
+// @version      2.0.0
 // @description  Weiterentwicklung des CnCTA Base Finder mit eigenem Geisterbasen-Renderer.
 // @author       Harzi
 // @contributor  bloofi
@@ -12,8 +12,9 @@
 // @grant        none
 // ==/UserScript==
 
-// Änderungen in 1.8.0
-// - Erweitert um Suchfunktion getrennt nach Main -und Ghostbasen
+// Änderungen in 2.0.0
+// - Übernahme von bis zu 3 Allianzen zur Suche
+// - Frei wählbare Anzeigefarben für Ghost und Main Basen
 
 /*
  * Ghostfinder - HE
@@ -84,7 +85,18 @@
                 mainBaseOnly: 'Main Basen',
                 mainBaseTop2: 'Main & Zweit Main',
                 mainBaseTop3: 'Main bis 3-Main',
-                showMain: 'Main anzeigen'
+                showMain: 'Main anzeigen',
+                mainColor: 'Main-Farbe:',
+                ghostColor: 'Ghost-Farbe:',
+                colorBlue: 'Blau',
+                colorRed: 'Rot',
+                colorGreen: 'Grün',
+                colorYellow: 'Gelb',
+                colorOrange: 'Orange',
+                colorPurple: 'Violett',
+                colorCyan: 'Cyan',
+                colorWhite: 'Weiß',
+                addAlliance: 'Hinzufügen',
             },
 
             en: {
@@ -117,7 +129,18 @@
                 mainBaseOnly: 'Main bases',
                 mainBaseTop2: 'Main & second Main',
                 mainBaseTop3: 'Main up to 3-Main',
-                showMain: 'Show Main'
+                showMain: 'Show Main',
+                mainColor: 'Main color:',
+                ghostColor: 'Ghost color:',
+                colorBlue: 'Blue',
+                colorRed: 'Red',
+                colorGreen: 'Green',
+                colorYellow: 'Yellow',
+                colorOrange: 'Orange',
+                colorPurple: 'Purple',
+                colorCyan: 'Cyan',
+                colorWhite: 'White',
+                addAlliance: 'Add',
             },
 
             fr: {
@@ -150,7 +173,18 @@
                 mainBaseOnly: 'Bases Main',
                 mainBaseTop2: 'Main & deuxième Main',
                 mainBaseTop3: 'Main jusqu’à 3 bases',
-                showMain: 'Afficher les Main'
+                showMain: 'Afficher les Main',
+                mainColor: 'Couleur Main :',
+                ghostColor: 'Couleur Ghost :',
+                colorBlue: 'Bleu',
+                colorRed: 'Rouge',
+                colorGreen: 'Vert',
+                colorYellow: 'Jaune',
+                colorOrange: 'Orange',
+                colorPurple: 'Violet',
+                colorCyan: 'Cyan',
+                colorWhite: 'Blanc',
+                addAlliance: 'Ajouter',
             },
 
             es: {
@@ -183,7 +217,18 @@
                 mainBaseOnly: 'Bases Main',
                 mainBaseTop2: 'Main y segundo Main',
                 mainBaseTop3: 'Main hasta 3 bases',
-                showMain: 'Mostrar Main'
+                showMain: 'Mostrar Main',
+                mainColor: 'Color Main:',
+                ghostColor: 'Color Ghost:',
+                colorBlue: 'Azul',
+                colorRed: 'Rojo',
+                colorGreen: 'Verde',
+                colorYellow: 'Amarillo',
+                colorOrange: 'Naranja',
+                colorPurple: 'Violeta',
+                colorCyan: 'Cian',
+                colorWhite: 'Blanco',
+                addAlliance: 'Añadir',
             }
         };
 
@@ -267,6 +312,8 @@
                     ghostFilterSelect: null,
                     languageSelect: null,
                     languageRow: null,
+                    mainColorSelect: null,
+                    ghostColorSelect: null,
 
                     //////////////////////////////////////////////////////////////////
                     // GHOST RENDERER
@@ -466,6 +513,306 @@
                             )
                         );
 
+                        this.languageRow =
+                            new qx.ui.container.Composite(
+                            new qx.ui.layout.HBox(10)
+                        );
+
+                        this.languageLabel =
+                            new qx.ui.basic.Label().set({
+
+                            textAlign: 'left',
+                            width: 90,
+                            rich: true,
+                            textColor: 'white',
+
+                            value: t('language')
+                        });
+
+                        this.languageSelect =
+                            new qx.ui.form.SelectBox().set({
+                            width: 130
+                        });
+
+                        const languageItems = {};
+
+                        ['de', 'en', 'fr', 'es'].forEach(
+                            lang => {
+
+                                const item =
+                                      new qx.ui.form.ListItem(
+                                          LANGUAGES[lang].name,
+                                          null,
+                                          lang
+                                      );
+
+                                languageItems[lang] = item;
+                                this.languageSelect.add(item);
+                            }
+                        );
+
+                        const currentLanguage = getLanguage();
+
+                        this.languageSelect.setSelection([
+                            languageItems[currentLanguage]
+                        ]);
+
+                        this.languageSelect.addListener(
+                            'changeSelection',
+                            function () {
+
+                                const selection =
+                                      this.languageSelect
+                                .getSelection();
+
+                                if (
+                                    selection &&
+                                    selection.length > 0
+                                ) {
+
+                                    setLanguage(
+                                        selection[0].getModel()
+                                    );
+                                }
+                            },
+                            this
+                        );
+
+                        this.languageRow.add(
+                            this.languageLabel
+                        );
+
+                        this.languageRow.add(
+                            this.languageSelect
+                        );
+
+                        this.mainWindow.add(
+                            this.languageRow
+                        );
+
+                        // ---------------------------------------------------------------
+                        // Trennlinie unter Sprache
+                        // ---------------------------------------------------------------
+
+                        const languageSeparator =
+                              new qx.ui.core.Widget().set({
+                                  height: 3,
+
+                                  decorator:
+                                  new qx.ui.decoration.Decorator().set({
+                                      color: 'white',
+                                      style: 'solid',
+                                      widthTop: 2
+                                  })
+                              });
+
+
+                        // ---------------------------------------------------------------
+                        // FARBWAHL
+                        // ---------------------------------------------------------------
+
+                        const colorRow =
+                              new qx.ui.container.Composite(
+                                  new qx.ui.layout.HBox(10)
+                              );
+
+                        const mainColorLabel =
+                              new qx.ui.basic.Label(
+                                  t('mainColor')
+                              ).set({
+                                  width: 90,
+                                  textColor: 'white'
+                              });
+
+                        this.mainColorLabel = mainColorLabel;
+
+                        this.mainColorSelect =
+                            new qx.ui.form.SelectBox().set({
+                            width: 130
+                        });
+
+                        const mainColorItems = [
+                            [t('colorBlue'), '#0088ff'],
+                            [t('colorRed'), '#ff0000'],
+                            [t('colorGreen'), '#00cc00'],
+                            [t('colorYellow'), '#ffff00'],
+                            [t('colorOrange'), '#ff8800'],
+                            [t('colorPurple'), '#aa00ff'],
+                            [t('colorCyan'), '#00ffff'],
+                            [t('colorWhite'), '#ffffff']
+                        ];
+
+                        mainColorItems.forEach(
+                            itemData => {
+                                const item =
+                                      new qx.ui.form.ListItem(
+                                          itemData[0]
+                                      );
+
+                                item.setUserData(
+                                    'color',
+                                    itemData[1]
+                                );
+
+                                this.mainColorSelect.add(item);
+                            }
+                        );
+
+                        const savedMainColor =
+                              this.mainColorSelect
+                        .getChildren()
+                        .find(
+                            item =>
+                            item.getUserData('color') ===
+                            this.mainColor
+                        );
+
+                        this.mainColorSelect.setSelection([
+                            savedMainColor ||
+                            this.mainColorSelect.getChildren()[0]
+
+                        ]);
+
+                        this.mainColorSelect.setSelection([
+                            savedMainColor ||
+                            this.mainColorSelect.getChildren()[0]
+
+                        ]);
+
+                        this.mainColorSelect.addListener(
+                            'changeSelection',
+                            function () {
+                                const selection =
+                                      this.mainColorSelect
+                                .getSelection();
+
+                                if (
+                                    selection &&
+                                    selection.length > 0
+                                ) {
+                                    this.mainColor =
+                                        selection[0]
+                                        .getUserData('color');
+
+                                    this.saveStorage();
+                                }
+                            },
+                            this
+                        );
+
+                        colorRow.add(
+                            mainColorLabel
+                        );
+
+                        colorRow.add(
+                            this.mainColorSelect
+                        );
+
+                        this.mainWindow.add(
+                            colorRow
+                        );
+
+
+                        const ghostColorRow =
+                              new qx.ui.container.Composite(
+                                  new qx.ui.layout.HBox(10)
+                              );
+
+                        const ghostColorLabel =
+                              new qx.ui.basic.Label(
+                                  t('ghostColor')
+                              ).set({
+                                  width: 90,
+                                  textColor: 'white'
+                              });
+
+                        this.ghostColorLabel = ghostColorLabel;
+
+                        this.ghostColorSelect =
+                            new qx.ui.form.SelectBox().set({
+                            width: 130
+                        });
+
+                        const ghostColorItems = [
+                            ['Rot', '#ff0000'],
+                            ['Blau', '#0088ff'],
+                            ['Grün', '#00cc00'],
+                            ['Gelb', '#ffff00'],
+                            ['Orange', '#ff8800'],
+                            ['Violett', '#aa00ff'],
+                            ['Cyan', '#00ffff'],
+                            ['Weiß', '#ffffff']
+                        ];
+
+                        ghostColorItems.forEach(
+                            itemData => {
+                                const item =
+                                      new qx.ui.form.ListItem(
+                                          itemData[0]
+                                      );
+
+                                item.setUserData(
+                                    'color',
+                                    itemData[1]
+                                );
+
+                                this.ghostColorSelect.add(item);
+                            }
+                        );
+
+                        const savedGhostColor =
+                              this.ghostColorSelect
+                        .getChildren()
+                        .find(
+                            item =>
+                            item.getUserData('color') ===
+                            this.ghostColor
+                        );
+
+                        this.ghostColorSelect.setSelection([
+                            savedGhostColor ||
+                            this.ghostColorSelect.getChildren()[0]
+                        ]);
+
+                        this.ghostColorSelect.addListener(
+                            'changeSelection',
+                            function () {
+                                const selection =
+                                      this.ghostColorSelect
+                                .getSelection();
+
+                                if (
+                                    selection &&
+                                    selection.length > 0
+                                ) {
+                                    this.ghostColor =
+                                        selection[0]
+                                        .getUserData('color');
+
+                                    this.saveStorage();
+                                }
+                            },
+                            this
+                        );
+
+                        ghostColorRow.add(
+                            ghostColorLabel
+                        );
+
+                        ghostColorRow.add(
+                            this.ghostColorSelect
+                        );
+
+                        this.mainWindow.add(
+                            ghostColorRow
+                        );
+
+                        this.mainWindow.add(
+
+                            languageSeparator
+
+                        );
+
                         this.mainWindow.center();
 
                         this.selectAllianceLabel =
@@ -509,7 +856,7 @@
 
                         this.buttonAddAlliance =
                             new qx.ui.form.Button(
-                            'Hinzufügen'
+                            t('addAlliance')
                         );
 
                         this.buttonAddAlliance.addListener(
@@ -663,102 +1010,6 @@
                             allianceRow
                         );
 
-                        this.languageRow =
-                            new qx.ui.container.Composite(
-                            new qx.ui.layout.HBox(10)
-                        );
-
-                        this.languageLabel =
-                            new qx.ui.basic.Label().set({
-
-                            textAlign: 'left',
-                            width: 90,
-                            rich: true,
-                            textColor: 'white',
-
-                            value: t('language')
-                        });
-
-                        this.languageSelect =
-                            new qx.ui.form.SelectBox().set({
-                            width: 130
-                        });
-
-                        const languageItems = {};
-
-                        ['de', 'en', 'fr', 'es'].forEach(
-                            lang => {
-
-                                const item =
-                                      new qx.ui.form.ListItem(
-                                          LANGUAGES[lang].name,
-                                          null,
-                                          lang
-                                      );
-
-                                languageItems[lang] = item;
-                                this.languageSelect.add(item);
-                            }
-                        );
-
-                        const currentLanguage = getLanguage();
-
-                        this.languageSelect.setSelection([
-                            languageItems[currentLanguage]
-                        ]);
-
-                        this.languageSelect.addListener(
-                            'changeSelection',
-                            function () {
-
-                                const selection =
-                                      this.languageSelect
-                                .getSelection();
-
-                                if (
-                                    selection &&
-                                    selection.length > 0
-                                ) {
-
-                                    setLanguage(
-                                        selection[0].getModel()
-                                    );
-                                }
-                            },
-                            this
-                        );
-
-                        this.languageRow.add(
-                            this.languageLabel
-                        );
-
-                        this.languageRow.add(
-                            this.languageSelect
-                        );
-
-                        this.mainWindow.add(
-                            this.languageRow
-                        );
-
-                        // ---------------------------------------------------------------
-                        // Trennlinie unter Sprache
-                        // ---------------------------------------------------------------
-
-                        const languageSeparator =
-                              new qx.ui.core.Widget().set({
-                                  height: 3,
-
-                                  decorator:
-                                  new qx.ui.decoration.Decorator().set({
-                                      color: 'white',
-                                      style: 'solid',
-                                      widthTop: 2
-                                  })
-                              });
-
-                        this.mainWindow.add(
-                            languageSeparator
-                        );
 
                         // ---------------------------------------------------------------
                         // GHOSTFINDER ÜBERSCHRIFT
@@ -1211,9 +1462,27 @@
                             );
                         }
 
+                        if (this.mainColorLabel) {
+                            this.mainColorLabel.setValue(
+                                t('mainColor')
+                            );
+                        }
+
+                        if (this.ghostColorLabel) {
+                            this.ghostColorLabel.setValue(
+                                t('ghostColor')
+                            );
+                        }
+
                         if (this.buttonShowMain) {
                             this.buttonShowMain.setLabel(
                                 t('showMain')
+                            );
+                        }
+
+                        if (this.buttonAddAlliance) {
+                            this.buttonAddAlliance.setLabel(
+                                t('addAlliance')
                             );
                         }
 
@@ -1282,6 +1551,104 @@
                                 ]);
                             }
                         }
+
+                        if (this.mainColorSelect) {
+
+                            const selectedColor =
+                                  this.mainColorSelect
+                            .getSelection()[0]
+                            ?.getUserData('color');
+
+                            this.mainColorSelect.removeAll();
+
+                            const items = [
+                                [t('colorBlue'), '#0088ff'],
+                                [t('colorRed'), '#ff0000'],
+                                [t('colorGreen'), '#00cc00'],
+                                [t('colorYellow'), '#ffff00'],
+                                [t('colorOrange'), '#ff8800'],
+                                [t('colorPurple'), '#aa00ff'],
+                                [t('colorCyan'), '#00ffff'],
+                                [t('colorWhite'), '#ffffff']
+                            ];
+
+                            let selectedItem = null;
+
+                            items.forEach(itemData => {
+
+                                const item =
+                                      new qx.ui.form.ListItem(
+                                          itemData[0]
+                                      );
+
+                                item.setUserData(
+                                    'color',
+                                    itemData[1]
+                                );
+
+                                this.mainColorSelect.add(item);
+
+                                if (itemData[1] === selectedColor) {
+                                    selectedItem = item;
+                                }
+                            });
+
+                            if (selectedItem) {
+                                this.mainColorSelect.setSelection([
+                                    selectedItem
+                                ]);
+                            }
+                        }
+
+
+                        if (this.ghostColorSelect) {
+
+                            const selectedColor =
+                                  this.ghostColorSelect
+                            .getSelection()[0]
+                            ?.getUserData('color');
+
+                            this.ghostColorSelect.removeAll();
+
+                            const items = [
+                                [t('colorRed'), '#ff0000'],
+                                [t('colorBlue'), '#0088ff'],
+                                [t('colorGreen'), '#00cc00'],
+                                [t('colorYellow'), '#ffff00'],
+                                [t('colorOrange'), '#ff8800'],
+                                [t('colorPurple'), '#aa00ff'],
+                                [t('colorCyan'), '#00ffff'],
+                                [t('colorWhite'), '#ffffff']
+                            ];
+
+                            let selectedItem = null;
+
+                            items.forEach(itemData => {
+
+                                const item =
+                                      new qx.ui.form.ListItem(
+                                          itemData[0]
+                                      );
+
+                                item.setUserData(
+                                    'color',
+                                    itemData[1]
+                                );
+
+                                this.ghostColorSelect.add(item);
+
+                                if (itemData[1] === selectedColor) {
+                                    selectedItem = item;
+                                }
+                            });
+
+                            if (selectedItem) {
+                                this.ghostColorSelect.setSelection([
+                                    selectedItem
+                                ]);
+                            }
+                        }
+
 
                         if (this.ghostFilterSelect) {
 
@@ -2122,6 +2489,13 @@
 
                         try {
 
+                            const ghostColor =
+                                  this.ghostColorSelect
+                            ? this.ghostColorSelect
+                            .getSelection()[0]
+                            .getUserData('color')
+                            : '#ff0000';
+
                             const ww =
                                   this.ghostRendererWorld;
 
@@ -2268,7 +2642,7 @@
                                         1;
 
                                     ctx.fillStyle =
-                                        '#ff0000';
+                                        ghostColor;
 
                                     ctx.beginPath();
 
@@ -2282,8 +2656,6 @@
 
                                     ctx.fill();
 
-                                    ctx.restore();
-                                    return;
 
                                     /*
                                          * --------------------------------------
@@ -2579,6 +2951,13 @@
 
                         try {
 
+                            const mainColor =
+                                  this.mainColorSelect
+                            ? this.mainColorSelect
+                            .getSelection()[0]
+                            .getUserData('color')
+                            : '#0088ff';
+
                             const ww =
                                   this.ghostRendererWorld;
 
@@ -2708,7 +3087,7 @@
                                         0.55;
 
                                     ctx.fillStyle =
-                                        '#0088ff';
+                                        mainColor;
 
                                     ctx.beginPath();
 
@@ -3857,6 +4236,14 @@
                             .get_Server()
                             .get_WorldId()}`
                                 ] || [];
+
+                        this.mainColor =
+                            storage.mainColor ||
+                            '#0088ff';
+
+                        this.ghostColor =
+                            storage.ghostColor ||
+                            '#ff0000';
                     },
 
                     saveStorage:
@@ -3876,6 +4263,14 @@
                             .get_WorldId()}`
                             ] =
                             this.favorites;
+
+                        storage.mainColor =
+                            this.mainColor ||
+                            '#0088ff';
+
+                        storage.ghostColor =
+                            this.ghostColor ||
+                            '#ff0000';
 
                         localStorage.setItem(
                             storageKey,
