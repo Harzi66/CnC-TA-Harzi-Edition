@@ -25,6 +25,12 @@ Zeigt auf der Hauptseite bei den Basen an wie lange der Cooldown noch besteht
 
 ---
 
+# MaelstromTools Dev (Modv1.7 for MCV)
+
+Zeigt umfangreiche Statistiken über Produktion, Armee & Verteidigung
+
+---
+
 # Shockr - Tiberium Alliances Tools
 
 Sammlung von wichtigen Scripts, wie Basescanner, Produktionsübersichten usw. 
