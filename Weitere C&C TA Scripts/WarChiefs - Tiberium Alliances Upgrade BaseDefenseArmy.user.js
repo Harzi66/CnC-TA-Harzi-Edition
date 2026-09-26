@@ -5,6 +5,8 @@
 // @version         2017.06.06
 // @namespace       https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @include         https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
+// @updateURL       https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/WarChiefs%20-%20Tiberium%20Alliances%20Upgrade%20BaseDefenseArmy.user.js
+// @downloadURL     https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/WarChiefs%20-%20Tiberium%20Alliances%20Upgrade%20BaseDefenseArmy.user.js
 // @icon            http://eistee82.github.io/ta_simv2/icon.png
 // ==/UserScript==
 /**
