@@ -1,10 +1,12 @@
 // ==UserScript==
-// @name Tiberium Alliances Attack Range
-// @description Helps to see what bases come in attack range when you select to "move base".The bases in range will become highlighted... Forgotten bases in green colour and player bases in orange colour
-// @namespace TAAT
-// @include     https://cncapp*.alliances.commandandconquer.com/*/index.aspx*
-// @version 2.31
-// @author Napali, XDaast
+// @name           Tiberium Alliances Attack Range
+// @description    Helps to see what bases come in attack range when you select to "move base".The bases in range will become highlighted... Forgotten bases in green colour and player bases in orange colour
+// @namespace      TAAT
+// @include        https://cncapp*.alliances.commandandconquer.com/*/index.aspx*
+// @version        2.31
+// @author         Napali, XDaast
+// @updateURL      https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/TA_Attack_Range.user.js
+// @downloadURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/TA_Attack_Range.user.js
 // @contributor    NetquiK (https://github.com/netquik) 20.2 FIX
 // ==/UserScript==
 (function () {
