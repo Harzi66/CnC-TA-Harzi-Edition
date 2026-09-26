@@ -8,6 +8,7 @@
 // @namespace      https://*.alliances.commandandconquer.com/*/index.aspx*
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
 // @updateURL      https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/master/TA_MaelstromTools_Dev_Mod_MCV.user.js
+// @downloadURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/MaelstromTools%20Dev%20%28Modv1.7%20for%20MCV%29.user.js
 // @grant none
 // ==/UserScript==
 //var offense_units = own_city.get_CityArmyFormationsManager().GetFormationByTargetBaseId(current_city.get_Id()).get_ArmyUnits().l;
