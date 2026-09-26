@@ -7,6 +7,8 @@
 // @grant           unsafeWindow
 // @version         4.5.3.6
 // @icon            https://shockr.dev/favicon.0012b310.png
+// @updateURL       https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/Shockr%20-%20Tiberium%20Alliances%20Tools.user.js
+// @downloadURL     https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/Shockr%20-%20Tiberium%20Alliances%20Tools.user.js
 // @versionHash     77260e3
 // ==/UserScript==
 
