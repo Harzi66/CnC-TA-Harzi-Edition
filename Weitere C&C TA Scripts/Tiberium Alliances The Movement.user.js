@@ -9,6 +9,8 @@
 // @contributor    Netquik (19.3||19.4||20.3||22.2||22.3 FIX) + !!NOEVIL!!
 // @description    Strategical territory simulator
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
+// @downloadURL  https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/Tiberium%20Alliances%20The%20Movement.user.js
+// @updateURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/Tiberium%20Alliances%20The%20Movement.user.js
 // ==/UserScript==
 'use strict';
 (function () {
