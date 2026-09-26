@@ -6,6 +6,7 @@
 // @match        https://*.alliances.commandandconquer.com/*/index.aspx*
 // @author       NetquiK (https://github.com/netquik) (see first comments for changelog) (original author unicode)
 // @updateURL    https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/master/TA_Info_Sticker.user.js
+// @downloadURL  https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/TA_Info_Sticker.user.js
 // ==/UserScript==
 /* 
 codes by NetquiK
