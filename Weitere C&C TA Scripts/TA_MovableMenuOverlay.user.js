@@ -5,6 +5,7 @@
 // @version         1.0.9
 // @namespace       https://cncapp*.alliances.commandandconquer.com/*/index.aspx*
 // @match           https://*.alliances.commandandconquer.com/*/index.aspx*
+// @downloadURL     https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/TA_MovableMenuOverlay.user.js
 // @updateURL       https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/master/TA_MovableMenuOverlay.user.js
 // ==/UserScript==
 /**
