@@ -7,6 +7,7 @@
 // @author      White X Dragon / Debitosphere / NetquiK
 // @author      Der_Flake
 // @contributor NetquiK (https://github.com/netquik) - (see first comments for changelog), Ch-ats
+// @downloadURL https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/TA_ADDON_City_Online_Status_Colorer_SC.user.js
 // @updateURL   https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/master/TA_ADDON_City_Online_Status_Colorer_SC.user.js
 // ==/UserScript==
 
