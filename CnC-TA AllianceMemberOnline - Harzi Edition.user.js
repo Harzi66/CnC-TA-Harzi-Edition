@@ -2,7 +2,7 @@
 // @name        AllianceMemberOnline - HE
 // @namespace   AllianceMemberOnline - HE
 // @description Gives an overview of all online alliance members sorted by their member state.
-// @version     0.1.10
+// @version     0.1.11
 // @author      f@nTisi & Harzi
 // @description Original by ffi82, further developed by Harzi66
 // @include     http*://*.alliances.commandandconquer.com/*
@@ -18,8 +18,12 @@
 // @updateURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
 // ==/UserScript==
 
+
 // Changelog Harzi Edition
 //
+//  0.1.11
+// - Menüeintrag über die native ScriptsButton.Add()-Funktion
+
 //  0.1.10
 // - Neu
 // - Aufruf über die Scriptschnitstelle im Kopf des Browsergames
@@ -50,74 +54,6 @@
 
         };
         // ============================================================
-        // Suche die vorhandene "Skripte"-Schaltfläche
-        // ============================================================
-
-        function findScriptsButton(widget) {
-
-            if (!widget) {
-                return null;
-            }
-
-            try {
-
-                if (typeof widget.getLabel === "function") {
-
-                    var label = widget.getLabel();
-
-                    if (
-                        label &&
-                        (
-                            label.toLowerCase() === "skripte" ||
-                            label.toLowerCase() === "scripts"
-                        )
-                    ) {
-                        return widget;
-                    }
-                }
-
-                if (typeof widget.getValue === "function") {
-
-                    var value = widget.getValue();
-
-                    if (
-                        value &&
-                        (
-                            value.toLowerCase() === "skripte" ||
-                            value.toLowerCase() === "scripts"
-                        )
-                    ) {
-                        return widget;
-                    }
-                }
-
-                if (typeof widget.getChildren === "function") {
-
-                    var children = widget.getChildren();
-
-                    for (var i = 0; i < children.length; i++) {
-
-                        var result = findScriptsButton(children[i]);
-
-                        if (result) {
-                            return result;
-                        }
-                    }
-                }
-
-            } catch (e) {
-
-                console.log(
-                    "AllianceMemberOnline: Fehler bei Suche nach Skripte-Button:",
-                    e
-                );
-            }
-
-            return null;
-        }
-
-
-        // ============================================================
         // AllianceMemberOnline Menüeintrag hinzufügen
         // ============================================================
 
@@ -125,86 +61,47 @@
 
             try {
 
-                var app = qx.core.Init.getApplication();
-
-                if (!app) {
-                    return false;
-                }
-
-                var desktop = app.getDesktop();
-
-                if (!desktop) {
-                    return false;
-                }
-
-                var scriptsButton = findScriptsButton(desktop);
+                var scriptsButton =
+                    qx.core.Init
+                        .getApplication()
+                        .getMenuBar()
+                        .getScriptsButton();
 
                 if (!scriptsButton) {
-
                     console.log(
-                        "AllianceMemberOnline: Skripte-Button noch nicht gefunden."
+                        "AllianceMemberOnline: Skripte-Button nicht gefunden."
                     );
-
                     return false;
                 }
 
-                if (typeof scriptsButton.getMenu !== "function") {
-
-                    console.log(
-                        "AllianceMemberOnline: Der Skripte-Button besitzt kein getMenu()."
-                    );
-
-                    return false;
-                }
-
-                var menu = scriptsButton.getMenu();
-
-                if (!menu) {
-
-                    console.log(
-                        "AllianceMemberOnline: Skripte-Button besitzt momentan kein Menü."
-                    );
-
-                    return false;
-                }
-
-
-                // ----------------------------------------------------
-                // Verhindern, dass der Eintrag doppelt angelegt wird
-                // ----------------------------------------------------
-
-                var menuChildren = menu.getChildren();
-
-                for (var i = 0; i < menuChildren.length; i++) {
-
-                    var child = menuChildren[i];
-
-                    if (
-                        typeof child.getLabel === "function" &&
-                        child.getLabel() === "AllianceMemberOnline"
-                    ) {
-
-                        return true;
-                    }
-                }
-
-
-                // ----------------------------------------------------
-                // Menüeintrag erzeugen
-                // ----------------------------------------------------
+                // Native Spiel-Schnittstelle verwenden.
+                // Dadurch wird das Skripte-Menü bei Bedarf korrekt initialisiert.
+                scriptsButton.Add(
+                    "AllianceMemberOnline"
+                );
 
                 var menuItem =
-                    new qx.ui.menu.Button("AllianceMemberOnline");
+                    scriptsButton
+                        .getMenu()
+                        .getChildren()
+                        .find(
+                            function(item) {
+                                return item.getLabel() ===
+                                    "AllianceMemberOnline";
+                            }
+                        );
+
+                if (!menuItem) {
+                    console.error(
+                        "AllianceMemberOnline: Nativer Menüeintrag konnte nicht ermittelt werden"
+                    );
+                    return false;
+                }
 
                 menuItem.set({
                     toolTipText:
                     "Online-Mitglieder der Allianz anzeigen"
                 });
-
-
-                // ----------------------------------------------------
-                // Klick auf Menüeintrag
-                // ----------------------------------------------------
 
                 menuItem.addListener(
                     "execute",
@@ -216,49 +113,37 @@
                                 AllianceMemberOnline.Window.getInstance();
 
                             if (window.isVisible()) {
-
                                 console.log(
                                     "AllianceMemberOnline: Fenster schließen"
                                 );
-
                                 window.close();
-
                             } else {
-
                                 console.log(
                                     "AllianceMemberOnline: Fenster öffnen"
                                 );
-
                                 window.open();
                             }
 
                         } catch (e) {
-
                             console.log(
                                 "AllianceMemberOnline: Fehler beim Öffnen:",
                                 e
                             );
                         }
-
                     }
                 );
 
-
-                menu.add(menuItem);
-
                 console.log(
-                    "AllianceMemberOnline: Menüeintrag erfolgreich hinzugefügt."
+                    "AllianceMemberOnline: Menüeintrag erfolgreich über die native ScriptsButton.Add()-Funktion hinzugefügt."
                 );
 
                 return true;
 
             } catch (e) {
-
                 console.log(
                     "AllianceMemberOnline: Fehler beim Hinzufügen zum Skripte-Menü:",
                     e
                 );
-
                 return false;
             }
         }
