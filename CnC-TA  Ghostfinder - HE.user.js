@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ghostfinder - HE
 // @namespace    https://github.com/Harzi66/CnC-TA-Harzi-Edition
-// @version      2.0.0
+// @version      2.0.1
 // @description  Weiterentwicklung des CnCTA Base Finder mit eigenem Geisterbasen-Renderer.
 // @author       Harzi
 // @contributor  bloofi
@@ -11,6 +11,9 @@
 // @updateURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Ghostfinder-HE/main/CnC-TA-Ghostfinder-HE.user.js
 // @grant        none
 // ==/UserScript==
+
+// Änderungen in 2.0.1
+// - Menüeintrag über die native ScriptsButton.Add()-Funktion
 
 // Änderungen in 2.0.0
 // - Übernahme von bis zu 3 Allianzen zur Suche
@@ -335,22 +338,38 @@
                         ghostfinderMainInstance = this;
 
                         this.installGhostRendererHook();
+                        const scriptsButton =
+                            qx.core.Init
+                                .getApplication()
+                                .getMenuBar()
+                                .getScriptsButton();
+
+                        scriptsButton.Add(
+                            'Ghostfinder - HE'
+                        );
 
                         const button =
-                              new qx.ui.menu.Button('Ghostfinder - HE');
+                            scriptsButton
+                                .getMenu()
+                                .getChildren()
+                                .find(
+                                    item =>
+                                        item.getLabel() ===
+                                        'Ghostfinder - HE'
+                                );
+
+                        if (!button) {
+                            console.error(
+                                'Ghostfinder - HE: Nativer Menüeintrag konnte nicht ermittelt werden'
+                            );
+                            return;
+                        }
 
                         button.addListener(
                             'execute',
                             this.onOpenMainWindow,
                             this
                         );
-
-                        qx.core.Init
-                            .getApplication()
-                            .getMenuBar()
-                            .getScriptsButton()
-                            .getMenu()
-                            .add(button);
                     },
 
                     //////////////////////////////////////////////////////////////////
