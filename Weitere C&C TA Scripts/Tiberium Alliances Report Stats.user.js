@@ -6,8 +6,8 @@
 // @contributor    leo7044 (https://github.com/leo7044)
 // @contributor    AlkalyneD4 (https://github.com/SebHeuze)
 // @contributor    NetquiK (https://github.com/netquik) (see first comments for changelog)
-// @downloadURL    https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/master/TA_Report_Stats.user.js
-// @updateURL      https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/master/TA_Report_Stats.user.js
+// @downloadURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/Tiberium%20Alliances%20Report%20Stats.user.js
+// @updateURL      https://github.com/Harzi66/CnC-TA-Harzi-Edition/raw/refs/heads/main/Weitere%20C%26C%20TA%20Scripts/Tiberium%20Alliances%20Report%20Stats.user.js
 // @description    Calculates combined RT and CP costs and loot of multiple combat reports
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
 // ==/UserScript==
