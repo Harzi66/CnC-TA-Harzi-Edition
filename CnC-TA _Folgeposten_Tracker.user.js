@@ -246,30 +246,34 @@
 
 
         // --------------------------------------------------------
-        // Hauptbasis bestimmen
+        // Bezugsbasis bestimmen
         // --------------------------------------------------------
 
-        getMainCity() {
+        getSelectedCity() {
 
             const cities =
                   ClientLib.Data.MainData
             .GetInstance()
-            .get_Cities()
-            .get_AllCities();
+            .get_Cities();
 
-            let mainCity = null;
-
-            for (const city of Object.values(cities.d)) {
-
-                if (
-                    mainCity === null ||
-                    mainCity.get_LvlOffense() < city.get_LvlOffense()
-                ) {
-                    mainCity = city;
-                }
+            if (!cities ||
+                typeof cities.get_CurrentOwnCity !== 'function') {
+                return null;
             }
 
-            return mainCity;
+            const selectedCity =
+                  cities.get_CurrentOwnCity();
+
+            if (selectedCity == null) {
+                return null;
+            }
+
+            // Nur eigene Basen mit einer gültigen Offensivstufe verwenden
+            if (typeof selectedCity.get_LvlOffense !== 'function') {
+                return null;
+            }
+
+            return selectedCity;
         }
 
 
@@ -277,12 +281,12 @@
         // Folgeposten suchen
         // --------------------------------------------------------
 
-        getNearbyCamps(mainCity) {
+        getNearbyCamps(selectedCity) {
 
             const result = [];
 
-            const cityX = mainCity.get_PosX();
-            const cityY = mainCity.get_PosY();
+            const cityX = selectedCity.get_PosX();
+            const cityY = selectedCity.get_PosY();
 
             const maxDistance =
                   ClientLib.Data.MainData
@@ -296,7 +300,7 @@
             .get_World();
 
             const minimumLevel =
-                  mainCity.get_LvlOffense() +
+                  selectedCity.get_LvlOffense() +
                   SETTINGS.offenseDifference;
 
             const minX = Math.floor(cityX - maxDistance);
@@ -447,15 +451,15 @@
 
         doUpdate() {
 
-            const mainCity = this.getMainCity();
+            const selectedCity = this.getSelectedCity();
 
-            if (mainCity == null) {
+            if (selectedCity == null) {
                 return;
             }
 
 
             let camps =
-                this.getNearbyCamps(mainCity);
+                this.getNearbyCamps(selectedCity);
 
 
             // Genau wie im Original:
