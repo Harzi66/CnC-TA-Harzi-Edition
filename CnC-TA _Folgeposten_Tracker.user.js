@@ -8,6 +8,8 @@
 // @original-source    https://github.com/leo7044/CnC_TA
 // @contributor        Harzi – Anpassung und Weiterentwicklung
 // @match              https://*.alliances.commandandconquer.com/*/index.aspx*
+// @downloadURL        https://raw.githubusercontent.com/Harzi66/CnC-TA-Folgeposten-Tracker/main/CnC-TA_Folgeposten_Tracker.user.js
+// @updateURL          https://raw.githubusercontent.com/Harzi66/CnC-TA-Folgeposten-Tracker/main/CnC-TA_Folgeposten_Tracker.user.js
 // @grant              none
 // ==/UserScript==
 
