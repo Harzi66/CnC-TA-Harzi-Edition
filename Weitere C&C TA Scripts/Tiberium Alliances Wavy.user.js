@@ -4,6 +4,8 @@
 // @namespace      https://openuserjs.org/users/petui
 // @license        GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html
 // @author         petui
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/Tiberium%20Alliances%20Wavy.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/Tiberium%20Alliances%20Wavy.user.js
 // @contributor    NetquiK (https://github.com/netquik) Distance FIX | 22.3 FIX
 // @contributor    leo7044 (https://github.com/leo7044) Distance-Fix
 // @description    Displays details about forgotten attack wave zones.
