@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               CnC-TA Folgeposten Tracker
 // @namespace          Harzi
-// @version            0.1.0
+// @version            0.1.1
 // @description        Markiert die 10 neuesten Folgeposten/Camps auf der Weltkarte.
 // @author             Harzi
 // @original-author    leo7044
@@ -514,22 +514,19 @@
                     ? chatCamp.level
                     : '?';
 
-                    const coordinate =
-                          `<a style="color:${webfrontend.gui.util.BBCode.clrLink}; cursor:pointer;" ` +
-                          `onClick="webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(${chatCamp.x}, ${chatCamp.y});">` +
-                          `${chatCamp.x}:${chatCamp.y}</a>`;
-
                     const levelColor = campName === 'Lager'
                     ? '#FFD700'
                     : '#00FF00';
 
                     const highlightedLevel =
-                          `<span style="color:${levelColor}; font-weight:bold;">${level}</span>`;
+                          `<a style="color:${levelColor}; font-weight:bold; cursor:pointer;" ` +
+                          `onClick="webfrontend.gui.UtilView.centerCoordinatesOnRegionViewWindow(${chatCamp.x}, ${chatCamp.y});">` +
+                          `${level}</a>`;
 
                     const message =
                           campName === 'Lager'
-                    ? `Neues Lager bei ${coordinate} Level ${highlightedLevel}`
-        : `Neuer Vorposten bei ${coordinate} Level ${highlightedLevel}`;
+                    ? `Neues Lager Level ${highlightedLevel}`
+        : `Neuer Vorposten Level ${highlightedLevel}`;
 
                     qx.core.Init
                         .getApplication()
