@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               CnC-TA Folgeposten Tracker
 // @namespace          Harzi
-// @version            0.1.1
+// @version            0.1.0
 // @description        Markiert die 10 neuesten Folgeposten/Camps auf der Weltkarte.
 // @author             Harzi
 // @original-author    leo7044
@@ -214,6 +214,7 @@
             this.markers = new Map();
             this.lastUpdatedStep = null;
             this.updatePending = false;
+            this.lastSelectedCityId = null;
 
             this.firstUpdate = true;
         }
@@ -430,12 +431,37 @@
             const serverStep =
                   time.GetServerStep();
 
+            const selectedCity =
+                  this.getSelectedCity();
 
-            if (serverStep === this.lastUpdatedStep) {
+            if (selectedCity == null) {
+                return;
+            }
+
+            const selectedCityId =
+                  typeof selectedCity.get_Id === 'function'
+            ? selectedCity.get_Id()
+            : null;
+
+            const cityChanged =
+                  selectedCityId !== this.lastSelectedCityId;
+
+            if (
+                serverStep === this.lastUpdatedStep &&
+                !cityChanged
+            ) {
                 return;
             }
 
             this.lastUpdatedStep = serverStep;
+            this.lastSelectedCityId = selectedCityId;
+
+            // Bei einem Wechsel der eigenen Off
+            // die Chatmeldung für die neue Umgebung neu beginnen.
+            if (cityChanged) {
+                this.firstUpdate = true;
+            }
+
             this.updatePending = true;
 
 
