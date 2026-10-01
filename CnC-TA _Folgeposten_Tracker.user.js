@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               CnC-TA Folgeposten Tracker
 // @namespace          Harzi
-// @version            0.1.0
+// @version            0.1.2
 // @description        Markiert die 10 neuesten Folgeposten/Camps auf der Weltkarte.
 // @author             Harzi
 // @original-author    leo7044
