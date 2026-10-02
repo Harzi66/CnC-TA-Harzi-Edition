@@ -2,7 +2,7 @@
 // @name        AllianceMemberOnline - HE
 // @namespace   AllianceMemberOnline - HE
 // @description Gives an overview of all online alliance members sorted by their member state.
-// @version     0.1.11
+// @version     0.1.12
 // @author      f@nTisi & Harzi
 // @description Original by ffi82, further developed by Harzi66
 // @include     http*://*.alliances.commandandconquer.com/*
@@ -14,8 +14,8 @@
 // @grant       GM_updatingEnabled
 // @grant       unsafeWindow
 // @grant       metadata
-// @downloadURL  https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
-// @updateURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/CnC-TA%20AllianceMemberOnline%20-%20Harzi%20Edition.user.js
+// @downloadURL  https://raw.githubusercontent.com/Harzi66/Alliance_Member_Online-Harzi_Edition/main/AllianceMemberOnline%20-%20HE.user.js
+// @updateURL    https://raw.githubusercontent.com/Harzi66/Alliance_Member_Online-Harzi_Edition/main/AllianceMemberOnline%20-%20HE.user.js
 // ==/UserScript==
 
 
