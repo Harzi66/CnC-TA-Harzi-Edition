@@ -1,3 +1,11 @@
+# C&C Tiberium Alliances PvP/PvE Ranking, POI Holding and split base kill score
+
+Erweitert das Spielerfenster um PvP-/PvE-Ranking, gehaltene POIs, Allianz-POIs und Base-Level-Informationen. Die gepflegte Version **1.7.4** enthält außerdem einen Chrome-Kompatibilitätsfix für das PlayerInfoWindow.
+
+**[📖 Detaillierte README zum Script](C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score%20README.md)** · **[⬇️ Script installieren](https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.user.js)**
+
+---
+
 Hier stehen weitere C&C TA Scripts von anderen Entwicklern
 
 
