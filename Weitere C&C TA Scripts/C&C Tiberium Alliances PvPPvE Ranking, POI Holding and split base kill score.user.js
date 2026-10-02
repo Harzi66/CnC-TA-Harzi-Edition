@@ -6,7 +6,7 @@
 // @include        https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @grant          none
 // @version        1.7.4
-// @homepageURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/tree/main/Weitere%20C%26C%20TA%20Scripts
+// @homepageURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/blob/main/Weitere%20C%26C%20TA%20Scripts/C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score%20README.md
 // @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.user.js
 // @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.user.js
 // ==/UserScript==
