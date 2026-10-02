@@ -1,16 +1,17 @@
 // ==UserScript==
 // @name           C&C Tiberium Alliances PvP/PvE Ranking, POI Holding and split base kill score.
 // @author         ViolentVin, KRS_L, YiannisS
-// @description    Shows PvP/PvE Ranking of the players alliance in the PlayerWindow, also adds POIs the Player holds and splits pve/pvp score. 
+// @description    Shows PvP/PvE Ranking in the PlayerWindow, adds held POIs and base levels, and splits PvP/PvE score. Includes a Chrome compatibility fix for the PlayerInfoWindow.
 // @namespace      pvp_rank_mod
 // @include        https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
 // @grant          none
 // @version        1.7.4
-// @downloadURL    https://update.greasyfork.org/scripts/1936/CC%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.user.js
-// @updateURL      https://update.greasyfork.org/scripts/1936/CC%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.meta.js
+// @homepageURL    https://github.com/Harzi66/CnC-TA-Harzi-Edition/tree/main/Weitere%20C%26C%20TA%20Scripts
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/C%26C%20Tiberium%20Alliances%20PvPPvE%20Ranking%2C%20POI%20Holding%20and%20split%20base%20kill%20score.user.js
 // ==/UserScript==
 
-// 1.7.4 Chrom Fix
+// 1.7.4 Chrome compatibility fix by Harzi
 
 (function () {
     var PvpRankMod_main = function () {
