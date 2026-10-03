@@ -5,9 +5,12 @@
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
-// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/CnC-TA-Building_%26_Off-Saver-HE.user.js
-// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/CnC-TA-Building_%26_Off-Saver-HE.user.js
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver-HE.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver-HE.user.js
 // ==/UserScript==
+
+// Version 1.2.2
+// Moving Fix
 
 (function () {
 
