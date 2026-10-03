@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ghostfinder - HE
 // @namespace    https://github.com/Harzi66/CnC-TA-Harzi-Edition
-// @version      2.0.1
+// @version      2.0.5
 // @description  Weiterentwicklung des CnCTA Base Finder mit eigenem Geisterbasen-Renderer.
 // @author       Harzi
 // @contributor  bloofi
@@ -12,12 +12,9 @@
 // @grant        none
 // ==/UserScript==
 
-// Änderungen in 2.0.1
-// - Menüeintrag über die native ScriptsButton.Add()-Funktion
 
-// Änderungen in 2.0.0
-// - Übernahme von bis zu 3 Allianzen zur Suche
-// - Frei wählbare Anzeigefarben für Ghost und Main Basen
+// Änderungen in 2.0.5
+// - Umstellung auf HTML-DOM-Methode
 
 /*
  * Ghostfinder - HE
@@ -33,7 +30,7 @@
  *
  * Eigene Weiterentwicklung:
  * - eigener Ghost-Renderer
- * - VKVAYK / C&C-TA-Renderbaum
+ * - HTML-DOM-Methode
  * - transparente rote Ghost-Kreise
  * - mehrere Ghosts gleichzeitig
  * - Basisname und Besitzer als Beschriftung
@@ -339,24 +336,24 @@
 
                         this.installGhostRendererHook();
                         const scriptsButton =
-                            qx.core.Init
-                                .getApplication()
-                                .getMenuBar()
-                                .getScriptsButton();
+                              qx.core.Init
+                        .getApplication()
+                        .getMenuBar()
+                        .getScriptsButton();
 
                         scriptsButton.Add(
                             'Ghostfinder - HE'
                         );
 
                         const button =
-                            scriptsButton
-                                .getMenu()
-                                .getChildren()
-                                .find(
-                                    item =>
-                                        item.getLabel() ===
-                                        'Ghostfinder - HE'
-                                );
+                              scriptsButton
+                        .getMenu()
+                        .getChildren()
+                        .find(
+                            item =>
+                            item.getLabel() ===
+                            'Ghostfinder - HE'
+                        );
 
                         if (!button) {
                             console.error(
@@ -377,98 +374,29 @@
                     //////////////////////////////////////////////////////////////////
 
                     installGhostRendererHook: function () {
-
                         const self = this;
 
                         function hook() {
-
-                            if (
-                                typeof $I === 'undefined' ||
-                                !$I.YDBEUZ ||
-                                !$I.YDBEUZ.prototype ||
-                                !$I.YDBEUZ.prototype.UYOMZT
-                            ) {
-
+                            if (typeof $I === 'undefined' || !$I.BCBWRF) {
                                 setTimeout(hook, 1000);
                                 return;
                             }
 
-                            if (
-                                $I.YDBEUZ.prototype
-                                .__GhostfinderHookInstalled
-                            ) {
+                            const manager = $I.BCBWRF.GetInstance();
+                            const world = manager && manager.get_World();
+
+                            if (!world) {
+                                setTimeout(hook, 1000);
                                 return;
                             }
 
-                            $I.YDBEUZ.prototype
-                                .__GhostfinderHookInstalled = true;
-
-                            const original =
-                                  $I.YDBEUZ.prototype.UYOMZT;
-
-                            $I.YDBEUZ.prototype.UYOMZT =
-                                function (n, t, i, r, u) {
-
-                                const result =
-                                      original.apply(
-                                          this,
-                                          arguments
-                                      );
-
-                                try {
-
-                                    if (
-                                        t &&
-                                        t.l === 2400 &&
-                                        t.ec === 3 &&
-                                        t.w === 120 &&
-                                        t.h === 120 &&
-                                        t.e &&
-                                        t.e.length === 3 &&
-                                        t.e[0] &&
-                                        t.e[0].s ===
-                                        'battleview/nod/gui/selectedbase/base_fx.png'
-                                    ) {
-
-                                        const ghost =
-                                              this.JNGHTC;
-
-                                        if (
-                                            ghost &&
-                                            ghost.GLCMWM &&
-                                            ghost.GLCMWM.PUPNDM
-                                        ) {
-
-                                            self.ghostRendererRoot =
-                                                ghost.GLCMWM;
-
-                                            self.ghostRendererWorld =
-                                                ghost.GLCMWM.PUPNDM;
-
-                                            self.ghostRendererReady =
-                                                true;
-
-                                            console.log(
-                                                '%c[Ghostfinder] Ghost-Renderer bereit',
-                                                'color:lime;font-weight:bold'
-                                            );
-                                        }
-                                    }
-
-                                } catch (e) {
-
-                                    console.error(
-                                        '[Ghostfinder] Renderer-Hook Fehler:',
-                                        e
-                                    );
-                                }
-
-                                return result;
-                            };
+                            self.ghostRendererWorld = world;
+                            self.ghostRendererRoot = world.CZSFRF;
+                            self.ghostRendererReady = true;
 
                             console.log(
-                                '%c[Ghostfinder] Renderer-Hook installiert',
-                                'color:cyan;font-weight:bold'
+                                '%c[Ghostfinder] Neuer Weltkarten-Renderer bereit',
+                                'color:lime;font-weight:bold'
                             );
                         }
 
@@ -2324,6 +2252,7 @@
                         ? selection.getUserData('ghostFilter')
                         : 'all';
 
+
                         const isGhostAndValid =
                               b =>
                         b &&
@@ -2332,7 +2261,43 @@
                               typeof b.x === 'number' &&
                               typeof b.y === 'number';
 
+                        /* ==================================================
+                        * DIAGNOSE: RUINEN / GHOST-STATUS
+                        * ================================================== */
+
+                        Object.values(this.bases).forEach(b => {
+
+                            if (
+                                b &&
+                                (
+                                    b.n === 'odin' ||
+                                    b.n === 'Odin' ||
+                                    b.n === 'HQ2' ||
+                                    b.n === 'CB7'
+                                )
+                            ) {
+
+                                console.log(
+                                    '%c[Ghostfinder RUIN-DIAG]',
+                                    'color:#ff00ff;font-weight:bold',
+                                    {
+                                        id: b.i,
+                                        name: b.n,
+                                        x: b.x,
+                                        y: b.y,
+                                        g: b.g,
+                                        isFetched: b.isFetched,
+                                        isMain: b.isMain,
+                                        player: b.pn,
+                                        fullData: b
+                                    }
+                                );
+                            }
+                        });
+
                         // Alle schwebenden Basen: bestehendes Verhalten.
+
+
                         if (mode === 'all') {
 
                             return Object.values(
@@ -2508,6 +2473,11 @@
 
                         try {
 
+                            /* ==================================================
+         * GHOST-MARKER ALS HTML-DIV
+         * Gleiche Technik wie beim Folgeposten-Tracker
+         * ================================================== */
+
                             const ghostColor =
                                   this.ghostColorSelect
                             ? this.ghostColorSelect
@@ -2515,434 +2485,460 @@
                             .getUserData('color')
                             : '#ff0000';
 
-                            const ww =
-                                  this.ghostRendererWorld;
+                            const visMain =
+                                  ClientLib.Vis.VisMain.GetInstance();
 
-                            const uaz =
-                                  this.ghostRendererRoot;
+                            const region =
+                                  visMain.get_Region();
 
-                            if (
-                                !ww ||
-                                !uaz
-                            ) {
+                            if (!visMain || !region) {
+
+                                console.error(
+                                    '%c[Ghostfinder] Weltkarten-Region nicht verfügbar.',
+                                    'color:red;font-weight:bold'
+                                );
+
                                 return;
                             }
 
-                            const zielX =
-                                  Number(base.x);
+                            const canvas =
+                                  document.querySelector('canvas');
 
-                            const zielY =
-                                  Number(base.y);
+                            if (!canvas || !canvas.parentElement) {
 
-                            /*
-                             * Funktionierender Render-Knoten:
-                             * eine Kartenzeile unter dem Ziel.
-                             */
+                                console.error(
+                                    '%c[Ghostfinder] Karten-Canvas nicht gefunden.',
+                                    'color:red;font-weight:bold'
+                                );
 
-                            const mapX =
-                                  zielX;
+                                return;
+                            }
 
-                            const mapY =
-                                  zielY + 1;
+                            /* ==================================================
+                             * AKTUELLE WELTKARTEN-KOORDINATEN ERMITTELN
+                             * ================================================== */
 
-                            const nodeOffsetX =
-                                  65;
+                            let zielX = Number(base.x);
+                            let zielY = Number(base.y);
 
-                            const nodeOffsetY =
-                                  78;
+                            try {
 
-                            const basisX =
-                                  mapX * 128 + 3;
+                                const world =
+                                      this.ghostRendererWorld;
 
-                            const basisY =
-                                  mapY * 96 - 44;
 
-                            const nodeX =
-                                  basisX + nodeOffsetX;
+                                let worldObject = null;
 
-                            const nodeY =
-                                  basisY + nodeOffsetY;
+                                /*
+                                 * Zuerst versuchen wir die Basis direkt über
+                                 * die Weltkarten-City-Sammlung zu finden.
+                                 */
 
-                            /*
-                             * Sichtbare Position
-                             */
+                                if (
+                                    world &&
+                                    typeof world.GetCities === 'function'
+                                ) {
 
-                            const bildX =
-                                  nodeX;
+                                    const cities =
+                                          world.GetCities();
 
-                            const bildY =
-                                  nodeY - 96;
+                                    console.log(
+                                        '%c[Ghostfinder COORD]',
+                                        'color:#00ffff;font-weight:bold',
+                                        'GetCities():',
+                                        cities
+                                    );
 
-                            /*
-                             * Kreisgröße
-                             */
+                                    if (
+                                        cities &&
+                                        typeof cities.GetCity === 'function'
+                                    ) {
 
-                            const radius =
-                                  65;
+                                        worldObject =
+                                            cities.GetCity(
+                                            Number(base.i)
+                                        );
+                                    }
+                                }
 
-                            /*
-                             * Basisname
-                             */
+                                /*
+                                 * Wenn ein echtes Weltkartenobjekt gefunden wurde,
+                                 * verwenden wir dessen RawX / RawY.
+                                 */
+
+                                if (
+                                    worldObject &&
+                                    typeof worldObject.get_RawX === 'function' &&
+                                    typeof worldObject.get_RawY === 'function'
+                                ) {
+
+                                    const rawX =
+                                          Number(
+                                              worldObject.get_RawX()
+                                          );
+
+                                    const rawY =
+                                          Number(
+                                              worldObject.get_RawY()
+                                          );
+
+                                    if (
+                                        Number.isFinite(rawX) &&
+                                        Number.isFinite(rawY)
+                                    ) {
+
+                                        zielX = rawX;
+                                        zielY = rawY;
+
+                                        console.log(
+                                            '%c[Ghostfinder COORD] AKTIVE WELTKARTEN-KOORDINATEN',
+                                            'color:#00ff00;font-weight:bold',
+                                            base.n || '',
+                                            '| ID:',
+                                            base.i,
+                                            '| API:',
+                                            base.x + ':' + base.y,
+                                            '| RAW:',
+                                            zielX + ':' + zielY
+                                        );
+                                    }
+                                }
+
+                            } catch (e) {
+
+                                console.error(
+                                    '%c[Ghostfinder COORD] Fehler bei Weltkarten-Koordinaten:',
+                                    'color:red;font-weight:bold',
+                                    e
+                                );
+                            }
+
+                            if (
+                                !Number.isFinite(zielX) ||
+                                !Number.isFinite(zielY)
+                            ) {
+
+                                console.error(
+                                    '%c[Ghostfinder] Ungültige Ghost-Koordinaten:',
+                                    'color:red;font-weight:bold',
+                                    base
+                                );
+
+                                return;
+                            }
+
+                            /* ==================================================
+                             * MARKER
+                             * ================================================== */
+
+                            const element =
+                                  document.createElement('div');
+
+                            element.className =
+                                'harzi-ghostfinder-marker';
+
+                            element.style.position =
+                                'absolute';
+
+                            element.style.transform =
+                                'scale(1)';
+
+                            element.style.pointerEvents =
+                                'none';
+
+                            element.style.zIndex =
+                                '9999';
+
+                            element.style.width =
+                                '105px';
+
+                            element.style.height =
+                                '105px';
+
+                            element.style.flexShrink =
+                                '0';
+
+                            element.style.borderRadius =
+                                '50%';
+
+                            element.style.boxSizing =
+                                'border-box';
+
+                            element.style.backgroundColor =
+                                ghostColor;
+
+                            element.style.opacity =
+                                '0.75';
+
+                            element.style.border =
+                                '4px solid #ffffff';
+
+                            element.style.color =
+                                '#ffffff';
+
+                            element.style.fontFamily =
+                                'Arial, sans-serif';
+
+                            element.style.fontWeight =
+                                'bold';
+
+                            element.style.textAlign =
+                                'center';
+
+                            element.style.display =
+                                'flex';
+
+                            element.style.flexDirection =
+                                'column';
+
+                            element.style.justifyContent =
+                                'center';
+
+                            element.style.alignItems =
+                                'center';
+
+                            element.style.textShadow =
+                                '2px 2px 3px #000000';
+
+                            element.style.boxShadow =
+                                '0 0 6px rgba(0,0,0,0.9)';
+
+                            /* ==================================================
+                             * BESCHRIFTUNG
+                             * ================================================== */
 
                             const basisName =
                                   String(
                                       base.n || 'Ghost'
                                   );
 
-                            /*
-                             * Besitzer
-                             */
-
                             const ownerName =
                                   String(
                                       base.pn || 'Unbekannt'
                                   );
 
-                            /*
-                             * VKVAYK erzeugen
-                             */
+                            const nameElement =
+                                  document.createElement('div');
 
-                            const bild =
-                                  (new $I.VKVAYK).EZBPQM();
+                            nameElement.textContent =
+                                basisName;
 
-                            bild.VZOHDC =
-                                1;
+                            nameElement.style.fontSize =
+                                '17px';
 
-                            bild.PZGTBW =
-                                true;
+                            nameElement.style.lineHeight =
+                                '20px';
 
-                            bild.SJAVSW =
-                                0;
+                            nameElement.style.maxWidth =
+                                '118px';
 
-                            bild.LMKPBT =
-                                0;
+                            nameElement.style.overflow =
+                                'hidden';
 
-                            bild.EWJFML =
-                                0;
+                            nameElement.style.textOverflow =
+                                'ellipsis';
 
-                            bild.WAVWQR =
-                                bildX;
+                            nameElement.style.whiteSpace =
+                                'nowrap';
 
-                            bild.IVXFVG =
-                                bildY;
+                            const ownerElement =
+                                  document.createElement('div');
 
-                            bild.YHAABV =
-                                radius * 2;
+                            ownerElement.textContent =
+                                ownerName;
 
-                            bild.BEJVGV =
-                                radius * 2;
+                            ownerElement.style.fontSize =
+                                '13px';
 
-                            bild.IAZCLT =
-                                null;
+                            ownerElement.style.lineHeight =
+                                '17px';
 
-                            bild.GLCMWM =
-                                uaz;
+                            ownerElement.style.maxWidth =
+                                '118px';
 
-                            /*
-                             * ==================================================
-                             * RENDERING
-                             * ==================================================
-                             */
+                            ownerElement.style.overflow =
+                                'hidden';
 
-                            bild.UIYIHQ =
-                                function (ctx) {
+                            ownerElement.style.textOverflow =
+                                'ellipsis';
 
-                                try {
+                            ownerElement.style.whiteSpace =
+                                'nowrap';
 
-                                    ctx.save();
-
-                                    /*
-                                         * --------------------------------------
-                                         * ROTER KREIS
-                                         * --------------------------------------
-                                         */
-
-                                    ctx.globalAlpha =
-                                        1;
-
-                                    ctx.fillStyle =
-                                        ghostColor;
-
-                                    ctx.beginPath();
-
-                                    ctx.arc(
-                                        this.WAVWQR,
-                                        this.IVXFVG,
-                                        radius,
-                                        0,
-                                        Math.PI * 2
-                                    );
-
-                                    ctx.fill();
-
-
-                                    /*
-                                         * --------------------------------------
-                                         * BESCHRIFTUNG
-                                         * --------------------------------------
-                                         */
-
-                                    ctx.globalAlpha =
-                                        1;
-
-                                    ctx.textAlign =
-                                        'center';
-
-                                    ctx.textBaseline =
-                                        'middle';
-
-                                    /*
-                                         * Basisname
-                                         */
-
-                                    ctx.font =
-                                        'bold 14px Arial';
-
-                                    const basisWidth =
-                                          ctx.measureText(
-                                              basisName
-                                          ).width;
-
-                                    /*
-                                         * Besitzer
-                                         */
-
-                                    ctx.font =
-                                        '11px Arial';
-
-                                    const ownerWidth =
-                                          ctx.measureText(
-                                              ownerName
-                                          ).width;
-
-                                    /*
-                                         * Größte Textbreite bestimmen
-                                         */
-
-                                    const textWidth =
-                                          Math.max(
-                                              basisWidth,
-                                              ownerWidth
-                                          );
-
-                                    const paddingX =
-                                          6;
-
-                                    const paddingY =
-                                          4;
-
-                                    const boxWidth =
-                                          textWidth +
-                                          paddingX * 2;
-
-                                    const boxHeight =
-                                          34;
-
-                                    /*
-                                         * Position des Textfeldes
-                                         */
-
-                                    const textX =
-                                          this.WAVWQR;
-
-                                    const textY =
-                                          this.IVXFVG -
-                                          radius +
-                                          20;
-
-                                    /*
-                                         * Schwarzer transparenter
-                                         * Hintergrund
-                                         */
-
-                                    ctx.fillStyle =
-                                        'rgba(0,0,0,0.80)';
-
-                                    ctx.fillRect(
-                                        textX -
-                                        boxWidth / 2,
-
-                                        textY -
-                                        boxHeight / 2,
-
-                                        boxWidth,
-                                        boxHeight
-                                    );
-
-                                    /*
-                                         * --------------------------------------
-                                         * BASISNAME
-                                         * --------------------------------------
-                                         */
-
-                                    ctx.font =
-                                        'bold 14px Arial';
-
-                                    ctx.fillStyle =
-                                        '#ffffff';
-
-                                    ctx.fillText(
-                                        basisName,
-                                        textX,
-                                        textY - 7
-                                    );
-
-                                    /*
-                                         * --------------------------------------
-                                         * BESITZER
-                                         * --------------------------------------
-                                         */
-
-                                    ctx.font =
-                                        '11px Arial';
-
-                                    ctx.fillStyle =
-                                        '#dddddd';
-
-                                    ctx.fillText(
-                                        ownerName,
-                                        textX,
-                                        textY + 8
-                                    );
-
-                                    ctx.restore();
-
-                                } catch (e) {
-
-                                    console.error(
-                                        '[Ghostfinder] Kreis-/Text-Renderfehler:',
-                                        e
-                                    );
-                                }
-                            };
-
-                            /*
-                             * ==================================================
-                             * RENDER-BOUNDS
-                             * ==================================================
-                             */
-
-                            const halbX =
-                                  bild.YHAABV / 2;
-
-                            const halbY =
-                                  bild.BEJVGV / 2;
-
-                            const minX =
-                                  nodeX - halbX;
-
-                            const maxX =
-                                  nodeX + halbX;
-
-                            const minY =
-                                  nodeY - halbY;
-
-                            const maxY =
-                                  nodeY + halbY;
-
-                            ww.VYLEYP(
-                                bild,
-                                minX,
-                                minY,
-                                maxX,
-                                maxY
+                            element.appendChild(
+                                nameElement
                             );
 
-                            /*
-                             * Renderknoten merken
-                             */
+                            element.appendChild(
+                                ownerElement
+                            );
 
-                            /*
- * Den tatsächlichen Parent-Node unseres Bildes
- * suchen.
- *
- * Nicht über Koordinaten bestimmen!
- * Wir suchen exakt das von uns erzeugte Objekt.
- */
+                            /* ==================================================
+                             * POSITIONIERUNG
+                             * Genau wie im Folgeposten-Tracker
+                             * ================================================== */
 
-                            let renderNode = null;
+                            const positionMarker =
+                                  () => {
 
-                            if (
-                                ww.CNTDDB &&
-                                ww.CNTDDB.length
-                            ) {
+                                      const currentRegion =
+                                            visMain.get_Region();
 
-                                for (
-                                    let i = 0;
-                                    i < ww.CNTDDB.length;
-                                    i++
-                                ) {
+                                      if (!currentRegion) {
+                                          return;
+                                      }
 
-                                    const node =
-                                          ww.CNTDDB[i];
+                                      const gridWidth =
+                                            currentRegion.get_GridWidth();
 
-                                    if (
-                                        !node ||
-                                        !node.VVDSNU ||
-                                        !node.VVDSNU.l
-                                    ) {
-                                        continue;
-                                    }
+                                      const gridHeight =
+                                            currentRegion.get_GridHeight();
 
-                                    const liste =
-                                          node.VVDSNU.l;
-
-                                    for (
-                                        let j = 0;
-                                        j < liste.length;
-                                        j++
-                                    ) {
-
-                                        if (
-                                            liste[j] === bild
-                                        ) {
-
-                                            renderNode =
-                                                node;
-
-                                            console.log(
-                                                '%c[Ghostfinder] Parent-Node gefunden:',
-                                                'color:lime;font-weight:bold',
-                                                'CNTDDB[' + i + ']'
+                                      const top =
+                                            visMain.ScreenPosFromWorldPosY(
+                                                (zielY + 0.1) * gridHeight
                                             );
 
-                                            break;
-                                        }
-                                    }
+                                      const left =
+                                            visMain.ScreenPosFromWorldPosX(
+                                                (zielX + 0.1) * gridWidth
+                                            );
 
-                                    if (renderNode) {
-                                        break;
-                                    }
-                                }
-                            }
+                                      const bottom =
+                                            currentRegion.get_ViewHeight();
 
-                            if (!renderNode) {
+                                      const right =
+                                            currentRegion.get_ViewWidth();
 
-                                console.warn(
-                                    '%c[Ghostfinder] Parent-Node NICHT gefunden:',
-                                    'color:orange;font-weight:bold',
-                                    base.n
-                                );
-                            }
+                                      /* Außerhalb der Karte */
 
-                            /*
-                             * Marker speichern
-                             */
+                                      if (
+                                          top < -150 ||
+                                          left < -150 ||
+                                          top > bottom + 150 ||
+                                          left > right + 150
+                                      ) {
+
+                                          element.style.display =
+                                              'none';
+
+                                          return;
+                                      }
+
+                                      element.style.display =
+                                          'flex';
+
+                                      /* ==================================================
+                                       * ZOOMABHÄNGIGE POSITIONSKORREKTUR
+                                       * Bei Zoom 1.0 = keine Korrektur
+                                       * ================================================== */
+
+                                      const zoomFactor =
+                                            visMain.get_ZoomFactor
+                                      ? visMain.get_ZoomFactor()
+                                      : 1;
+
+                                      /* Je weiter herausgezoomt wird,
+                                       * desto stärker wird korrigiert.
+                                       */
+                                      const correction =
+                                            (1 - zoomFactor) * 55;
+
+                                      element.style.top =
+                                          (top - correction) + 'px';
+
+                                      element.style.left =
+                                          (left - correction) + 'px';
+
+                                      /* ==================================================
+                                       * ZOOMABHÄNGIGE MARKERGRÖSSE
+                                       * ================================================== */
+
+                                      const zoomScale =
+                                            Math.max(
+                                                0.25,
+                                                Math.min(
+                                                    1,
+                                                    visMain.get_ZoomFactor
+                                                    ? visMain.get_ZoomFactor()
+                                                    : 1
+                                                )
+                                            );
+
+                                      element.style.transform =
+                                          'scale(' + zoomScale + ')';
+
+                                  };
+
+                            /* Erste Position */
+
+                            positionMarker();
+
+                            /* ==================================================
+                             * IN DIE KARTEN-EBENE EINHÄNGEN
+                             * ================================================== */
+
+                            canvas.parentElement.appendChild(
+                                element
+                            );
+
+                            /* ==================================================
+                             * MARKER SPEICHERN
+                             * ================================================== */
 
                             this.ghostMarkers.push({
 
                                 base:
                                 base,
 
-                                bild:
-                                bild,
+                                element:
+                                element,
 
-                                node:
-                                renderNode
+                                position:
+                                positionMarker
                             });
 
+                            /* ==================================================
+                             * EIN gemeinsamer Positions-Timer
+                             * Bei Bewegung / Zoom der Weltkarte
+                             * ================================================== */
+
+                            if (
+                                !this.ghostDomPositionTimer
+                            ) {
+
+                                this.ghostDomPositionTimer =
+                                    setInterval(
+                                    () => {
+
+                                        if (
+                                            !this.ghostMarkers ||
+                                            this.ghostMarkers.length === 0
+                                        ) {
+                                            return;
+                                        }
+
+                                        this.ghostMarkers.forEach(
+                                            marker => {
+
+                                                if (
+                                                    marker &&
+                                                    typeof marker.position ===
+                                                    'function'
+                                                ) {
+
+                                                    marker.position();
+                                                }
+                                            }
+                                        );
+
+                                    },
+                                    250
+                                );
+                            }
+
                             console.log(
-                                '%c[Ghostfinder] Ghost gesetzt:',
+                                '%c[Ghostfinder] HTML-Ghost-Marker gesetzt:',
                                 'color:lime;font-weight:bold',
                                 basisName,
                                 '|',
@@ -2954,14 +2950,13 @@
                         } catch (e) {
 
                             console.error(
-                                '%c[Ghostfinder] Ghost-Fehler:',
+                                '%c[Ghostfinder] HTML-Ghost-Fehler:',
                                 'color:red;font-weight:bold',
                                 base,
                                 e
                             );
                         }
                     },
-
                     //////////////////////////////////////////////////////////////////
                     // EINEN MAIN-MARKER SETZEN
                     //////////////////////////////////////////////////////////////////
@@ -2970,6 +2965,11 @@
 
                         try {
 
+                            /* ==================================================
+                             * MAIN-MARKER ALS HTML-DIV
+                             * Gleiche Technik wie beim funktionierenden Ghost
+                             * ================================================== */
+
                             const mainColor =
                                   this.mainColorSelect
                             ? this.mainColorSelect
@@ -2977,65 +2977,210 @@
                             .getUserData('color')
                             : '#0088ff';
 
-                            const ww =
-                                  this.ghostRendererWorld;
+                            const visMain =
+                                  ClientLib.Vis.VisMain.GetInstance();
 
-                            const uaz =
-                                  this.ghostRendererRoot;
+                            if (!visMain) {
 
-                            if (
-                                !ww ||
-                                !uaz
-                            ) {
+                                console.error(
+                                    '%c[Ghostfinder MAIN] VisMain nicht verfügbar.',
+                                    'color:red;font-weight:bold'
+                                );
+
                                 return;
                             }
 
-                            // ========================================================
-                            // IDENTISCHE POSITIONSBERECHNUNG WIE BEIM GHOST
-                            // ========================================================
+                            const region =
+                                  visMain.get_Region();
 
-                            const zielX =
-                                  Number(base.x);
+                            if (!region) {
 
-                            const zielY =
-                                  Number(base.y);
+                                console.error(
+                                    '%c[Ghostfinder MAIN] Weltkarten-Region nicht verfügbar.',
+                                    'color:red;font-weight:bold'
+                                );
 
-                            const mapX =
-                                  zielX;
+                                return;
+                            }
 
-                            const mapY =
-                                  zielY + 1;
+                            const canvas =
+                                  document.querySelector('canvas');
 
-                            const nodeOffsetX =
-                                  65;
+                            if (
+                                !canvas ||
+                                !canvas.parentElement
+                            ) {
 
-                            const nodeOffsetY =
-                                  78;
+                                console.error(
+                                    '%c[Ghostfinder MAIN] Karten-Canvas nicht gefunden.',
+                                    'color:red;font-weight:bold'
+                                );
 
-                            const basisX =
-                                  mapX * 128 + 3;
+                                return;
+                            }
 
-                            const basisY =
-                                  mapY * 96 - 44;
+                            /* ==================================================
+                             * KOORDINATEN
+                             * ================================================== */
 
-                            const nodeX =
-                                  basisX + nodeOffsetX;
+                            let zielX =
+                                Number(base.x);
 
-                            const nodeY =
-                                  basisY + nodeOffsetY;
+                            let zielY =
+                                Number(base.y);
 
-                            const bildX =
-                                  nodeX;
+                            /* ==================================================
+                             * AKTUELLE WELTKARTEN-KOORDINATEN
+                             * Genau wie beim Ghost
+                             * ================================================== */
 
-                            const bildY =
-                                  nodeY - 96;
+                            try {
 
-                            const radius =
-                                  65;
+                                const world =
+                                      this.ghostRendererWorld;
 
-                            // ========================================================
-                            // BESCHRIFTUNG
-                            // ========================================================
+                                let worldObject =
+                                    null;
+
+                                if (
+                                    world &&
+                                    typeof world.GetCities ===
+                                    'function'
+                                ) {
+
+                                    const cities =
+                                          world.GetCities();
+
+                                    if (
+                                        cities &&
+                                        typeof cities.GetCity ===
+                                        'function'
+                                    ) {
+
+                                        worldObject =
+                                            cities.GetCity(
+                                            Number(base.i)
+                                        );
+                                    }
+                                }
+
+                                if (
+                                    worldObject &&
+                                    typeof worldObject.get_RawX ===
+                                    'function' &&
+                                    typeof worldObject.get_RawY ===
+                                    'function'
+                                ) {
+
+                                    const rawX =
+                                          Number(
+                                              worldObject.get_RawX()
+                                          );
+
+                                    const rawY =
+                                          Number(
+                                              worldObject.get_RawY()
+                                          );
+
+                                    if (
+                                        Number.isFinite(rawX) &&
+                                        Number.isFinite(rawY)
+                                    ) {
+
+                                        zielX = rawX;
+                                        zielY = rawY;
+                                    }
+                                }
+
+                            } catch (e) {
+
+                                console.warn(
+                                    '%c[Ghostfinder MAIN COORD]',
+                                    'color:orange;font-weight:bold',
+                                    'Raw-Koordinaten konnten nicht gelesen werden.',
+                                    e
+                                );
+                            }
+
+                            /* ==================================================
+                             * MARKER
+                             * ================================================== */
+
+                            const element =
+                                  document.createElement('div');
+
+                            element.className =
+                                'harzi-ghostfinder-main-marker';
+
+                            element.style.position =
+                                'absolute';
+
+                            element.style.transform =
+                                'scale(1)';
+
+                            element.style.pointerEvents =
+                                'none';
+
+                            element.style.zIndex =
+                                '9998';
+
+                            element.style.width =
+                                '105px';
+
+                            element.style.height =
+                                '105px';
+
+                            element.style.flexShrink =
+                                '0';
+
+                            element.style.borderRadius =
+                                '50%';
+
+                            element.style.boxSizing =
+                                'border-box';
+
+                            element.style.backgroundColor =
+                                mainColor;
+
+                            element.style.opacity =
+                                '0.75';
+
+                            element.style.border =
+                                '4px solid #ffffff';
+
+                            element.style.color =
+                                '#ffffff';
+
+                            element.style.fontFamily =
+                                'Arial, sans-serif';
+
+                            element.style.fontWeight =
+                                'bold';
+
+                            element.style.textAlign =
+                                'center';
+
+                            element.style.display =
+                                'flex';
+
+                            element.style.flexDirection =
+                                'column';
+
+                            element.style.justifyContent =
+                                'center';
+
+                            element.style.alignItems =
+                                'center';
+
+                            element.style.textShadow =
+                                '2px 2px 3px #000000';
+
+                            element.style.boxShadow =
+                                '0 0 6px rgba(0,0,0,0.9)';
+
+                            /* ==================================================
+                             * BESCHRIFTUNG
+                             * ================================================== */
 
                             const basisName =
                                   String(
@@ -3047,299 +3192,226 @@
                                       base.pn || 'Unbekannt'
                                   );
 
-                            // ========================================================
-                            // VKVAYK ERZEUGEN
-                            // ========================================================
+                            const nameElement =
+                                  document.createElement('div');
 
-                            const bild =
-                                  (new $I.VKVAYK).EZBPQM();
+                            nameElement.textContent =
+                                basisName;
 
-                            bild.VZOHDC =
-                                1;
+                            nameElement.style.fontSize =
+                                '17px';
 
-                            bild.PZGTBW =
-                                true;
+                            nameElement.style.lineHeight =
+                                '20px';
 
-                            bild.SJAVSW =
-                                0;
+                            nameElement.style.maxWidth =
+                                '118px';
 
-                            bild.LMKPBT =
-                                0;
+                            nameElement.style.overflow =
+                                'hidden';
 
-                            bild.EWJFML =
-                                0;
+                            nameElement.style.textOverflow =
+                                'ellipsis';
 
-                            bild.WAVWQR =
-                                bildX;
+                            nameElement.style.whiteSpace =
+                                'nowrap';
 
-                            bild.IVXFVG =
-                                bildY;
+                            const ownerElement =
+                                  document.createElement('div');
 
-                            bild.YHAABV =
-                                radius * 2;
+                            ownerElement.textContent =
+                                ownerName;
 
-                            bild.BEJVGV =
-                                radius * 2;
+                            ownerElement.style.fontSize =
+                                '13px';
 
-                            bild.IAZCLT =
-                                null;
+                            ownerElement.style.lineHeight =
+                                '17px';
 
-                            bild.GLCMWM =
-                                uaz;
+                            ownerElement.style.maxWidth =
+                                '118px';
 
-                            // ========================================================
-                            // RENDERING
-                            // ========================================================
+                            ownerElement.style.overflow =
+                                'hidden';
 
-                            bild.UIYIHQ =
-                                function (ctx) {
+                            ownerElement.style.textOverflow =
+                                'ellipsis';
 
-                                try {
+                            ownerElement.style.whiteSpace =
+                                'nowrap';
 
-                                    ctx.save();
-
-                                    // ------------------------------------------------
-                                    // BLAUER KREIS
-                                    // ------------------------------------------------
-
-                                    ctx.globalAlpha =
-                                        0.55;
-
-                                    ctx.fillStyle =
-                                        mainColor;
-
-                                    ctx.beginPath();
-
-                                    ctx.arc(
-                                        this.WAVWQR,
-                                        this.IVXFVG,
-                                        radius,
-                                        0,
-                                        Math.PI * 2
-                                    );
-
-                                    ctx.fill();
-
-                                    // ------------------------------------------------
-                                    // BESCHRIFTUNG
-                                    // ------------------------------------------------
-
-                                    ctx.globalAlpha =
-                                        1;
-
-                                    ctx.textAlign =
-                                        'center';
-
-                                    ctx.textBaseline =
-                                        'middle';
-
-                                    // Basisname
-                                    ctx.font =
-                                        'bold 14px Arial';
-
-                                    const basisWidth =
-                                          ctx.measureText(
-                                              basisName
-                                          ).width;
-
-                                    // Besitzer
-                                    ctx.font =
-                                        '11px Arial';
-
-                                    const ownerWidth =
-                                          ctx.measureText(
-                                              ownerName
-                                          ).width;
-
-                                    const textWidth =
-                                          Math.max(
-                                              basisWidth,
-                                              ownerWidth
-                                          );
-
-                                    const paddingX =
-                                          6;
-
-                                    const boxHeight =
-                                          34;
-
-                                    const boxWidth =
-                                          textWidth +
-                                          paddingX * 2;
-
-                                    const textX =
-                                          this.WAVWQR;
-
-                                    const textY =
-                                          this.IVXFVG -
-                                          radius +
-                                          20;
-
-                                    // ------------------------------------------------
-                                    // SCHWARZER TRANSPARENTER HINTERGRUND
-                                    // ------------------------------------------------
-
-                                    ctx.fillStyle =
-                                        'rgba(0,0,0,0.80)';
-
-                                    ctx.fillRect(
-                                        textX -
-                                        boxWidth / 2,
-
-                                        textY -
-                                        boxHeight / 2,
-
-                                        boxWidth,
-                                        boxHeight
-                                    );
-
-                                    // ------------------------------------------------
-                                    // BASISNAME
-                                    // ------------------------------------------------
-
-                                    ctx.font =
-                                        'bold 14px Arial';
-
-                                    ctx.fillStyle =
-                                        '#ffffff';
-
-                                    ctx.fillText(
-                                        basisName,
-                                        textX,
-                                        textY - 7
-                                    );
-
-                                    // ------------------------------------------------
-                                    // BESITZER
-                                    // ------------------------------------------------
-
-                                    ctx.font =
-                                        '11px Arial';
-
-                                    ctx.fillStyle =
-                                        '#dddddd';
-
-                                    ctx.fillText(
-                                        ownerName,
-                                        textX,
-                                        textY + 8
-                                    );
-
-                                    ctx.restore();
-
-                                } catch (e) {
-
-                                    console.error(
-                                        '[Ghostfinder] Main-Kreis-/Text-Renderfehler:',
-                                        e
-                                    );
-                                }
-                            };
-
-                            // ========================================================
-                            // RENDER-BOUNDS
-                            // ========================================================
-
-                            const halbX =
-                                  bild.YHAABV / 2;
-
-                            const halbY =
-                                  bild.BEJVGV / 2;
-
-                            const minX =
-                                  nodeX - halbX;
-
-                            const maxX =
-                                  nodeX + halbX;
-
-                            const minY =
-                                  nodeY - halbY;
-
-                            const maxY =
-                                  nodeY + halbY;
-
-                            ww.VYLEYP(
-                                bild,
-                                minX,
-                                minY,
-                                maxX,
-                                maxY
+                            element.appendChild(
+                                nameElement
                             );
 
-                            // ========================================================
-                            // PARENT-NODE SUCHEN
-                            // ========================================================
+                            element.appendChild(
+                                ownerElement
+                            );
 
-                            let renderNode =
-                                null;
+                            /* ==================================================
+                             * POSITIONIERUNG
+                             * ================================================== */
 
-                            if (
-                                ww.CNTDDB &&
-                                ww.CNTDDB.length
-                            ) {
+                            const positionMarker =
+                                  () => {
 
-                                for (
-                                    let i = 0;
-                                    i < ww.CNTDDB.length;
-                                    i++
-                                ) {
+                                      const currentRegion =
+                                            visMain.get_Region();
 
-                                    const node =
-                                          ww.CNTDDB[i];
+                                      if (!currentRegion) {
+                                          return;
+                                      }
 
-                                    if (
-                                        !node ||
-                                        !node.VVDSNU ||
-                                        !node.VVDSNU.l
-                                    ) {
-                                        continue;
-                                    }
+                                      const gridWidth =
+                                            currentRegion.get_GridWidth();
 
-                                    const liste =
-                                          node.VVDSNU.l;
+                                      const gridHeight =
+                                            currentRegion.get_GridHeight();
 
-                                    for (
-                                        let j = 0;
-                                        j < liste.length;
-                                        j++
-                                    ) {
+                                      const top =
+                                            visMain.ScreenPosFromWorldPosY(
+                                                (zielY + 0.1) *
+                                                gridHeight
+                                            );
 
-                                        if (
-                                            liste[j] === bild
-                                        ) {
+                                      const left =
+                                            visMain.ScreenPosFromWorldPosX(
+                                                (zielX + 0.1) *
+                                                gridWidth
+                                            );
 
-                                            renderNode =
-                                                node;
+                                      const bottom =
+                                            currentRegion.get_ViewHeight();
 
-                                            break;
-                                        }
-                                    }
+                                      const right =
+                                            currentRegion.get_ViewWidth();
 
-                                    if (renderNode) {
-                                        break;
-                                    }
-                                }
-                            }
+                                      if (
+                                          top < -150 ||
+                                          left < -150 ||
+                                          top > bottom + 150 ||
+                                          left > right + 150
+                                      ) {
 
-                            // ========================================================
-                            // MAIN-MARKER SPEICHERN
-                            // ========================================================
+                                          element.style.display =
+                                              'none';
+
+                                          return;
+                                      }
+
+                                      element.style.display =
+                                          'flex';
+
+                                      /* ==================================================
+                                       * ZOOMABHÄNGIGE POSITIONSKORREKTUR
+                                       * Gleicher Wert wie bei Ghosts
+                                       * ================================================== */
+
+                                      const zoomFactor =
+                                            visMain.get_ZoomFactor
+                                      ? visMain.get_ZoomFactor()
+                                      : 1;
+
+                                      const correction =
+                                            (1 - zoomFactor) * 55;
+
+                                      element.style.top =
+                                          (top - correction) +
+                                          'px';
+
+                                      element.style.left =
+                                          (left - correction) +
+                                          'px';
+
+                                      /* ==================================================
+                                       * ZOOMABHÄNGIGE MARKERGRÖSSE
+                                       * Gleicher Wert wie bei Ghosts
+                                       * ================================================== */
+
+                                      const zoomScale =
+                                            Math.max(
+                                                0.25,
+                                                Math.min(
+                                                    1,
+                                                    zoomFactor
+                                                )
+                                            );
+
+                                      element.style.transform =
+                                          'scale(' +
+                                          zoomScale +
+                                          ')';
+                                  };
+
+                            /* Erste Position */
+
+                            positionMarker();
+
+                            /* ==================================================
+                             * IN DIE KARTEN-EBENE EINHÄNGEN
+                             * ================================================== */
+
+                            canvas.parentElement.appendChild(
+                                element
+                            );
+
+                            /* ==================================================
+                             * MAIN-MARKER SPEICHERN
+                             * ================================================== */
 
                             this.mainMarkers.push({
 
                                 base:
                                 base,
 
-                                bild:
-                                bild,
+                                element:
+                                element,
 
-                                node:
-                                renderNode
+                                position:
+                                positionMarker
                             });
 
+                            /* ==================================================
+                             * GEMEINSAMER MAIN-POSITIONS-TIMER
+                             * ================================================== */
+
+                            if (
+                                !this.mainDomPositionTimer
+                            ) {
+
+                                this.mainDomPositionTimer =
+                                    setInterval(
+                                    () => {
+
+                                        if (
+                                            !this.mainMarkers ||
+                                            this.mainMarkers.length === 0
+                                        ) {
+                                            return;
+                                        }
+
+                                        this.mainMarkers.forEach(
+                                            marker => {
+
+                                                if (
+                                                    marker &&
+                                                    typeof marker.position ===
+                                                    'function'
+                                                ) {
+
+                                                    marker.position();
+                                                }
+                                            }
+                                        );
+
+                                    },
+                                    250
+                                );
+                            }
+
                             console.log(
-                                '%c[Ghostfinder MAIN] Marker gesetzt:',
-                                'color:#0088ff;font-weight:bold',
+                                '%c[Ghostfinder MAIN] HTML-Marker gesetzt:',
+                                'color:#00aaff;font-weight:bold',
                                 basisName,
                                 '|',
                                 ownerName,
@@ -3409,108 +3481,55 @@
                             'color:#00aaff;font-weight:bold'
                         );
 
-                        const ww =
-                              this.ghostRendererWorld;
-
-                        if (
-                            !ww ||
-                            !ww.CNTDDB
-                        ) {
-
-                            console.error(
-                                '[Ghostfinder MAIN CLEAR] Renderwelt nicht verfügbar.'
-                            );
-
-                            return;
-                        }
-
                         const markers =
-                              this.mainMarkers.slice();
+                              Array.isArray(this.mainMarkers)
+                        ? this.mainMarkers.slice()
+                        : [];
 
                         let removed = 0;
                         let notFound = 0;
 
                         console.log(
-                            '[Ghostfinder MAIN CLEAR] Marker:',
+                            '%c[Ghostfinder MAIN CLEAR] Marker:',
+                            'color:#00aaff;font-weight:bold',
                             markers.length
                         );
 
-                        /*
-     * Jeden unserer Main-Marker einzeln suchen.
-     */
+                        /* ==================================================
+                         * HTML-MARKER ENTFERNEN
+                         * ================================================== */
 
                         markers.forEach(
                             (marker, markerIndex) => {
 
-                                if (!marker || !marker.bild) {
+                                if (
+                                    !marker ||
+                                    !marker.element
+                                ) {
+
                                     notFound++;
+
+                                    console.warn(
+                                        '%c[Ghostfinder MAIN CLEAR] Element nicht gefunden:',
+                                        'color:orange;font-weight:bold',
+                                        markerIndex,
+                                        marker && marker.base
+                                        ? marker.base.n
+                                        : ''
+                                    );
+
                                     return;
                                 }
 
-                                let foundNode =
-                                    null;
-
-                                /*
-             * AKTUELLEN Renderbaum durchsuchen.
-             */
-
-                                for (
-                                    let i = 0;
-                                    i < ww.CNTDDB.length;
-                                    i++
-                                ) {
-
-                                    const node =
-                                          ww.CNTDDB[i];
+                                try {
 
                                     if (
-                                        !node ||
-                                        !node.VVDSNU ||
-                                        !node.VVDSNU.l
-                                    ) {
-                                        continue;
-                                    }
-
-                                    const liste =
-                                          node.VVDSNU.l;
-
-                                    for (
-                                        let j = 0;
-                                        j < liste.length;
-                                        j++
+                                        marker.element.parentElement
                                     ) {
 
-                                        /*
-                     * Exakte Objekt-Referenz!
-                     */
-
-                                        if (
-                                            liste[j] ===
-                                            marker.bild
-                                        ) {
-
-                                            foundNode =
-                                                node;
-
-                                            break;
-                                        }
-                                    }
-
-                                    if (foundNode) {
-                                        break;
-                                    }
-                                }
-
-                                /*
-             * Parent gefunden -> löschen
-             */
-
-                                if (foundNode) {
-
-                                    try {
-
-                                        foundNode.QAOPNR(
-                                            marker.bild
+                                        marker.element.parentElement
+                                            .removeChild(
+                                            marker.element
                                         );
 
                                         removed++;
@@ -3524,54 +3543,53 @@
                                             : ''
                                         );
 
-                                    } catch (e) {
+                                    } else {
 
-                                        console.error(
-                                            '[Ghostfinder MAIN CLEAR] Fehler beim Löschen:',
-                                            e
+                                        notFound++;
+
+                                        console.warn(
+                                            '%c[Ghostfinder MAIN CLEAR] Element bereits entfernt:',
+                                            'color:orange;font-weight:bold',
+                                            markerIndex,
+                                            marker.base
+                                            ? marker.base.n
+                                            : ''
                                         );
                                     }
 
-                                } else {
+                                } catch (e) {
 
                                     notFound++;
 
-                                    console.warn(
-                                        '%c[Ghostfinder MAIN CLEAR] Marker nicht gefunden:',
-                                        'color:orange;font-weight:bold',
+                                    console.error(
+                                        '%c[Ghostfinder MAIN CLEAR] Fehler beim Löschen:',
+                                        'color:red;font-weight:bold',
                                         markerIndex,
-                                        marker.base
-                                        ? marker.base.n
-                                        : ''
+                                        e
                                     );
                                 }
                             }
                         );
 
-                        /*
-     * Renderliste aktualisieren.
-     */
+                        /* ==================================================
+                         * POSITIONIERUNGS-TIMER STOPPEN
+                         * ================================================== */
 
-                        try {
+                        if (
+                            this.mainDomPositionTimer
+                        ) {
 
-                            if (
-                                typeof ww.HLOSPC ===
-                                'function'
-                            ) {
-                                ww.HLOSPC();
-                            }
-
-                        } catch (e) {
-
-                            console.warn(
-                                '[Ghostfinder MAIN CLEAR] HLOSPC Fehler:',
-                                e
+                            clearInterval(
+                                this.mainDomPositionTimer
                             );
+
+                            this.mainDomPositionTimer =
+                                null;
                         }
 
-                        /*
-     * Unsere Marker-Liste erst jetzt leeren.
-     */
+                        /* ==================================================
+                         * MARKER-LISTE LEEREN
+                         * ================================================== */
 
                         this.mainMarkers = [];
 
@@ -3605,172 +3623,96 @@
                             'color:yellow;font-weight:bold'
                         );
 
-                        const ww =
-                              this.ghostRendererWorld;
-
-                        if (
-                            !ww ||
-                            !ww.CNTDDB
-                        ) {
-
-                            console.error(
-                                '[Ghostfinder CLEAR] Renderwelt nicht verfügbar.'
-                            );
-
-                            return;
-                        }
-
                         const markers =
-                              this.ghostMarkers.slice();
+                              Array.isArray(this.ghostMarkers)
+                        ? this.ghostMarkers.slice()
+                        : [];
 
                         let removed = 0;
-                        let notFound = 0;
+                        let errors = 0;
 
                         console.log(
-                            '[Ghostfinder CLEAR] Marker:',
+                            '%c[Ghostfinder CLEAR] Marker:',
+                            'color:#00ffff;font-weight:bold',
                             markers.length
                         );
 
-                        /*
-     * Jeden unserer Marker einzeln suchen.
-     */
+                        /* ==================================================
+                         * ALLE VON UNS ERZEUGTEN HTML-MARKER ENTFERNEN
+                         * ================================================== */
 
                         markers.forEach(
-                            (marker, markerIndex) => {
+                            (marker, index) => {
 
-                                if (!marker || !marker.bild) {
+                                if (
+                                    !marker ||
+                                    !marker.element
+                                ) {
 
-                                    notFound++;
+                                    console.warn(
+                                        '%c[Ghostfinder CLEAR] Ungültiger Marker:',
+                                        'color:orange;font-weight:bold',
+                                        index
+                                    );
 
                                     return;
                                 }
 
-                                let foundNode =
-                                    null;
+                                try {
 
-                                /*
-             * AKTUELLEN Renderbaum durchsuchen.
-             */
+                                    marker.element.remove();
 
-                                for (
-                                    let i = 0;
-                                    i < ww.CNTDDB.length;
-                                    i++
-                                ) {
+                                    removed++;
 
-                                    const node =
-                                          ww.CNTDDB[i];
-
-                                    if (
-                                        !node ||
-                                        !node.VVDSNU ||
-                                        !node.VVDSNU.l
-                                    ) {
-                                        continue;
-                                    }
-
-                                    const liste =
-                                          node.VVDSNU.l;
-
-                                    for (
-                                        let j = 0;
-                                        j < liste.length;
-                                        j++
-                                    ) {
-
-                                        /*
-                     * Exakte Objekt-Referenz!
-                     */
-
-                                        if (
-                                            liste[j] ===
-                                            marker.bild
-                                        ) {
-
-                                            foundNode =
-                                                node;
-
-                                            break;
-                                        }
-                                    }
-
-                                    if (foundNode) {
-                                        break;
-                                    }
-                                }
-
-                                /*
-             * Parent gefunden -> löschen
-             */
-
-                                if (foundNode) {
-
-                                    try {
-
-                                        foundNode.QAOPNR(
-                                            marker.bild
-                                        );
-
-                                        removed++;
-
-                                        console.log(
-                                            '%c[Ghostfinder CLEAR] gelöscht:',
-                                            'color:lime;font-weight:bold',
-                                            markerIndex,
-                                            marker.base
-                                            ? marker.base.n
-                                            : ''
-                                        );
-
-                                    } catch (e) {
-
-                                        console.error(
-                                            '[Ghostfinder CLEAR] Fehler beim Löschen:',
-                                            e
-                                        );
-                                    }
-
-                                } else {
-
-                                    notFound++;
-
-                                    console.warn(
-                                        '%c[Ghostfinder CLEAR] Marker nicht gefunden:',
-                                        'color:orange;font-weight:bold',
-                                        markerIndex,
+                                    console.log(
+                                        '%c[Ghostfinder CLEAR] gelöscht:',
+                                        'color:lime;font-weight:bold',
+                                        index,
                                         marker.base
                                         ? marker.base.n
                                         : ''
+                                    );
+
+                                } catch (e) {
+
+                                    errors++;
+
+                                    console.error(
+                                        '%c[Ghostfinder CLEAR] Fehler beim Löschen:',
+                                        'color:red;font-weight:bold',
+                                        index,
+                                        e
                                     );
                                 }
                             }
                         );
 
-                        /*
-     * Renderliste aktualisieren.
-     */
+                        /* ==================================================
+                         * SICHERHEIT:
+                         * eventuell noch vorhandene Ghost-DIVs entfernen
+                         * ================================================== */
 
                         try {
 
-                            if (
-                                typeof ww.HLOSPC ===
-                                'function'
-                            ) {
-
-                                ww.HLOSPC();
-                            }
+                            document
+                                .querySelectorAll(
+                                '.harzi-ghostfinder-marker'
+                            )
+                                .forEach(
+                                element => element.remove()
+                            );
 
                         } catch (e) {
 
                             console.warn(
-                                '[Ghostfinder CLEAR] HLOSPC Fehler:',
+                                '[Ghostfinder CLEAR] DOM-Bereinigung fehlgeschlagen:',
                                 e
                             );
                         }
 
-                        /*
-     * Unsere Marker-Liste erst jetzt leeren.
-     */
+                        /* ==================================================
+                         * MARKER-LISTE LEEREN
+                         * ================================================== */
 
                         this.ghostMarkers = [];
 
@@ -3779,8 +3721,8 @@
                             'color:yellow;font-weight:bold',
                             'gelöscht =',
                             removed,
-                            '| nicht gefunden =',
-                            notFound
+                            '| Fehler =',
+                            errors
                         );
 
                         console.log(
@@ -3788,6 +3730,8 @@
                             'color:yellow;font-weight:bold'
                         );
                     },
+
+
                     //////////////////////////////////////////////////////////////////
                     // CLEAR
                     //////////////////////////////////////////////////////////////////
@@ -4088,9 +4032,9 @@
                                         this.bases[
                                             `b-${data.i}`
                                                 ]
-                                    ),
-                                    data
-                                ),
+                ),
+                data
+            ),
                                 {
                                     isFetched:
                                     true
