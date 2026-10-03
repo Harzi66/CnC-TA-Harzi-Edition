@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           CnC-TA-Building_&_Off-Saver - HE
 // @namespace      https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
-// @version        1.0.7
+// @version        1.2.2
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
@@ -123,8 +123,57 @@
         var currentCity =
             cities.get_CurrentCity();
 
+        if (!currentCity) {
+            console.log(
+                "%cFORMATION: Kein aktuelles Ziel gefunden.",
+                "color: orange; font-weight: bold;"
+            );
+            return;
+        }
+
         var cityID =
             currentCity.get_Id();
+
+        // Formationen werden AUSSCHLIESSLICH in der eigenen Basis
+        // gespeichert. Andere Ziele dürfen hier nicht als Quelle
+        // für eine neue Formation verwendet werden.
+        if (cityID !== ownCityId) {
+            console.log(
+                "%cFORMATION: Speichern abgebrochen – keine eigene Basis.",
+                "color: orange; font-weight: bold;"
+            );
+            return false;
+        }
+
+        // ========================================================
+        // Zieltyp ausschließlich über den Namen erkennen
+        // ========================================================
+        var targetName = "";
+
+        try {
+            if (typeof currentCity.Name !== "undefined") {
+                targetName = currentCity.Name || "";
+            }
+        } catch (e) {}
+
+        if (!targetName) {
+            try {
+                if (typeof currentCity.get_Name === "function") {
+                    targetName = currentCity.get_Name() || "";
+                }
+            } catch (e) {}
+        }
+
+        var targetType = "Basis/Feind";
+        var targetRecognized = false;
+
+        if (targetName === "Lager") {
+            targetType = "Lager";
+            targetRecognized = true;
+        } else if (targetName === "Vorposten") {
+            targetType = "Vorposten";
+            targetRecognized = true;
+        }
 
         var formation =
             currentOwnCity
@@ -158,22 +207,23 @@
             });
         }
 
+        // ========================================================
+        // Formationen sind global gespeichert.
+        // Sie gehören NICHT zu einem bestimmten Ziel oder einer
+        // bestimmten eigenen Basis.
+        // ========================================================
         var layouts =
             localStorage.harziOffFormations;
 
         layouts =
             layouts ? JSON.parse(layouts) : {};
 
-        if (!layouts[ownCityId]) {
-            layouts[ownCityId] = {};
-        }
-
-        if (layouts[ownCityId][layoutName]) {
+        if (layouts[layoutName]) {
             alert("Der Formationsname ist bereits vergeben.");
             return false;
         }
 
-        layouts[ownCityId][layoutName] = {
+        layouts[layoutName] = {
             t: new Date().getTime(),
             units: units
         };
@@ -191,81 +241,6 @@
         return true;
     }
 
-    // ============================================================
-    // Offensiveinheiten ermitteln – Diagnose
-    // ============================================================
-
-    function diagnoseOffUnits() {
-
-        console.log(
-            "%cFORMATION-DIAGNOSE: ===== EINHEITEN =====",
-            "color: yellow; font-weight: bold;"
-        );
-
-        var cities =
-            ClientLib.Data.MainData.GetInstance()
-        .get_Cities();
-
-        var city =
-            cities.get_CurrentOwnCity();
-
-        if (!city) {
-            console.log(
-                "%cFORMATION-DIAGNOSE: Keine eigene Basis gefunden.",
-                "color: red; font-weight: bold;"
-            );
-            return;
-        }
-
-        var buildings = city.get_Buildings();
-
-
-        console.log(
-            "%cFORMATION-DIAGNOSE: Basis-ID = " +
-            city.get_Id(),
-            "color: cyan; font-weight: bold;"
-        );
-
-
-        // ========================================================
-        // Versuchen, die aufgestellten Einheiten zu ermitteln
-        // ========================================================
-
-        var manager =
-            city.get_CityArmyFormationsManager();
-
-        console.log(
-            "%cFORMATION-DIAGNOSE: FormationManager = " +
-            (manager ? "GEFUNDEN" : "NICHT GEFUNDEN"),
-            "color: cyan; font-weight: bold;"
-        );
-
-        if (!manager) {
-            return;
-        }
-
-
-        var formation =
-            manager.GetFormationByTargetBaseId(
-                cities.get_CurrentCity().get_Id()
-            );
-
-        console.log(
-            "%cFORMATION-DIAGNOSE: Formation = " +
-            (formation ? "GEFUNDEN" : "NICHT GEFUNDEN"),
-            "color: cyan; font-weight: bold;"
-        );
-
-        if (!formation) {
-            return;
-        }
-
-
-        console.log(
-            "%cFORMATION-DIAGNOSE: ===== ENDE =====",
-            "color: yellow; font-weight: bold;"
-        );
-    }
 
     // ============================================================
     // Gebäude laden
@@ -367,11 +342,23 @@
 
                     differences++;
 
-                    building.ZRBFIX(
-                        saved.x,
-                        saved.y
-                    );
-                }
+                    ClientLib.Net.CommunicationManager
+                        .GetInstance()
+                        .SendCommand(
+                            "MoveBuilding",
+                            {
+                                cityid: city.get_Id(),
+                                posX: currentX,
+                                posY: currentY,
+                                targetPosX: saved.x,
+                                targetPosY: saved.y
+                            },
+                            null,
+                            null,
+                            true
+                        );
+
+                    }
             }
 
 
@@ -405,16 +392,6 @@
 
                 return;
             }
-
-
-            console.log(
-                "%cLAYOUT: Durchlauf " +
-                pass +
-                " – " +
-                differences +
-                " Gebäude werden erneut gesetzt.",
-                "color: cyan; font-weight: bold;"
-            );
 
 
             window.setTimeout(function () {
@@ -529,11 +506,10 @@
         layouts =
             layouts ? JSON.parse(layouts) : {};
 
-        if (layouts[ownCityId]) {
-
-            for (
-                var formationName in layouts[ownCityId]
-            ) {
+        // Formationsspeicher ist global und nicht zielgebunden.
+        for (
+            var formationName in layouts
+        ) {
 
                 var row =
                     new qx.ui.container.Composite(
@@ -555,11 +531,6 @@
                     formationLabel.addListener(
                         "click",
                         function () {
-
-                            console.log(
-                                "FORMATION-TEST: Name angeklickt = " +
-                                name
-                            );
 
                             loadOffFormation(name);
                         }
@@ -593,9 +564,7 @@
                         "execute",
                         function () {
 
-                            delete layouts[
-                                ownCityId
-                            ][name];
+                            delete layouts[name];
 
                             localStorage
                                 .harziOffFormations =
@@ -626,7 +595,6 @@
                     row
                 );
             }
-        }
 
         container.add(
             formationList,
@@ -701,10 +669,6 @@
                 formationLabel.addListener(
                     "click",
                     function () {
-                        console.log(
-                            "FORMATION-TEST: Name angeklickt = " +
-                            name
-                        );
 
                         loadOffFormation(name);
                     }
@@ -731,7 +695,7 @@
                             ? JSON.parse(currentLayouts)
                         : {};
 
-                        delete currentLayouts[ownCityId][name];
+                        delete currentLayouts[name];
 
                         localStorage.harziOffFormations =
                             JSON.stringify(currentLayouts);
@@ -800,15 +764,17 @@
         var ownCityId =
             currentOwnCity.get_Id();
 
-        if (
-            !layouts[ownCityId] ||
-            !layouts[ownCityId][layoutName]
-        ) {
+        // Formationen sind global gespeichert und unabhängig vom Ziel.
+        if (!layouts[layoutName]) {
+            console.log(
+                "%cFORMATION: Globale Formation nicht gefunden: " + layoutName,
+                "color: red; font-weight: bold;"
+            );
             return;
         }
 
         var saved =
-            layouts[ownCityId][layoutName];
+            layouts[layoutName];
 
         var currentCity =
             cities.get_CurrentCity();
@@ -816,15 +782,61 @@
         var cityID =
             currentCity.get_Id();
 
+        // ========================================================
+        // Ziel anhand des sichtbaren Namens erkennen
+        // ========================================================
+        // Bei Lager/Vorposten liefert die aktuelle City-Information
+        // zuverlässig den Namen, während CampType dort teilweise
+        // nicht vorhanden ist.
+        var targetName = "";
+
+        try {
+            if (typeof currentCity.Name !== "undefined") {
+                targetName = currentCity.Name || "";
+            }
+        } catch (e) {}
+
+        if (!targetName) {
+            try {
+                if (typeof currentCity.get_Name === "function") {
+                    targetName = currentCity.get_Name() || "";
+                }
+            } catch (e) {}
+        }
+
+        var targetType = "Basis/Feind";
+        var targetRecognized = false;
+
+        if (targetName === "Lager") {
+            targetType = "Lager";
+            targetRecognized = true;
+        } else if (targetName === "Vorposten") {
+            targetType = "Vorposten";
+            targetRecognized = true;
+        }
+
+
+        // Eine Formation wird nicht auf der eigenen Basis angewendet.
+        // Dort wird sie ausschließlich gespeichert.
+        if (cityID === ownCityId) {
+            console.log(
+                "%cFORMATION: Eigene Basis – keine Umstellung.",
+                "color: orange; font-weight: bold;"
+            );
+            return;
+        }
+
+        // Auf allen anderen Zielen darf die globale Formation angewendet
+        // werden: Feindbasis, vergessene Basis, Lager oder Vorposten.
+        console.log(
+            "%cFORMATION: Anwenden auf Zieltyp = " + targetType,
+            "color: lime; font-weight: bold;"
+        );
+
         var formation =
             currentOwnCity
         .get_CityArmyFormationsManager()
         .GetFormationByTargetBaseId(cityID);
-
-        console.log(
-            "FORMATION-TEST: Formation = " +
-            (formation ? "GEFUNDEN" : "NICHT GEFUNDEN")
-        );
 
         if (!formation) {
             return;
@@ -833,34 +845,64 @@
         var armyUnits =
             formation.get_ArmyUnits();
 
-        console.log(
-            "FORMATION-TEST: armyUnits = " +
-            (armyUnits ? "VORHANDEN" : "NULL")
-        );
-
         if (!armyUnits) {
             return;
         }
 
         armyUnits = armyUnits.l;
 
+        var movedCount = 0;
+
         for (var i in saved.units) {
 
             var savedUnit = saved.units[i];
+            var foundUnit = false;
 
             for (var j in armyUnits) {
 
                 if (armyUnits[j].get_Id() === savedUnit.id) {
 
+                    foundUnit = true;
+                    movedCount++;
+
+                    // Die funktionierende Formation-Saver-Methode verwenden.
+                    // Die gespeicherten Koordinaten werden direkt auf die
+                    // vorhandene Einheit im aktuellen Ziel angewendet.
                     armyUnits[j].MoveBattleUnit(
                         savedUnit.x,
                         savedUnit.y
                     );
 
+                    // Gespeicherten Aktivierungszustand ebenfalls übernehmen.
+                    if (savedUnit.e !== undefined && savedUnit.e !== null) {
+                        if (armyUnits[j].set_Enabled_Original) {
+                            armyUnits[j].set_Enabled_Original(savedUnit.e);
+                        } else if (typeof armyUnits[j].set_Enabled === "function") {
+                            armyUnits[j].set_Enabled(savedUnit.e);
+                        }
+                    }
+
                     break;
                 }
             }
+
+            if (!foundUnit) {
+                console.log(
+                    "%cFORMATION: Gespeicherte Unit nicht im aktuellen Ziel gefunden: " +
+                    savedUnit.id,
+                    "color: orange; font-weight: bold;"
+                );
+            }
         }
+
+        console.log(
+            "%cFORMATION: " +
+            movedCount +
+            " von " +
+            saved.units.length +
+            " gespeicherten Einheiten gefunden.",
+            "color: yellow; font-weight: bold;"
+        );
         console.log(
             "%cFORMATION: Geladen – " +
             layoutName +
@@ -921,7 +963,7 @@
         );
 
         buildingSaverContainer.setWidth(110);
-        buildingSaverContainer.setHeight(125);
+        buildingSaverContainer.setHeight(250);
         buildingSaverContainer.setZIndex(9999);
 
 
@@ -1483,10 +1525,7 @@
 
         } catch (e) {
 
-            console.log(
-                "%cLAYOUT-TEST: Initialisierung wartet noch.",
-                "color: cyan; font-weight: bold;"
-            );
+
         }
     }
 
