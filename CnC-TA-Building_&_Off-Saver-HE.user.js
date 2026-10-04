@@ -1,16 +1,13 @@
 // ==UserScript==
 // @name           CnC-TA-Building_&_Off-Saver - HE
 // @namespace      https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
-// @version        1.2.2
+// @version        1.2.5
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
-// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver-HE.user.js
-// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver-HE.user.js
+// @downloadURL    https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver%20-%20HE.user.js
+// @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver%20-%20HE.user.js
 // ==/UserScript==
-
-// Version 1.2.2
-// Moving Fix
 
 (function () {
 
@@ -348,20 +345,20 @@
                     ClientLib.Net.CommunicationManager
                         .GetInstance()
                         .SendCommand(
-                            "MoveBuilding",
-                            {
-                                cityid: city.get_Id(),
-                                posX: currentX,
-                                posY: currentY,
-                                targetPosX: saved.x,
-                                targetPosY: saved.y
-                            },
-                            null,
-                            null,
-                            true
-                        );
+                        "MoveBuilding",
+                        {
+                            cityid: city.get_Id(),
+                            posX: currentX,
+                            posY: currentY,
+                            targetPosX: saved.x,
+                            targetPosY: saved.y
+                        },
+                        null,
+                        null,
+                        true
+                    );
 
-                    }
+                }
             }
 
 
@@ -437,17 +434,14 @@
             zIndex: 10000
         });
 
-        var playArea =
-            qx.core.Init.getApplication()
-        .getPlayArea();
-
-        playArea.add(
+        buildingSaverContainer.getLayoutParent().add(
             container,
             {
-                left: 0,
-                top: 110
+                right: 0,
+                top: 120
             }
         );
+
         var label =
             new qx.ui.basic.Label("Formation");
 
@@ -514,96 +508,96 @@
             var formationName in layouts
         ) {
 
-                var row =
-                    new qx.ui.container.Composite(
-                        new qx.ui.layout.HBox(6)
-                    );
-
-                row.set({
-                    width: 105,
-                    height: 22
-                });
-
-                var formationLabel =
-                    new qx.ui.basic.Label(
-                        formationName
-                    );
-
-                (function (name) {
-
-                    formationLabel.addListener(
-                        "click",
-                        function () {
-
-                            loadOffFormation(name);
-                        }
-                    );
-
-                })(formationName);
-
-                formationLabel.set({
-                    width: 75,
-                    height: 20,
-                    rich: true,
-                    textColor: "#FFFFFF",
-                    cursor: "pointer"
-                });
-
-                var deleteButton =
-                    new qx.ui.form.Button("X");
-
-                deleteButton.set({
-                    width: 22,
-                    height: 20,
-                    appearance: "button-text-small"
-                });
-
-                (function (
-                 name,
-                  currentRow
-                 ) {
-
-                    deleteButton.addListener(
-                        "execute",
-                        function () {
-
-                            delete layouts[name];
-
-                            localStorage
-                                .harziOffFormations =
-                                JSON.stringify(
-                                layouts
-                            );
-
-                            formationList.remove(
-                                currentRow
-                            );
-                        }
-                    );
-
-                })(
-                    formationName,
-                    row
+            var row =
+                new qx.ui.container.Composite(
+                    new qx.ui.layout.HBox(6)
                 );
 
-                row.add(
-                    formationLabel
+            row.set({
+                width: 105,
+                height: 22
+            });
+
+            var formationLabel =
+                new qx.ui.basic.Label(
+                    formationName
                 );
 
-                row.add(
-                    deleteButton
+            (function (name) {
+
+                formationLabel.addListener(
+                    "click",
+                    function () {
+
+                        loadOffFormation(name);
+                    }
                 );
 
-                formationList.add(
-                    row
+            })(formationName);
+
+            formationLabel.set({
+                width: 75,
+                height: 20,
+                rich: true,
+                textColor: "#FFFFFF",
+                cursor: "pointer"
+            });
+
+            var deleteButton =
+                new qx.ui.form.Button("X");
+
+            deleteButton.set({
+                width: 22,
+                height: 20,
+                appearance: "button-text-small"
+            });
+
+            (function (
+             name,
+              currentRow
+             ) {
+
+                deleteButton.addListener(
+                    "execute",
+                    function () {
+
+                        delete layouts[name];
+
+                        localStorage
+                            .harziOffFormations =
+                            JSON.stringify(
+                            layouts
+                        );
+
+                        formationList.remove(
+                            currentRow
+                        );
+                    }
                 );
-            }
+
+            })(
+                formationName,
+                row
+            );
+
+            row.add(
+                formationLabel
+            );
+
+            row.add(
+                deleteButton
+            );
+
+            formationList.add(
+                row
+            );
+        }
 
         container.add(
             formationList,
             {
                 left: 5,
-                top: 116
+                top: 115
             }
         );
 
@@ -620,7 +614,7 @@
             saveButton,
             {
                 left: 5,
-                top: 58
+                top: 55
             }
         );
 
@@ -1036,62 +1030,22 @@
             buildingButton,
             {
                 left: 5,
-                top: 2
+                top: 0
             }
         );
-
-        offSaverContainer =
-            new qx.ui.container.Composite();
-
-        offSaverContainer.setLayout(
-            new qx.ui.layout.Canvas()
-        );
-
-        offSaverContainer.setWidth(110);
-        offSaverContainer.setHeight(45);
-        offSaverContainer.setZIndex(9999);
-
-        playArea.add(
-            offSaverContainer,
-            {
-                left: 0,
-                top: 70
-            }
-        );
-
-        offButton =
-            new qx.ui.form.Button("Formation");
-
-        offButton.set({
-            width: 100,
-            height: 40,
-            appearance: "button-text-small"
-        });
-
-        offSaverContainer.add(
-            offButton,
-            {
-                left: 5,
-                top: 2
-            }
-        );
-
-        offButton.exclude();
-
 
         // ========================================================
         // FORMATION Button
         // ========================================================
 
-        offButton.addListener(
-            "execute",
-            function () {
-                openOffFormationSaver();
-            }
-        );
         // ========================================================
         // Sichtbarkeit nach Spielmodus
         // ========================================================
+
+        //=================================================================================================
+        var lastTestCityId = null;
+        //================================================================================================
+
 
         buildingModeTimer =
             window.setInterval(function () {
@@ -1104,23 +1058,125 @@
                 .get_Mode();
 
 
-
                 if (currentMode === 1) {
 
-                    if (offFormationContainer) {
-                        offFormationContainer.destroy();
-                        offFormationContainer = null;
-                    }
-
+                    // Eigene Basis – Gebäude
+                    buildingButton.setLabel("LAYOUT");
                     buildingButton.show();
                     offButton.exclude();
 
-                } else {
+                } else if (currentMode === 4) {
 
-                    closeBuildingLayout();
+                    // Eigene Basis – Armee
+                    buildingButton.setLabel("FORMATION");
+                    buildingButton.show();
+                    offButton.exclude();
+
+                } else if (
+                    currentMode === 2 ||
+                    currentMode === 5
+                ) {
+
+                    // Mode 2 = Weltkarte
+                    // Mode 5 = DEFF-Ansicht (zukünftige Funktion)
 
                     buildingButton.exclude();
-                    offButton.show();
+                    offButton.exclude();
+
+                                                } else {
+
+                    // Zielbasis / Lager / Vorposten / vergessene Basis
+
+                    var selectedObject = null;
+                    var ownAllianceId = -1;
+                    var selectedAllianceId = -1;
+                    var isOwnBase = false;
+
+                    try {
+                        selectedObject =
+                            ClientLib.Vis.VisMain
+                                .GetInstance()
+                                .get_SelectedObject();
+                    } catch (e) {
+                        selectedObject = null;
+                    }
+
+                    // Eigene Allianz-ID dynamisch aus dem aktuellen Spieler
+                    try {
+                        var ownPlayer =
+                            ClientLib.Data.MainData
+                                .GetInstance()
+                                .get_Player();
+
+                        if (
+                            ownPlayer &&
+                            typeof ownPlayer.get_AllianceId === "function"
+                        ) {
+                            ownAllianceId =
+                                Number(ownPlayer.get_AllianceId());
+                        }
+                    } catch (e) {
+                        ownAllianceId = -1;
+                    }
+
+                    // Allianz-ID des aktuell ausgewählten Objekts
+                    try {
+                        if (
+                            selectedObject &&
+                            typeof selectedObject.get_AllianceId === "function"
+                        ) {
+                            selectedAllianceId =
+                                Number(selectedObject.get_AllianceId());
+                        }
+                    } catch (e) {
+                        selectedAllianceId = -1;
+                    }
+
+                    // Prüfen, ob es die eigene Basis ist
+                    try {
+                        var currentCity =
+                            ClientLib.Data.MainData
+                                .GetInstance()
+                                .get_Cities()
+                                .get_CurrentCity();
+
+                        if (
+                            currentCity &&
+                            typeof currentCity.get_IsOwnBase === "function"
+                        ) {
+                            isOwnBase =
+                                currentCity.get_IsOwnBase() === true;
+                        }
+                    } catch (e) {
+                        isOwnBase = false;
+                    }
+
+                    if (isOwnBase) {
+
+                        // Eigene Basis
+                        buildingButton.setLabel("FORMATION");
+                        buildingButton.show();
+                        offButton.exclude();
+
+                    } else if (
+                        selectedAllianceId > 0 &&
+                        selectedAllianceId === ownAllianceId
+                    ) {
+
+                        // Allianzmitglied
+                        // Kein Building-/Off-Button
+                        buildingButton.exclude();
+                        offButton.exclude();
+
+                    } else {
+
+                        // Fremder Spieler
+                        // Lager / Vorposten / vergessene Basis
+                        buildingButton.setLabel("FORMATION");
+                        buildingButton.show();
+                        offButton.exclude();
+                    }
+
                 }
 
             } catch (e) {}
@@ -1135,6 +1191,19 @@
         buildingButton.addListener(
             "execute",
             function () {
+
+                var currentMode =
+                    ClientLib.Vis.VisMain
+                .GetInstance()
+                .get_Mode();
+
+                if (currentMode !== 1) {
+                    buildingButton.setLabel("FORMATION");
+                    openOffFormationSaver();
+                    return;
+                }
+
+                buildingButton.setLabel("LAYOUT");
 
                 var input =
                     new qx.ui.form.TextField();
