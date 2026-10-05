@@ -432,8 +432,5 @@
 		setTimeout(waitForGame, 1000);
 	};
 
-	var script = document.createElement('script');
-	script.textContent = '(' + main.toString() + ')();';
-	script.type = 'text/javascript';
-	document.getElementsByTagName('head')[0].appendChild(script);
+	main();
 })();
