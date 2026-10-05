@@ -2,7 +2,8 @@
 // ==UserScript==
 // @name        CnCTA TargetWatcher Enhancer
 // @version	    2023.04.17
-// @updateURL   https://raw.githubusercontent.com/netquik/CnCTA-SoO-SCRIPT-PACK/Testing/TA_TargetWatcher_Enhancer.user.js
+// @downloadURL https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/TA_TargetWatcher_Enhancer.user.js
+// @updateURL   https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/TA_TargetWatcher_Enhancer.user.js
 // @match       https://*.alliances.commandandconquer.com/*/index.aspx*
 // @autohor     bloofi (https://github.com/bloofi) || Updated by NetquiK [SoO] (https://github.com/netquik)
 // ==/UserScript==
