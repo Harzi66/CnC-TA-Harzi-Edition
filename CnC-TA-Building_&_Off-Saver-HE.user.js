@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           CnC-TA-Building_&_Off-Saver - HE
 // @namespace      https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
-// @version        1.2.5
+// @version        1.2.8
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
@@ -10,6 +10,15 @@
 // ==/UserScript==
 
 (function () {
+
+    // ============================================================
+    // TEST6 – Gebäudetyp-Klassifizierung + Sondergebäude-Parklogik
+    // ============================================================
+    window.HARZI_BUILDING_OFF_SAVER_TEST6 = true;
+    console.log(
+        "%cBUILDING-OFF-SAVER HE TEST6 – SCRIPT GELADEN",
+        "color: lime; font-weight: bold; font-size: 14px;"
+    );
 
     var buildingSaverContainer = null;
     var buildingButton = null;
@@ -22,6 +31,55 @@
     var buildingLayoutList = null;
     var buildingLayoutSaveButton = null;
     var buildingLayoutCloseButton = null;
+
+
+    // ============================================================
+    // Gebäudetyp bestimmen
+    // ============================================================
+
+    /*
+     * NORMAL = Kraftwerk, Silo, Akkumulator, Raffinerie, Sammler
+     * SPECIAL = alles andere
+     */
+    function getBuildingType(building) {
+        var name = "";
+
+        try {
+            name = building.get_UnitGameData_Obj().dn || "";
+        } catch (e) {}
+
+        if (
+            name === "Kraftwerk" ||
+            name === "Silo" ||
+            name === "Akkumulator" ||
+            name === "Raffinerie" ||
+            name === "Sammler"
+        ) {
+            return "NORMAL";
+        }
+
+        return "SPECIAL";
+    }
+
+    // Für alte gespeicherte Layouts ohne type-Feld wird der Typ immer
+    // aus dem aktuell vorhandenen Runtime-Gebäude abgeleitet.
+    function getSavedBuildingType(saved, runtimeBuilding) {
+        if (saved && (saved.type === "NORMAL" || saved.type === "SPECIAL")) {
+            return saved.type;
+        }
+
+        return runtimeBuilding ? getBuildingType(runtimeBuilding) : "SPECIAL";
+    }
+
+    // C&C-TA behandelt direkt angrenzende Sondergebäude als ungültige
+    // Belegung. Wir prüfen alle 8 Nachbarfelder.
+    function isDirectlyAdjacent(x1, y1, x2, y2) {
+        return (
+            Math.abs(x1 - x2) <= 1 &&
+            Math.abs(y1 - y2) <= 1 &&
+            (x1 !== x2 || y1 !== y2)
+        );
+    }
 
 
     // ============================================================
@@ -49,6 +107,7 @@
             result.push({
                 id: building.get_Id(),
                 name: building.get_UnitGameData_Obj().dn,
+                type: getBuildingType(building),
                 x: building.get_CoordX(),
                 y: building.get_CoordY()
             });
@@ -248,12 +307,64 @@
 
     function loadBuildingLayout(layoutName) {
 
-        var city =
-            ClientLib.Data.MainData.GetInstance()
-        .get_Cities()
-        .get_CurrentOwnCity();
+        /*
+         * TEST4:
+         * Jeder Ladevorgang erhält eine eigene Generation. Sobald ein
+         * neuer Ladevorgang gestartet oder der aktuelle beendet wird,
+         * werden alle noch offenen setTimeout-Ketten der alten Generation
+         * ungültig. Dadurch können keine alten Loader mehr "nachlaufen".
+         */
+        if (window.HARZI_BUILDING_LAYOUT_LOADING) {
+            console.log(
+                "%cLAYOUT: Ladevorgang bereits aktiv – kein zweiter Loader gestartet.",
+                "color: orange; font-weight: bold;"
+            );
+            return;
+        }
+
+        window.HARZI_BUILDING_LAYOUT_LOADING = true;
+        window.HARZI_BUILDING_LAYOUT_TOKEN =
+            (window.HARZI_BUILDING_LAYOUT_TOKEN || 0) + 1;
+
+        var loadToken = window.HARZI_BUILDING_LAYOUT_TOKEN;
+
+        function finishLoad(message, style) {
+            if (loadToken !== window.HARZI_BUILDING_LAYOUT_TOKEN) {
+                return;
+            }
+
+            window.HARZI_BUILDING_LAYOUT_LOADING = false;
+            window.HARZI_BUILDING_LAYOUT_TOKEN++;
+
+            if (message) {
+                console.log(message, style || "color: lime; font-weight: bold;");
+            }
+        }
+
+        function isLoaderActive() {
+            return (
+                window.HARZI_BUILDING_LAYOUT_LOADING === true &&
+                loadToken === window.HARZI_BUILDING_LAYOUT_TOKEN
+            );
+        }
+
+        function getLiveCity() {
+            try {
+                return ClientLib.Data.MainData.GetInstance()
+                    .get_Cities()
+                    .get_CurrentOwnCity();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        var city = getLiveCity();
 
         if (!city) {
+            finishLoad(
+                "%cLAYOUT: Keine eigene Basis gefunden – Ladevorgang abgebrochen.",
+                "color: orange; font-weight: bold;"
+            );
             return;
         }
 
@@ -267,12 +378,10 @@
             !layouts[ownCityId] ||
             !layouts[ownCityId][layoutName]
         ) {
-
-            console.log(
+            finishLoad(
                 "%cLAYOUT: Layout nicht gefunden.",
                 "color: red; font-weight: bold;"
             );
-
             return;
         }
 
@@ -280,132 +389,699 @@
             layouts[ownCityId][layoutName].buildings;
 
         if (!savedBuildings || !savedBuildings.length) {
+            finishLoad(
+                "%cLAYOUT: Layout enthält keine Gebäude.",
+                "color: orange; font-weight: bold;"
+            );
             return;
         }
 
+        // --------------------------------------------------------
+        // Gebäudeklassen diagnostisch ausgeben
+        // --------------------------------------------------------
+        // Auch ältere Layouts ohne gespeichertes type-Feld bleiben
+        // kompatibel: Der Typ wird aus dem aktuell vorhandenen Gebäude
+        // ermittelt. Die Klassifizierung ändert in diesem Test noch keine
+        // Bewegungsentscheidung.
+        console.groupCollapsed(
+            "%cLAYOUT: Gebäudeklassifizierung – " + layoutName,
+            "color: #00ffff; font-weight: bold;"
+        );
 
-        // --------------------------------------------------------
-        // Gebäude anhand der eindeutigen ID suchen
-        // --------------------------------------------------------
+        for (var typeIndex = 0; typeIndex < savedBuildings.length; typeIndex++) {
+            var typeSaved = savedBuildings[typeIndex];
+            var typeBuilding = null;
+
+            try {
+                var typeBuildings = city.get_Buildings();
+                for (var typeId in typeBuildings.d) {
+                    var candidate = typeBuildings.d[typeId];
+                    if (candidate && candidate.get_Id() === typeSaved.id) {
+                        typeBuilding = candidate;
+                        break;
+                    }
+                }
+            } catch (e) {}
+
+            if (typeBuilding) {
+                console.log(
+                    "LAYOUT: " +
+                    (typeSaved.name || "Gebäude") +
+                    " ID=" + typeSaved.id +
+                    " → " + getBuildingType(typeBuilding)
+                );
+            } else {
+                console.warn(
+                    "LAYOUT: Gebäude ID=" + typeSaved.id +
+                    " nicht gefunden – Typ konnte nicht ermittelt werden."
+                );
+            }
+        }
+
+        console.groupEnd();
+
+        /*
+         * TEST5-Diagnose:
+         * Eine Gebäude-ID darf im gespeicherten Layout nur genau ein Ziel
+         * besitzen. Genau das prüfen wir vor dem ersten Move.
+         * Gleiche ID + unterschiedliche Ziele wäre die direkte Ursache für
+         * ein Hin-und-Her wie z.B. ID=480155 (1:6) <-> (3:6).
+         */
+        var targetsById = {};
+        var cleanedBuildings = [];
+        var duplicateError = false;
+
+        for (var s = 0; s < savedBuildings.length; s++) {
+            var savedEntry = savedBuildings[s];
+            var idKey = String(savedEntry.id);
+            var targetKey = String(savedEntry.x) + ":" + String(savedEntry.y);
+
+            if (targetsById[idKey]) {
+                if (targetsById[idKey].target !== targetKey) {
+                    console.error(
+                        "%cLAYOUT: FEHLER – Gebäude ID=" +
+                        savedEntry.id +
+                        " ist mehrfach mit unterschiedlichen Zielpositionen gespeichert: " +
+                        "(" + targetsById[idKey].x + ":" + targetsById[idKey].y +
+                        ") und (" + savedEntry.x + ":" + savedEntry.y + "). " +
+                        "Ladevorgang wird VOR dem ersten Move abgebrochen.",
+                        "color: red; font-weight: bold;"
+                    );
+                    duplicateError = true;
+                    continue;
+                }
+
+                console.warn(
+                    "%cLAYOUT: Doppelte identische Speicherung erkannt – ID=" +
+                    savedEntry.id +
+                    " Ziel=(" + savedEntry.x + ":" + savedEntry.y +"). Eintrag wird ignoriert.",
+                    "color: orange; font-weight: bold;"
+                );
+                continue;
+            }
+
+            targetsById[idKey] = {
+                target: targetKey,
+                x: savedEntry.x,
+                y: savedEntry.y
+            };
+            cleanedBuildings.push(savedEntry);
+        }
+
+        if (duplicateError) {
+            finishLoad(
+                "%cLAYOUT: Inkonsistentes Layout erkannt – bitte Layout neu speichern.",
+                "color: red; font-weight: bold;"
+            );
+            return;
+        }
+
+        savedBuildings = cleanedBuildings;
+
+        function coordKey(x, y) {
+            return String(x) + ":" + String(y);
+        }
 
         function findBuilding(buildingId) {
+            var liveCity = getLiveCity();
 
-            var buildings = city.get_Buildings();
+            if (!liveCity || liveCity.get_Id() !== ownCityId) {
+                return null;
+            }
+
+            var buildings = liveCity.get_Buildings();
+
+            if (!buildings || !buildings.d) {
+                return null;
+            }
 
             for (var id in buildings.d) {
-
                 var building = buildings.d[id];
 
-                if (building.get_Id() === buildingId) {
-                    return building;
+                if (!building) {
+                    continue;
+                }
+
+                try {
+                    if (building.get_Id() === buildingId) {
+                        return building;
+                    }
+                } catch (e) {}
+            }
+
+            return null;
+        }
+
+        function getMoveState() {
+            var occupied = {};
+            var liveCity = getLiveCity();
+
+            if (
+                !liveCity ||
+                liveCity.get_Id() !== ownCityId
+            ) {
+                return occupied;
+            }
+
+            var buildings = liveCity.get_Buildings();
+
+            if (!buildings || !buildings.d) {
+                return occupied;
+            }
+
+            for (var id in buildings.d) {
+                var building = buildings.d[id];
+
+                if (!building) {
+                    continue;
+                }
+
+                try {
+                    occupied[coordKey(
+                        building.get_CoordX(),
+                        building.get_CoordY()
+                    )] = {
+                        id: building.get_Id(),
+                        name: building.get_UnitGameData_Obj().dn,
+                        type: getBuildingType(building),
+                        x: building.get_CoordX(),
+                        y: building.get_CoordY()
+                    };
+                } catch (e) {}
+            }
+
+            return occupied;
+        }
+
+        var reservedTargets = {};
+
+        for (var r = 0; r < savedBuildings.length; r++) {
+            reservedTargets[coordKey(
+                savedBuildings[r].x,
+                savedBuildings[r].y
+            )] = true;
+        }
+
+        function isVisuallyOccupied(x, y) {
+            try {
+                var visCity = ClientLib.Vis.VisMain
+                    .GetInstance()
+                    .get_City();
+
+                if (!visCity) {
+                    return false;
+                }
+
+                var gridW = visCity.get_GridWidth();
+                var gridH = visCity.get_GridHeight();
+
+                if (!gridW || !gridH) {
+                    return false;
+                }
+
+                var cityObject = visCity.GetCityObjectFromPosition(
+                    x * gridW,
+                    y * gridH
+                );
+
+                return cityObject !== null && cityObject !== undefined;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function canPlaceAtCoordinate(x, y, buildingType, occupied, ignoreId) {
+            // NORMAL-Gebäude dürfen auf jedem freien Feld stehen.
+            if (buildingType !== "SPECIAL") {
+                return true;
+            }
+
+            // Ein SPECIAL darf niemals direkt neben einem anderen SPECIAL
+            // stehen. Das gilt auch für einen Zwischenparkplatz.
+            for (var key in occupied) {
+                var other = occupied[key];
+
+                if (!other || other.id === ignoreId) {
+                    continue;
+                }
+
+                if (other.type !== "SPECIAL") {
+                    continue;
+                }
+
+                if (isDirectlyAdjacent(x, y, other.x, other.y)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function findTemporaryCoordinate(occupied, tried, buildingType, buildingId) {
+            tried = tried || {};
+
+            for (var y = 0; y <= 7; y++) {
+                for (var x = 0; x <= 8; x++) {
+                    var key = coordKey(x, y);
+
+                    if (
+                        reservedTargets[key] ||
+                        occupied[key] ||
+                        tried[key]
+                    ) {
+                        continue;
+                    }
+
+                    if (isVisuallyOccupied(x, y)) {
+                        tried[key] = true;
+                        continue;
+                    }
+
+                    if (!canPlaceAtCoordinate(
+                        x,
+                        y,
+                        buildingType,
+                        occupied,
+                        buildingId
+                    )) {
+                        tried[key] = true;
+                        continue;
+                    }
+
+                    return { x: x, y: y };
                 }
             }
 
             return null;
         }
 
+        function sendMoveBuilding(building, targetX, targetY, reason) {
+            if (!building || !isLoaderActive()) {
+                return false;
+            }
 
-        // --------------------------------------------------------
-        // Lade-Durchlauf
-        // --------------------------------------------------------
+            var currentX = building.get_CoordX();
+            var currentY = building.get_CoordY();
 
-        function loadPass(pass) {
+            if (currentX === targetX && currentY === targetY) {
+                return false;
+            }
 
-            var differences = 0;
+            console.log(
+                "%cLAYOUT: " +
+                (reason ? reason + " – " : "") +
+                building.get_UnitGameData_Obj().dn +
+                " ID=" + building.get_Id() +
+                " (" + currentX + ":" + currentY + ") -> (" +
+                targetX + ":" + targetY + ")",
+                reason === "TEMP"
+                    ? "color: orange; font-weight: bold;"
+                    : "color: cyan; font-weight: bold;"
+            );
 
-            for (
-                var i = 0;
-                i < savedBuildings.length;
-                i++
-            ) {
+            var liveCity = getLiveCity();
 
+            if (!liveCity || liveCity.get_Id() !== ownCityId) {
+                return false;
+            }
+
+            ClientLib.Net.CommunicationManager
+                .GetInstance()
+                .SendCommand(
+                "MoveBuilding",
+                {
+                    cityid: liveCity.get_Id(),
+                    posX: currentX,
+                    posY: currentY,
+                    targetPosX: targetX,
+                    targetPosY: targetY
+                },
+                null,
+                null,
+                true
+            );
+
+            return true;
+        }
+
+        /*
+         * Zustandsverlauf:
+         * Nach einem erfolgreich ausgeführten Move darf derselbe Zustand
+         * nicht erneut auftauchen. Damit wird ein echter Zyklus wie
+         * 1:6 -> 3:6 -> 1:6 erkannt.
+         * Nach einem fehlgeschlagenen TEMP-Move bleibt ein Zustand dagegen
+         * zunächst zulässig, damit ein anderer Parkplatz versucht werden kann.
+         */
+        var seenStates = {};
+        var lastMoveSucceeded = false;
+        var failedMoves = 0;
+        var triedTemporaryCoordinates = {};
+        var maxSteps = savedBuildings.length * 4 + 10;
+
+        function getLayoutStateSignature() {
+            var parts = [];
+
+            for (var i = 0; i < savedBuildings.length; i++) {
                 var saved = savedBuildings[i];
-
-                var building =
-                    findBuilding(saved.id);
+                var building = findBuilding(saved.id);
 
                 if (!building) {
+                    parts.push(String(saved.id) + "=MISSING");
                     continue;
                 }
 
-                var currentX =
-                    building.get_CoordX();
+                parts.push(
+                    String(saved.id) + "=" +
+                    building.get_CoordX() + ":" +
+                    building.get_CoordY()
+                );
+            }
 
-                var currentY =
-                    building.get_CoordY();
+            parts.sort();
+            return parts.join("|");
+        }
 
+        function loadStep(step) {
+            if (!isLoaderActive()) {
+                return;
+            }
+
+            var liveCity = getLiveCity();
+
+            if (!liveCity || liveCity.get_Id() !== ownCityId) {
+                finishLoad(
+                    "%cLAYOUT: Eigene Basis nicht mehr aktiv – Ladevorgang abgebrochen.",
+                    "color: orange; font-weight: bold;"
+                );
+                return;
+            }
+
+            if (step > maxSteps) {
+                finishLoad(
+                    "%cLAYOUT: Nach " + maxSteps +
+                    " Bewegungsschritten konnte die Aufstellung nicht vollständig geladen werden.",
+                    "color: orange; font-weight: bold;"
+                );
+                return;
+            }
+
+            var stateSignature = getLayoutStateSignature();
+
+            if (lastMoveSucceeded && seenStates[stateSignature]) {
+                console.error(
+                    "%cLAYOUT: Bewegungszyklus erkannt – derselbe Layoutzustand wurde erneut erreicht. Ladevorgang wird gestoppt.",
+                    "color: red; font-weight: bold;"
+                );
+                finishLoad();
+                return;
+            }
+
+            seenStates[stateSignature] = true;
+
+            var occupied = getMoveState();
+            var remaining = [];
+
+            for (var i = 0; i < savedBuildings.length; i++) {
+                var saved = savedBuildings[i];
+                var building = findBuilding(saved.id);
+
+                if (!building) {
+                    console.log(
+                        "%cLAYOUT: Gespeichertes Gebäude ID=" +
+                        saved.id + " nicht mehr gefunden.",
+                        "color: orange; font-weight: bold;"
+                    );
+                    continue;
+                }
+
+                var currentX = building.get_CoordX();
+                var currentY = building.get_CoordY();
 
                 if (
                     currentX !== saved.x ||
                     currentY !== saved.y
                 ) {
-
-                    differences++;
-
-                    ClientLib.Net.CommunicationManager
-                        .GetInstance()
-                        .SendCommand(
-                        "MoveBuilding",
-                        {
-                            cityid: city.get_Id(),
-                            posX: currentX,
-                            posY: currentY,
-                            targetPosX: saved.x,
-                            targetPosY: saved.y
-                        },
-                        null,
-                        null,
-                        true
-                    );
-
+                    remaining.push({
+                        saved: saved,
+                        building: building
+                    });
                 }
             }
 
-
-            // ----------------------------------------------------
-            // Alles korrekt
-            // ----------------------------------------------------
-
-            if (differences === 0) {
-
-                console.log(
+            if (remaining.length === 0) {
+                finishLoad(
                     "%cLAYOUT: Aufstellung vollständig geladen.",
                     "color: lime; font-weight: bold;"
                 );
-
                 return;
             }
 
+            var directMove = null;
 
-            // ----------------------------------------------------
-            // Maximale Anzahl Durchläufe erreicht
-            // ----------------------------------------------------
-
-            if (pass >= 5) {
-
-                console.log(
-                    "%cLAYOUT: Nach 5 Durchläufen noch " +
-                    differences +
-                    " Gebäude abweichend.",
-                    "color: orange; font-weight: bold;"
+            for (var d = 0; d < remaining.length; d++) {
+                var direct = remaining[d];
+                var targetKey = coordKey(
+                    direct.saved.x,
+                    direct.saved.y
                 );
 
+                var occupant = occupied[targetKey];
+
+                if (!occupant || occupant.id === direct.saved.id) {
+                    var directType = getSavedBuildingType(
+                        direct.saved,
+                        direct.building
+                    );
+
+                    if (canPlaceAtCoordinate(
+                        direct.saved.x,
+                        direct.saved.y,
+                        directType,
+                        occupied,
+                        direct.saved.id
+                    )) {
+                        directMove = direct;
+                        break;
+                    }
+                }
+            }
+
+            if (directMove) {
+                var sentDirect = sendMoveBuilding(
+                    directMove.building,
+                    directMove.saved.x,
+                    directMove.saved.y,
+                    "ZIEL"
+                );
+
+                if (!sentDirect) {
+                    failedMoves++;
+                }
+
+                window.setTimeout(function () {
+                    if (!isLoaderActive()) {
+                        return;
+                    }
+
+                    var movedBuilding = findBuilding(directMove.saved.id);
+                    var success = false;
+
+                    if (movedBuilding) {
+                        success = (
+                            movedBuilding.get_CoordX() === directMove.saved.x &&
+                            movedBuilding.get_CoordY() === directMove.saved.y
+                        );
+                    }
+
+                    if (success) {
+                        lastMoveSucceeded = true;
+                        failedMoves = 0;
+                    } else {
+                        lastMoveSucceeded = false;
+                        failedMoves++;
+                        console.log(
+                            "%cLAYOUT: Zielposition (" +
+                            directMove.saved.x + ":" + directMove.saved.y +
+                            ") wurde nicht übernommen.",
+                            "color: orange; font-weight: bold;"
+                        );
+                    }
+
+                    if (failedMoves >= 3) {
+                        finishLoad(
+                            "%cLAYOUT: Drei aufeinanderfolgende Bewegungen wurden nicht übernommen – Ladevorgang gestoppt.",
+                            "color: red; font-weight: bold;"
+                        );
+                        return;
+                    }
+
+                    loadStep(step + 1);
+                }, 1000);
+
                 return;
             }
 
+            var blockedCandidates = [];
+
+            for (var b = 0; b < remaining.length; b++) {
+                var candidate = remaining[b];
+                var blockedKey = coordKey(
+                    candidate.saved.x,
+                    candidate.saved.y
+                );
+                var blockedOccupant = occupied[blockedKey];
+
+                if (
+                    blockedOccupant &&
+                    blockedOccupant.id !== candidate.saved.id
+                ) {
+                    blockedCandidates.push({
+                        move: candidate,
+                        occupant: blockedOccupant
+                    });
+                }
+            }
+
+            var blocked = null;
+
+            if (blockedCandidates.length) {
+                for (var c = 0; c < blockedCandidates.length; c++) {
+                    var blockedCandidate = blockedCandidates[c];
+                    var occupant = blockedCandidate.occupant;
+
+                    for (var n = 0; n < remaining.length; n++) {
+                        if (remaining[n].saved.id === occupant.id) {
+                            continue;
+                        }
+
+                        if (
+                            remaining[n].saved.x === occupant.x &&
+                            remaining[n].saved.y === occupant.y
+                        ) {
+                            blocked = blockedCandidate;
+                            break;
+                        }
+                    }
+
+                    if (blocked) {
+                        break;
+                    }
+                }
+
+                if (!blocked) {
+                    blocked = blockedCandidates[0];
+                }
+            }
+
+            if (!blocked) {
+                finishLoad(
+                    "%cLAYOUT: Kein gültiger nächster Bewegungsschritt gefunden.",
+                    "color: orange; font-weight: bold;"
+                );
+                return;
+            }
+
+            var occupantType = blocked.occupant.type || "SPECIAL";
+
+            var temp = findTemporaryCoordinate(
+                occupied,
+                triedTemporaryCoordinates,
+                occupantType,
+                occupantId
+            );
+
+            if (!temp) {
+                finishLoad(
+                    "%cLAYOUT: Keine freie Zwischenposition zum Parken gefunden.",
+                    "color: orange; font-weight: bold;"
+                );
+                return;
+            }
+
+            var occupantId = blocked.occupant.id;
+            var occupantBuilding = findBuilding(occupantId);
+
+            if (!occupantBuilding) {
+                finishLoad(
+                    "%cLAYOUT: Das zu parkende Gebäude ID=" +
+                    occupantId + " wurde nicht gefunden.",
+                    "color: orange; font-weight: bold;"
+                );
+                return;
+            }
+
+            var tempKey = coordKey(temp.x, temp.y);
+
+            var sentTemp = sendMoveBuilding(
+                occupantBuilding,
+                temp.x,
+                temp.y,
+                "TEMP"
+            );
+
+            if (!sentTemp) {
+                triedTemporaryCoordinates[tempKey] = true;
+            }
 
             window.setTimeout(function () {
+                if (!isLoaderActive()) {
+                    return;
+                }
 
-                loadPass(pass + 1);
+                var movedBuilding = findBuilding(occupantId);
+                var tempSuccess = false;
+
+                if (movedBuilding) {
+                    var actualX = movedBuilding.get_CoordX();
+                    var actualY = movedBuilding.get_CoordY();
+
+                    tempSuccess = (
+                        actualX === temp.x &&
+                        actualY === temp.y
+                    );
+
+                    if (!tempSuccess) {
+                        triedTemporaryCoordinates[tempKey] = true;
+
+                        console.log(
+                            "%cLAYOUT: Zwischenposition (" +
+                            temp.x + ":" + temp.y +
+                            ") wurde nicht übernommen. Neuer Versuch.",
+                            "color: orange; font-weight: bold;"
+                        );
+                    }
+                }
+
+                lastMoveSucceeded = tempSuccess;
+
+                if (tempSuccess) {
+                    failedMoves = 0;
+                } else {
+                    failedMoves++;
+                }
+
+                if (failedMoves >= 8) {
+                    finishLoad(
+                        "%cLAYOUT: Zu viele erfolglose Bewegungsversuche – Ladevorgang gestoppt.",
+                        "color: red; font-weight: bold;"
+                    );
+                    return;
+                }
+
+                loadStep(step + 1);
 
             }, 1000);
         }
 
+        console.log(
+            "%cLAYOUT: Start – " + layoutName +
+            " | Basis-ID=" + ownCityId +
+            " | Gebäude=" + savedBuildings.length,
+            "color: cyan; font-weight: bold;"
+        );
 
-        // Erster Durchlauf
-        loadPass(1);
+        loadStep(1);
     }
-
 
     // ============================================================
     // Gebäude-Saver UI erstellen
@@ -438,7 +1114,7 @@
             container,
             {
                 right: 0,
-                top: 120
+                top: 150
             }
         );
 
@@ -1011,7 +1687,7 @@
             buildingSaverContainer,
             {
                 right: 0,
-                top: 75
+                top: 105
             }
         );
 
@@ -1043,9 +1719,43 @@
         // ========================================================
 
         //=================================================================================================
-        var lastTestCityId = null;
-        //================================================================================================
+        var lastSaverStateKey = null;
 
+        function getSaverStateKey(currentMode) {
+
+            var currentCityId = -1;
+
+            try {
+                var currentCity =
+                    ClientLib.Data.MainData
+                        .GetInstance()
+                        .get_Cities()
+                        .get_CurrentCity();
+
+                if (currentCity && typeof currentCity.get_Id === "function") {
+                    currentCityId = currentCity.get_Id();
+                }
+            } catch (e) {
+                currentCityId = -1;
+            }
+
+            return String(currentMode) + "|" + String(currentCityId);
+        }
+
+        function closeExpandedSaverPanels() {
+
+            // Layout-Ausklappung schließen
+            closeBuildingLayout();
+
+            // Formation-Ausklappung schließen
+            if (offFormationContainer) {
+                try {
+                    offFormationContainer.destroy();
+                } catch (e) {}
+
+                offFormationContainer = null;
+            }
+        }
 
         buildingModeTimer =
             window.setInterval(function () {
@@ -1056,6 +1766,21 @@
                     ClientLib.Vis.VisMain
                 .GetInstance()
                 .get_Mode();
+
+                // Bei jedem Wechsel des Spielzustands bzw. der aktuellen
+                // Basis wird eine eventuell geöffnete Layout-/Formation-
+                // Anzeige automatisch geschlossen.
+                var currentSaverStateKey =
+                    getSaverStateKey(currentMode);
+
+                if (
+                    lastSaverStateKey !== null &&
+                    currentSaverStateKey !== lastSaverStateKey
+                ) {
+                    closeExpandedSaverPanels();
+                }
+
+                lastSaverStateKey = currentSaverStateKey;
 
 
                 if (currentMode === 1) {
