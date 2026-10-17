@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           CnC-TA-Building_&_Off-Saver - HE
 // @namespace      https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
-// @version        1.2.8
+// @version        1.3.2
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
@@ -15,10 +15,21 @@
     // TEST6 – Gebäudetyp-Klassifizierung + Sondergebäude-Parklogik
     // ============================================================
     window.HARZI_BUILDING_OFF_SAVER_TEST6 = true;
+    console.log("%cBUILDING & OFF-SAVER HE 1.3.1 – SCRIPT WIRD AUSGEFÜHRT", "background:#ff0000;color:#ffffff;font-weight:bold;font-size:16px;padding:6px;");
     console.log(
         "%cBUILDING-OFF-SAVER HE TEST6 – SCRIPT GELADEN",
         "color: lime; font-weight: bold; font-size: 14px;"
     );
+
+    // Desktop-Position unabhängig von Stadt-/Zielansicht.
+    // Werte können zum Testen frei angepasst werden.
+    var SAVER_DESKTOP_POSITION = { right: 575, top: 0 };
+    // Abstand zwischen Button-Rechtskante und MainOverlay-Rechtskante
+    // bei der gewünschten maximalen Ausgangsposition.
+    var SAVER_OVERLAY_RIGHT_GAP = -150;
+    var SAVER_INITIAL_DESKTOP_WIDTH = null;
+    var SAVER_OVERLAY_RIGHT_INSET = null;
+    var SAVER_PANEL_OFFSET_Y = 75;
 
     var buildingSaverContainer = null;
     var buildingButton = null;
@@ -1110,13 +1121,14 @@
             zIndex: 10000
         });
 
-        buildingSaverContainer.getLayoutParent().add(
-            container,
-            {
-                right: 0,
-                top: 150
-            }
-        );
+        // Formation-Popup relativ zur frei gewählten Desktop-Position.
+        var panelPosition = Object.assign({}, SAVER_DESKTOP_POSITION);
+        if (panelPosition.top !== undefined) {
+            panelPosition.top += SAVER_PANEL_OFFSET_Y;
+        } else if (panelPosition.bottom !== undefined) {
+            panelPosition.bottom -= SAVER_PANEL_OFFSET_Y;
+        }
+        buildingSaverContainer.getLayoutParent().add(container, panelPosition);
 
         var label =
             new qx.ui.basic.Label("Formation");
@@ -1623,82 +1635,101 @@
             return;
         }
 
-        var playArea =
-            qx.core.Init.getApplication()
-        .getPlayArea();
+        var application = qx.core.Init.getApplication();
+        var desktop = application && application.getDesktop();
 
-
-        buildingSaverContainer =
-            new qx.ui.container.Composite();
-
-        buildingSaverContainer.setLayout(
-            new qx.ui.layout.Canvas()
-        );
-
-        buildingSaverContainer.setWidth(110);
-        buildingSaverContainer.setHeight(250);
-        buildingSaverContainer.setZIndex(9999);
-
-
-        // ========================================================
-        // LAYOUT rechts neben "Alles reparieren"
-        // ========================================================
-
-        var repairButton = null;
-
-        function findRepairButton(widget) {
-            if (!widget || !widget.getChildren) {
-                return;
-            }
-
-            var children = widget.getChildren();
-
-            for (var i = 0; i < children.length; i++) {
-                var child = children[i];
-
-                try {
-                    if (
-                        child.getLabel &&
-                        child.getLabel() === "Alles reparieren"
-                    ) {
-                        repairButton = child;
-                        return;
-                    }
-                } catch (e) {}
-
-                findRepairButton(child);
-
-                if (repairButton) {
-                    return;
-                }
-            }
-        }
-
-        findRepairButton(playArea);
-
-        if (!repairButton) {
+        if (!desktop) {
+            console.warn("BuildingSaver HE: Desktop nicht verfügbar.");
             return;
         }
 
-        var parent = repairButton.getLayoutParent();
-        parent = parent.getLayoutParent();
+        console.info("BuildingSaver HE 1.3.8: Desktop gefunden, erstelle Saver.");
+        buildingSaverContainer = new qx.ui.container.Composite();
+        buildingSaverContainer.setLayout(new qx.ui.layout.Canvas());
+        buildingSaverContainer.setWidth(140);
+        buildingSaverContainer.setHeight(260);
+        buildingSaverContainer.setZIndex(9999);
 
-        parent.add(
-            buildingSaverContainer,
-            {
-                right: 0,
-                top: 105
+        // Der Button bleibt auf dem Desktop, wird aber relativ zur rechten Kante
+        // des zentralen MainOverlay positioniert. Bei maximaler Fenstergröße
+        // ergibt der ursprüngliche Abstand right: 575 genau einen Overlay-Abstand von 72 px.
+        desktop.add(buildingSaverContainer, SAVER_DESKTOP_POSITION);
+
+        function positionSaverRelativeToOverlay(targetDesktop) {
+            var desktopBounds = targetDesktop && targetDesktop.getBounds && targetDesktop.getBounds();
+            var children = targetDesktop && targetDesktop.getChildren ? targetDesktop.getChildren() : [];
+            var overlay = children.find(function (child) {
+                return child && child.constructor &&
+                    child.constructor.classname === "webfrontend.gui.MainOverlay";
+            });
+            var overlayBounds = overlay && overlay.getBounds && overlay.getBounds();
+
+            if (!desktopBounds || !desktopBounds.width || !overlayBounds || !overlayBounds.width) {
+                return false;
             }
-        );
 
+            var overlayRight = overlayBounds.left + overlayBounds.width;
+            var rightOffset = Math.max(0, Math.round(
+                desktopBounds.width - overlayRight + SAVER_OVERLAY_RIGHT_GAP
+            ));
+
+            buildingSaverContainer.setLayoutProperties({ right: rightOffset, top: 0 });
+            if (typeof targetDesktop.updateLayout === "function") {
+                targetDesktop.updateLayout();
+            }
+            return { right: rightOffset, desktopWidth: desktopBounds.width,
+                overlayLeft: overlayBounds.left, overlayWidth: overlayBounds.width,
+                overlayRight: overlayRight };
+        }
+
+        // Position schon beim Start korrigieren, auch wenn DevTools bereits offen ist.
+        var initialPosition = positionSaverRelativeToOverlay(desktop);
+        if (initialPosition) {
+            console.info("BuildingSaver HE 1.3.8: Startposition", initialPosition);
+        }
+
+        // Die Resize-Position wird immer aus den aktuellen Desktop- und Overlay-Bounds berechnet.
+
+        if (!window.__buildingSaverResizeHandlerInstalled) {
+            window.__buildingSaverResizeHandlerInstalled = true;
+            window.addEventListener("resize", function () {
+                // Qooxdoo aktualisiert Overlay-Bounds nach dem Browser-Resize.
+                // Deshalb nach kurzer Verzögerung stets aktuelle Widgets neu suchen.
+                window.setTimeout(function () {
+                    try {
+                        if (!buildingSaverContainer || buildingSaverContainer.isDisposed()) {
+                            return;
+                        }
+
+                        var currentApp = qx.core.Init.getApplication();
+                        var currentDesktop = currentApp && currentApp.getDesktop();
+                        if (!currentDesktop) {
+                            console.warn("BuildingSaver HE: Desktop noch nicht verfügbar.");
+                            return;
+                        }
+
+                        var positionInfo = positionSaverRelativeToOverlay(currentDesktop);
+                        if (!positionInfo) {
+                            console.warn("BuildingSaver HE 1.3.8: Overlay-Bounds noch nicht verfügbar.");
+                            return;
+                        }
+
+                        console.info("BuildingSaver HE 1.3.8: Position angepasst", positionInfo);
+                    } catch (resizeError) {
+                        console.warn("BuildingSaver HE 1.3.8: Resize-Neupositionierung fehlgeschlagen.", resizeError);
+                    }
+                }, 150);
+            });
+        }
 
         buildingButton =
             new qx.ui.form.Button("LAYOUT");
 
         buildingButton.set({
-            width: 100,
-            height: 40,
-            appearance: "button-text-small"
+            width: 130,
+            height: 46,
+            appearance: "button-text-small",
+            toolTipText: "Building & Off-Saver HE – Test 1.3.2"
         });
 
 
@@ -1709,6 +1740,8 @@
                 top: 0
             }
         );
+        buildingButton.setBackgroundColor("#ff0000");
+        buildingButton.setTextColor("#ffffff");
 
         // ========================================================
         // FORMATION Button
@@ -2289,40 +2322,24 @@
     // ============================================================
 
     function initBuildingSaver() {
-
         try {
-
-            if (
-                typeof qx === "undefined"
-            ) {
+            if (typeof qx === "undefined") {
+                console.warn("BuildingSaver HE 1.3.8: qx noch nicht verfügbar.");
                 return;
             }
 
-
-            var application =
-                qx.core.Init
-            .getApplication();
-
-
+            var application = qx.core.Init.getApplication();
             if (!application) {
+                console.warn("BuildingSaver HE 1.3.8: Anwendung noch nicht verfügbar.");
                 return;
             }
 
-
-            var playArea =
-                application.getPlayArea();
-
-
-            if (!playArea) {
-                return;
-            }
-
-
+            // Nicht mehr von getPlayArea() abhängig sein: Der Saver wird
+            // direkt am Desktop positioniert und benötigt den PlayArea-Container nicht.
+            console.info("BuildingSaver HE 1.3.8: Initialisierung gestartet.");
             createBuildingSaver();
-
         } catch (e) {
-
-
+            console.error("BuildingSaver HE 1.3.8: Initialisierung fehlgeschlagen.", e);
         }
     }
 
@@ -2332,36 +2349,28 @@
     // ============================================================
 
     function checkGameLoaded() {
-
         try {
+            if (typeof qx !== "undefined" &&
+                qx.core && qx.core.Init &&
+                typeof qx.core.Init.getApplication === "function") {
 
-            if (
-                typeof qx !== "undefined"
-            ) {
+                var application = qx.core.Init.getApplication();
+                var desktop = application && application.getDesktop();
 
-                var application =
-                    qx.core.Init
-                .getApplication();
-
-
-                if (
-                    application &&
-                    application.getMenuBar()
-                ) {
-
+                if (desktop) {
+                    console.info(
+                        "%cBuildingSaver HE 1.3.8: Desktop verfügbar – Initialisierung wird ausgeführt.",
+                        "background:#ff0000;color:#ffffff;font-weight:bold;font-size:16px;padding:5px;"
+                    );
                     initBuildingSaver();
-
                     return;
                 }
             }
+        } catch (e) {
+            console.error("BuildingSaver HE 1.3.8: Startprüfung fehlgeschlagen.", e);
+        }
 
-        } catch (e) {}
-
-
-        window.setTimeout(
-            checkGameLoaded,
-            1000
-        );
+        window.setTimeout(checkGameLoaded, 1000);
     }
 
 
