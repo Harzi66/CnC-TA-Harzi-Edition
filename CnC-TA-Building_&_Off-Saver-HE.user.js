@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           CnC-TA-Building_&_Off-Saver - HE
 // @namespace      https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
-// @version        1.3.2
+// @version        1.3.5
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
@@ -338,12 +338,64 @@
             (window.HARZI_BUILDING_LAYOUT_TOKEN || 0) + 1;
 
         var loadToken = window.HARZI_BUILDING_LAYOUT_TOKEN;
+        var layoutLoadStartedAt = (window.performance && performance.now) ? performance.now() : Date.now();
+        var layoutLoadMoveCount = 0;
+        var layoutLoadConfirmedCount = 0;
+
+        function elapsedMs(start) {
+            var now = (window.performance && performance.now) ? performance.now() : Date.now();
+            return Math.round(now - start);
+        }
+
+        function logTiming(label, details, color) {
+            console.log(
+                "%c[LAYOUT-ZEIT] " + label,
+                "color:" + (color || "#b388ff") + ";font-weight:bold;",
+                details || ""
+            );
+        }
+
+        // Prüft den Spielzustand in kurzen Abständen statt pauschal 1 Sekunde
+        // zu warten. Sicherheitslimit: nach 2,5 Sekunden wird der Zustand
+        // trotzdem an die vorhandene Erfolgs-/Fehlerbehandlung übergeben.
+        function waitForBuildingPosition(buildingId, targetX, targetY, callback) {
+            var startedAt = (window.performance && performance.now) ? performance.now() : Date.now();
+            var maxWaitMs = 2500;
+            var pollIntervalMs = 100;
+
+            function checkPosition() {
+                if (!isLoaderActive()) {
+                    return;
+                }
+
+                var building = findBuilding(buildingId);
+                var reached = !!building &&
+                    building.get_CoordX() === targetX &&
+                    building.get_CoordY() === targetY;
+                var elapsed = elapsedMs(startedAt);
+
+                if (reached || elapsed >= maxWaitMs) {
+                    callback();
+                    return;
+                }
+
+                window.setTimeout(checkPosition, pollIntervalMs);
+            }
+
+            window.setTimeout(checkPosition, pollIntervalMs);
+        }
 
         function finishLoad(message, style) {
             if (loadToken !== window.HARZI_BUILDING_LAYOUT_TOKEN) {
                 return;
             }
 
+            var totalElapsed = elapsedMs(layoutLoadStartedAt);
+            logTiming(
+                "ENDE – Gesamtdauer " + (totalElapsed / 1000).toFixed(2) + " s",
+                { Bewegungen: layoutLoadMoveCount, bestaetigt: layoutLoadConfirmedCount },
+                message && message.indexOf("vollständig") !== -1 ? "#00c853" : "#ffab00"
+            );
             window.HARZI_BUILDING_LAYOUT_LOADING = false;
             window.HARZI_BUILDING_LAYOUT_TOKEN++;
 
@@ -406,6 +458,8 @@
             );
             return;
         }
+
+        logTiming("START – Layout '" + layoutName + "' mit " + savedBuildings.length + " Gebäuden", "Zeitmessung aktiv", "#00bcd4");
 
         // --------------------------------------------------------
         // Gebäudeklassen diagnostisch ausgeben
@@ -777,6 +831,7 @@
                 return;
             }
 
+            var stepStartedAt = (window.performance && performance.now) ? performance.now() : Date.now();
             var liveCity = getLiveCity();
 
             if (!liveCity || liveCity.get_Id() !== ownCityId) {
@@ -839,6 +894,12 @@
                 }
             }
 
+            logTiming(
+                "SCHRITT " + step + " – Prüfung " + elapsedMs(stepStartedAt) + " ms; offen: " + remaining.length,
+                { GebäudeImLayout: savedBuildings.length },
+                "#b388ff"
+            );
+
             if (remaining.length === 0) {
                 finishLoad(
                     "%cLAYOUT: Aufstellung vollständig geladen.",
@@ -887,9 +948,17 @@
 
                 if (!sentDirect) {
                     failedMoves++;
+                } else {
+                    layoutLoadMoveCount++;
                 }
+                var directMoveSentAt = (window.performance && performance.now) ? performance.now() : Date.now();
+                logTiming(
+                    "BEWEGUNG gesendet – " + directMove.saved.id + " -> (" + directMove.saved.x + ":" + directMove.saved.y + ")",
+                    { WartezeitBisPruefung: "1000 ms" },
+                    "#ffb300"
+                );
 
-                window.setTimeout(function () {
+                waitForBuildingPosition(directMove.saved.id, directMove.saved.x, directMove.saved.y, function () {
                     if (!isLoaderActive()) {
                         return;
                     }
@@ -904,7 +973,13 @@
                         );
                     }
 
+                    logTiming(
+                        (success ? "BESTÄTIGT" : "NICHT BESTÄTIGT") + " – Gebäude " + directMove.saved.id + "; Prüfung nach " + elapsedMs(directMoveSentAt) + " ms",
+                        { Ziel: directMove.saved.x + ":" + directMove.saved.y, Ist: movedBuilding ? movedBuilding.get_CoordX() + ":" + movedBuilding.get_CoordY() : "nicht gefunden" },
+                        success ? "#00c853" : "#ff5252"
+                    );
                     if (success) {
+                        layoutLoadConfirmedCount++;
                         lastMoveSucceeded = true;
                         failedMoves = 0;
                     } else {
@@ -927,7 +1002,7 @@
                     }
 
                     loadStep(step + 1);
-                }, 1000);
+                });
 
                 return;
             }
@@ -1032,9 +1107,17 @@
 
             if (!sentTemp) {
                 triedTemporaryCoordinates[tempKey] = true;
+            } else {
+                layoutLoadMoveCount++;
             }
+            var tempMoveSentAt = (window.performance && performance.now) ? performance.now() : Date.now();
+            logTiming(
+                "PARKBEWEGUNG gesendet – " + occupantId + " -> (" + temp.x + ":" + temp.y + ")",
+                { WartezeitBisPruefung: "1000 ms" },
+                "#ffb300"
+            );
 
-            window.setTimeout(function () {
+            waitForBuildingPosition(occupantId, temp.x, temp.y, function () {
                 if (!isLoaderActive()) {
                     return;
                 }
@@ -1063,9 +1146,13 @@
                     }
                 }
 
-                lastMoveSucceeded = tempSuccess;
-
+                logTiming(
+                    (tempSuccess ? "PARKEN BESTÄTIGT" : "PARKEN NICHT BESTÄTIGT") + " – Gebäude " + occupantId + "; Prüfung nach " + elapsedMs(tempMoveSentAt) + " ms",
+                    { Ziel: temp.x + ":" + temp.y, Ist: movedBuilding ? movedBuilding.get_CoordX() + ":" + movedBuilding.get_CoordY() : "nicht gefunden" },
+                    tempSuccess ? "#00c853" : "#ff5252"
+                );
                 if (tempSuccess) {
+                    layoutLoadConfirmedCount++;
                     failedMoves = 0;
                 } else {
                     failedMoves++;
@@ -1081,7 +1168,7 @@
 
                 loadStep(step + 1);
 
-            }, 1000);
+            });
         }
 
         console.log(
@@ -1643,7 +1730,7 @@
             return;
         }
 
-        console.info("BuildingSaver HE 1.3.8: Desktop gefunden, erstelle Saver.");
+        console.info("BuildingSaver HE: Desktop gefunden, erstelle Saver.");
         buildingSaverContainer = new qx.ui.container.Composite();
         buildingSaverContainer.setLayout(new qx.ui.layout.Canvas());
         buildingSaverContainer.setWidth(140);
@@ -1685,7 +1772,7 @@
         // Position schon beim Start korrigieren, auch wenn DevTools bereits offen ist.
         var initialPosition = positionSaverRelativeToOverlay(desktop);
         if (initialPosition) {
-            console.info("BuildingSaver HE 1.3.8: Startposition", initialPosition);
+            console.info("BuildingSaver HE: Startposition", initialPosition);
         }
 
         // Die Resize-Position wird immer aus den aktuellen Desktop- und Overlay-Bounds berechnet.
@@ -1710,13 +1797,13 @@
 
                         var positionInfo = positionSaverRelativeToOverlay(currentDesktop);
                         if (!positionInfo) {
-                            console.warn("BuildingSaver HE 1.3.8: Overlay-Bounds noch nicht verfügbar.");
+                            console.warn("BuildingSaver HE: Overlay-Bounds noch nicht verfügbar.");
                             return;
                         }
 
-                        console.info("BuildingSaver HE 1.3.8: Position angepasst", positionInfo);
+                        console.info("BuildingSaver HE: Position angepasst", positionInfo);
                     } catch (resizeError) {
-                        console.warn("BuildingSaver HE 1.3.8: Resize-Neupositionierung fehlgeschlagen.", resizeError);
+                        console.warn("BuildingSaver HE: Resize-Neupositionierung fehlgeschlagen.", resizeError);
                     }
                 }, 150);
             });
@@ -1726,22 +1813,58 @@
             new qx.ui.form.Button("LAYOUT");
 
         buildingButton.set({
-            width: 130,
-            height: 46,
+            width: 88,
+            height: 28,
             appearance: "button-text-small",
-            toolTipText: "Building & Off-Saver HE – Test 1.3.2"
+            toolTipText: "Building & Off-Saver HE – Layout / Formation"
         });
 
-
-        buildingSaverContainer.add(
-            buildingButton,
-            {
-                left: 5,
-                top: 0
-            }
-        );
-        buildingButton.setBackgroundColor("#ff0000");
+        // Fallback-Position, falls die obere Spielleiste nicht gefunden wird.
+        buildingSaverContainer.add(buildingButton, { left: 5, top: 0 });
+        buildingButton.setBackgroundColor("#8f0000");
         buildingButton.setTextColor("#ffffff");
+
+        // Den Button nach "Skripte" in dieselbe Qooxdoo-Leiste verschieben.
+        // Die Bewegungslogik einschließlich 100-ms-Positionsprüfung bleibt unverändert.
+        var topMenuButtonAttached = false;
+        function findScriptsButton(widget, depth) {
+            if (!widget || depth > 12) return null;
+            try {
+                var label = typeof widget.getLabel === "function" ? widget.getLabel() : "";
+                if (String(label).trim().toLowerCase() === "skripte") return widget;
+                var children = typeof widget.getChildren === "function" ? widget.getChildren() : [];
+                for (var i = 0; i < children.length; i++) {
+                    var found = findScriptsButton(children[i], depth + 1);
+                    if (found) return found;
+                }
+            } catch (e) {}
+            return null;
+        }
+        function attachButtonToTopMenu() {
+            if (topMenuButtonAttached || !buildingButton || buildingButton.isDisposed()) return;
+            var scriptsButton = findScriptsButton(desktop, 0);
+            if (!scriptsButton || typeof scriptsButton.getLayoutParent !== "function") return;
+            var menuParent = scriptsButton.getLayoutParent();
+            if (!menuParent || typeof menuParent.add !== "function") return;
+            try {
+                var currentParent = buildingButton.getLayoutParent();
+                if (currentParent) currentParent.remove(buildingButton);
+                menuParent.add(buildingButton);
+                buildingButton.set({ width: 88, height: 28 });
+                topMenuButtonAttached = true;
+                console.info("BuildingSaver HE 1.3.5: Button hinter 'Skripte' in die obere Leiste verschoben.");
+            } catch (e) {
+                console.warn("BuildingSaver HE 1.3.5: Topmenü konnte nicht verwendet werden; Fallback bleibt aktiv.", e);
+            }
+        }
+        attachButtonToTopMenu();
+        var topMenuAttachTimer = window.setInterval(function () {
+            if (topMenuButtonAttached) {
+                window.clearInterval(topMenuAttachTimer);
+                return;
+            }
+            attachButtonToTopMenu();
+        }, 1000);
 
         // ========================================================
         // FORMATION Button
@@ -2324,22 +2447,22 @@
     function initBuildingSaver() {
         try {
             if (typeof qx === "undefined") {
-                console.warn("BuildingSaver HE 1.3.8: qx noch nicht verfügbar.");
+                console.warn("BuildingSaver HE: qx noch nicht verfügbar.");
                 return;
             }
 
             var application = qx.core.Init.getApplication();
             if (!application) {
-                console.warn("BuildingSaver HE 1.3.8: Anwendung noch nicht verfügbar.");
+                console.warn("BuildingSaver HE: Anwendung noch nicht verfügbar.");
                 return;
             }
 
             // Nicht mehr von getPlayArea() abhängig sein: Der Saver wird
             // direkt am Desktop positioniert und benötigt den PlayArea-Container nicht.
-            console.info("BuildingSaver HE 1.3.8: Initialisierung gestartet.");
+            console.info("BuildingSaver HE: Initialisierung gestartet.");
             createBuildingSaver();
         } catch (e) {
-            console.error("BuildingSaver HE 1.3.8: Initialisierung fehlgeschlagen.", e);
+            console.error("BuildingSaver HE: Initialisierung fehlgeschlagen.", e);
         }
     }
 
@@ -2359,7 +2482,7 @@
 
                 if (desktop) {
                     console.info(
-                        "%cBuildingSaver HE 1.3.8: Desktop verfügbar – Initialisierung wird ausgeführt.",
+                        "%cBuildingSaver HE 1.3.3 TEST: Desktop verfügbar – Initialisierung wird ausgeführt.",
                         "background:#ff0000;color:#ffffff;font-weight:bold;font-size:16px;padding:5px;"
                     );
                     initBuildingSaver();
@@ -2367,7 +2490,7 @@
                 }
             }
         } catch (e) {
-            console.error("BuildingSaver HE 1.3.8: Startprüfung fehlgeschlagen.", e);
+            console.error("BuildingSaver HE: Startprüfung fehlgeschlagen.", e);
         }
 
         window.setTimeout(checkGameLoaded, 1000);
