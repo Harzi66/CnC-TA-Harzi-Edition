@@ -6,8 +6,8 @@
 // @author      petui
 // @contributor    AlkalyneD4 (https://github.com/SebHeuze) Patch 19.3 Fix
 // @contributor    Netquik (https://github.com/SebHeuze) Patch 19.4 Fix + NOEVIL + 22.3
-// @downloadURL    https://raw.githubusercontent.com/SebHeuze/CnC_TA/master/TA_Autorepair.user.js
-// @updateURL      https://raw.githubusercontent.com/SebHeuze/CnC_TA/master/TA_Autorepair.user.js
+// @downloadURL https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/TA_Autorepair.js
+// @updateURL   https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/TA_Autorepair.js
 // ==/UserScript==
 (function () {
     var n = function () {
