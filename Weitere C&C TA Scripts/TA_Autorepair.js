@@ -2,13 +2,16 @@
 // @name        TA_Autorepair
 // @description Repair buildings in a specific order
 // @match       https://*.alliances.commandandconquer.com/*/index.aspx*
-// @version     1.0.4
+// @version     1.0.5
 // @author      petui
 // @contributor    AlkalyneD4 (https://github.com/SebHeuze) Patch 19.3 Fix
 // @contributor    Netquik (https://github.com/SebHeuze) Patch 19.4 Fix + NOEVIL + 22.3
 // @downloadURL https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/TA_Autorepair.js
 // @updateURL   https://raw.githubusercontent.com/Harzi66/CnC-TA-Harzi-Edition/main/Weitere%20C%26C%20TA%20Scripts/TA_Autorepair.js
 // ==/UserScript==
+
+// Update Test
+
 (function () {
     var n = function () {
         'use strict';
