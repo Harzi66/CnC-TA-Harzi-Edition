@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           CnC-TA-Building_&_Off-Saver - HE
 // @namespace      https://prodgame*.alliances.commandandconquer.com/*/index.aspx*
-// @version        1.3.5
+// @version        1.4.5
 // @description    Speichert und lädt Gebäudeaufstellungen und Off-Formationen
 // @author         Harzi
 // @match          https://*.alliances.commandandconquer.com/*/index.aspx*
@@ -9,32 +9,31 @@
 // @updateURL      https://raw.githubusercontent.com/Harzi66/CnC-TA-Building_-_Off-Saver-HE/main/CnC-TA-Building_%26_Off-Saver%20-%20HE.user.js
 // ==/UserScript==
 
+// Änderungen Version 1.4.5
+// Speicherstände sitzen jetzt in einem freibeweglichen Fenster auf dem Qooxdoo-Desktop
+// Der ehemalige Speicher Container wurde entfernt
+
 (function () {
 
     // ============================================================
     // TEST6 – Gebäudetyp-Klassifizierung + Sondergebäude-Parklogik
     // ============================================================
     window.HARZI_BUILDING_OFF_SAVER_TEST6 = true;
-    console.log("%cBUILDING & OFF-SAVER HE 1.3.1 – SCRIPT WIRD AUSGEFÜHRT", "background:#ff0000;color:#ffffff;font-weight:bold;font-size:16px;padding:6px;");
+    console.log("%cBUILDING & OFF-SAVER HE 1.4.0 – SCRIPT WIRD AUSGEFÜHRT", "background:#ff0000;color:#ffffff;font-weight:bold;font-size:16px;padding:6px;");
     console.log(
         "%cBUILDING-OFF-SAVER HE TEST6 – SCRIPT GELADEN",
         "color: lime; font-weight: bold; font-size: 14px;"
     );
 
-    // Desktop-Position unabhängig von Stadt-/Zielansicht.
-    // Werte können zum Testen frei angepasst werden.
-    var SAVER_DESKTOP_POSITION = { right: 575, top: 0 };
-    // Abstand zwischen Button-Rechtskante und MainOverlay-Rechtskante
-    // bei der gewünschten maximalen Ausgangsposition.
+    // Der Hauptbutton bleibt separat auf der Spieloberfläche bzw. im Topmenü.
+    // Speicherfenster werden unabhängig davon direkt auf dem Qooxdoo-Desktop erzeugt.
+    var SAVER_BUTTON_POSITION = { right: 575, top: 0 };
     var SAVER_OVERLAY_RIGHT_GAP = -150;
-    var SAVER_INITIAL_DESKTOP_WIDTH = null;
-    var SAVER_OVERLAY_RIGHT_INSET = null;
-    var SAVER_PANEL_OFFSET_Y = 75;
+    var SAVER_WINDOW_POSITION_KEY = "harziBuildingOffSaverWindowPosition";
 
-    var buildingSaverContainer = null;
+    var activeSaverWindow = null;
     var buildingButton = null;
     var buildingModeTimer = null;
-    var offSaverContainer = null;
     var offButton = null;
     var offFormationContainer = null;
     var offFormationCityId = null;
@@ -250,17 +249,21 @@
         .get_CityArmyFormationsManager()
         .GetFormationByTargetBaseId(cityID);
 
-        var armyUnits =
-            formation.get_ArmyUnits();
+        var armyUnits = null;
 
-        if (armyUnits !== null) {
-            armyUnits = armyUnits.l;
-        } else {
-            armyUnits =
-                currentOwnCity
-                .get_CityUnitsData()
-                .get_OffenseUnits()
-                .d;
+        if (formation && typeof formation.get_ArmyUnits === "function") {
+            var formationUnits = formation.get_ArmyUnits();
+            if (formationUnits && formationUnits.l) {
+                armyUnits = formationUnits.l;
+            }
+        }
+
+        // Falls für die eigene Basis keine Formation existiert,
+        // die tatsächlich vorhandenen Offensiv-Einheiten verwenden.
+        if (!armyUnits) {
+            var offenseData = currentOwnCity.get_CityUnitsData()
+                .get_OffenseUnits();
+            armyUnits = offenseData && offenseData.d ? offenseData.d : {};
         }
 
         var units = [];
@@ -277,23 +280,27 @@
             });
         }
 
-        // ========================================================
-        // Formationen sind global gespeichert.
-        // Sie gehören NICHT zu einem bestimmten Ziel oder einer
-        // bestimmten eigenen Basis.
-        // ========================================================
-        var layouts =
-            localStorage.harziOffFormations;
-
-        layouts =
-            layouts ? JSON.parse(layouts) : {};
-
-        if (layouts[layoutName]) {
-            alert("Der Formationsname ist bereits vergeben.");
+        // Formationen werden getrennt nach eigener Basis gespeichert.
+        // Eine leere Formation wird nicht als Speicherstand angelegt.
+        if (units.length === 0) {
+            alert("In dieser Basis sind keine Offensiv-Einheiten vorhanden.");
+            console.log("%cFORMATION: Speichern abgebrochen – keine Einheiten vorhanden.", "color: orange; font-weight: bold;");
             return false;
         }
 
-        layouts[layoutName] = {
+        var layouts = localStorage.harziOffFormations;
+        layouts = layouts ? JSON.parse(layouts) : {};
+
+        if (!layouts[ownCityId]) {
+            layouts[ownCityId] = {};
+        }
+
+        if (layouts[ownCityId][layoutName]) {
+            alert("Der Formationsname ist in dieser Basis bereits vergeben.");
+            return false;
+        }
+
+        layouts[ownCityId][layoutName] = {
             t: new Date().getTime(),
             units: units
         };
@@ -1185,54 +1192,110 @@
     // Gebäude-Saver UI erstellen
     // ============================================================
 
+    // ============================================================
+    // Eigenständiges Speicherfenster (ohne buildingSaverContainer)
+    // ============================================================
+
+    function closeActiveSaverWindow() {
+        if (activeSaverWindow) {
+            var oldWindow = activeSaverWindow;
+            activeSaverWindow = null;
+            offFormationContainer = null;
+            try {
+                if (!oldWindow.isDisposed()) oldWindow.destroy();
+            } catch (e) {}
+        }
+    }
+
+    function createSaverWindow(caption, width, height) {
+        closeActiveSaverWindow();
+
+        var application = qx.core.Init.getApplication();
+        var desktop = application && application.getDesktop();
+        if (!desktop) {
+            console.warn("BuildingSaver HE: Desktop für Speicherfenster nicht verfügbar.");
+            return null;
+        }
+
+        var saverWindow = new qx.ui.window.Window(caption);
+        saverWindow.set({
+            width: width || 220,
+            height: height || 300,
+            minWidth: 190,
+            showMinimize: false,
+            showMaximize: false,
+            allowMinimize: false,
+            allowMaximize: false,
+            resizable: true,
+            movable: true,
+            showStatusbar: false
+        });
+        // Die Window-eigene VBox erhält Titelleiste und Fensterrahmen.
+        saverWindow.setLayout(new qx.ui.layout.VBox());
+
+        // Echtes VBox-Layout: alle Bedienelemente bleiben unabhängig
+        // von der Fensterbreite horizontal zentriert.
+        var content = new qx.ui.container.Composite(
+            new qx.ui.layout.VBox(6).set({ alignX: "center" })
+        );
+        content.set({ minWidth: 178, padding: 8 });
+        saverWindow.add(content, { flex: 1 });
+
+        var savedPosition = null;
+        try {
+            savedPosition = JSON.parse(localStorage.getItem(SAVER_WINDOW_POSITION_KEY) || "null");
+        } catch (e) {}
+
+        var position = savedPosition && isFinite(savedPosition.left) && isFinite(savedPosition.top)
+            ? { left: Math.max(0, savedPosition.left), top: Math.max(0, savedPosition.top) }
+            : { right: 80, top: 90 };
+        desktop.add(saverWindow, position);
+
+        function persistWindowPosition() {
+            try {
+                var bounds = saverWindow.getBounds();
+                if (bounds && isFinite(bounds.left) && isFinite(bounds.top)) {
+                    localStorage.setItem(SAVER_WINDOW_POSITION_KEY, JSON.stringify({
+                        left: Math.max(0, Math.round(bounds.left)),
+                        top: Math.max(0, Math.round(bounds.top))
+                    }));
+                }
+            } catch (e) {}
+        }
+        saverWindow.addListener("move", persistWindowPosition);
+        saverWindow.addListener("close", function () {
+            if (activeSaverWindow === saverWindow) {
+                activeSaverWindow = null;
+                    offFormationContainer = null;
+            }
+            try {
+                if (!saverWindow.isDisposed()) saverWindow.destroy();
+            } catch (e) {}
+        });
+
+        activeSaverWindow = saverWindow;
+        saverWindow.open();
+        return { window: saverWindow, content: content };
+    }
+
     function openOffFormationSaver() {
 
-        // Bereits geöffnetes Formation-Fenster zuerst schließen
-        if (offFormationContainer) {
-            offFormationContainer.destroy();
-            offFormationContainer = null;
-        }
-
-        var container =
-            new qx.ui.container.Composite();
-
-        offFormationContainer = container;
-
-        container.setLayout(
-            new qx.ui.layout.Canvas()
-        );
-
-        container.set({
-            width: 120,
-            height: 250,
-            zIndex: 10000
-        });
-
-        // Formation-Popup relativ zur frei gewählten Desktop-Position.
-        var panelPosition = Object.assign({}, SAVER_DESKTOP_POSITION);
-        if (panelPosition.top !== undefined) {
-            panelPosition.top += SAVER_PANEL_OFFSET_Y;
-        } else if (panelPosition.bottom !== undefined) {
-            panelPosition.bottom -= SAVER_PANEL_OFFSET_Y;
-        }
-        buildingSaverContainer.getLayoutParent().add(container, panelPosition);
+        var saverUi = createSaverWindow("Off-Formationen", 220, 330);
+        if (!saverUi) return;
+        var container = saverUi.content;
+        offFormationContainer = saverUi.window;
 
         var label =
-            new qx.ui.basic.Label("Formation");
+            new qx.ui.basic.Label("Off-Formationen");
 
         label.set({
-            width: 110,
+            width: 150,
             height: 20,
-            textColor: "#FFFFFF"
+            textColor: "#FFFFFF",
+            textAlign: "center"
         });
 
-        container.add(
-            label,
-            {
-                left: 5,
-                top: 5
-            }
-        );
+        container.add(label);
 
         var input =
             new qx.ui.form.TextField();
@@ -1242,19 +1305,13 @@
             height: 22
         });
 
-        container.add(
-            input,
-            {
-                left: 5,
-                top: 30
-            }
-        );
+        container.add(input);
 
         var formationList =
             new qx.ui.container.Composite();
 
         formationList.setLayout(
-            new qx.ui.layout.VBox(2)
+            new qx.ui.layout.VBox(2).set({ alignX: "center" })
         );
 
         var city =
@@ -1264,6 +1321,7 @@
         .get_CurrentOwnCity();
 
         if (!city) {
+            closeActiveSaverWindow();
             return;
         }
 
@@ -1272,15 +1330,13 @@
 
         offFormationCityId = ownCityId;
 
-        var layouts =
-            localStorage.harziOffFormations;
+        var layouts = localStorage.harziOffFormations;
+        layouts = layouts ? JSON.parse(layouts) : {};
+        var cityLayouts = layouts[ownCityId] || {};
 
-        layouts =
-            layouts ? JSON.parse(layouts) : {};
-
-        // Formationsspeicher ist global und nicht zielgebunden.
+        // Nur Formationen dieser eigenen Basis anzeigen.
         for (
-            var formationName in layouts
+            var formationName in cityLayouts
         ) {
 
             var row =
@@ -1336,13 +1392,9 @@
                     "execute",
                     function () {
 
-                        delete layouts[name];
+                        delete layouts[ownCityId][name];
 
-                        localStorage
-                            .harziOffFormations =
-                            JSON.stringify(
-                            layouts
-                        );
+                        localStorage.harziOffFormations = JSON.stringify(layouts);
 
                         formationList.remove(
                             currentRow
@@ -1368,14 +1420,6 @@
             );
         }
 
-        container.add(
-            formationList,
-            {
-                left: 5,
-                top: 115
-            }
-        );
-
         var saveButton =
             new qx.ui.form.Button("Speichern");
 
@@ -1385,13 +1429,7 @@
             appearance: "button-text-small"
         });
 
-        container.add(
-            saveButton,
-            {
-                left: 5,
-                top: 55
-            }
-        );
+        container.add(saveButton);
 
         saveButton.addListener(
             "execute",
@@ -1459,18 +1497,14 @@
                     "execute",
                     function () {
 
-                        var currentLayouts =
-                            localStorage.harziOffFormations;
+                        var currentLayouts = localStorage.harziOffFormations;
+                        currentLayouts = currentLayouts ? JSON.parse(currentLayouts) : {};
 
-                        currentLayouts =
-                            currentLayouts
-                            ? JSON.parse(currentLayouts)
-                        : {};
+                        if (currentLayouts[ownCityId]) {
+                            delete currentLayouts[ownCityId][name];
+                        }
 
-                        delete currentLayouts[name];
-
-                        localStorage.harziOffFormations =
-                            JSON.stringify(currentLayouts);
+                        localStorage.harziOffFormations = JSON.stringify(currentLayouts);
 
                         formationList.remove(row);
                     }
@@ -1494,18 +1528,13 @@
             appearance: "button-text-small"
         });
 
-        container.add(
-            closeButton,
-            {
-                left: 5,
-                top: 88
-            }
-        );
+        container.add(closeButton);
+        container.add(formationList);
 
         closeButton.addListener(
             "execute",
             function () {
-                container.destroy();
+                closeActiveSaverWindow();
             }
         );
     }
@@ -1516,11 +1545,8 @@
 
     function loadOffFormation(layoutName) {
 
-        var layouts =
-            localStorage.harziOffFormations;
-
-        layouts =
-            layouts ? JSON.parse(layouts) : {};
+        var layouts = localStorage.harziOffFormations;
+        layouts = layouts ? JSON.parse(layouts) : {};
 
         var cities =
             ClientLib.Data.MainData.GetInstance()
@@ -1536,17 +1562,17 @@
         var ownCityId =
             currentOwnCity.get_Id();
 
-        // Formationen sind global gespeichert und unabhängig vom Ziel.
-        if (!layouts[layoutName]) {
+        // Nur Speicherstände der aktuell eigenen Basis zulassen.
+        var cityLayouts = layouts[ownCityId] || {};
+        if (!cityLayouts[layoutName]) {
             console.log(
-                "%cFORMATION: Globale Formation nicht gefunden: " + layoutName,
+                "%cFORMATION: Für diese Basis nicht gefunden: " + layoutName,
                 "color: red; font-weight: bold;"
             );
             return;
         }
 
-        var saved =
-            layouts[layoutName];
+        var saved = cityLayouts[layoutName];
 
         var currentCity =
             cities.get_CurrentCity();
@@ -1686,39 +1712,16 @@
     }
 
     function closeBuildingLayout() {
-
-        if (buildingLayoutInput) {
-            buildingSaverContainer.remove(
-                buildingLayoutInput
-            );
-            buildingLayoutInput = null;
-        }
-
-        if (buildingLayoutList) {
-            buildingSaverContainer.remove(
-                buildingLayoutList
-            );
-            buildingLayoutList = null;
-        }
-
-        if (buildingLayoutSaveButton) {
-            buildingSaverContainer.remove(
-                buildingLayoutSaveButton
-            );
-            buildingLayoutSaveButton = null;
-        }
-
-        if (buildingLayoutCloseButton) {
-            buildingSaverContainer.remove(
-                buildingLayoutCloseButton
-            );
-            buildingLayoutCloseButton = null;
-        }
+        closeActiveSaverWindow();
+        buildingLayoutInput = null;
+        buildingLayoutList = null;
+        buildingLayoutSaveButton = null;
+        buildingLayoutCloseButton = null;
     }
 
     function createBuildingSaver() {
 
-        if (buildingSaverContainer) {
+        if (buildingButton && !buildingButton.isDisposed()) {
             return;
         }
 
@@ -1730,19 +1733,14 @@
             return;
         }
 
-        console.info("BuildingSaver HE: Desktop gefunden, erstelle Saver.");
-        buildingSaverContainer = new qx.ui.container.Composite();
-        buildingSaverContainer.setLayout(new qx.ui.layout.Canvas());
-        buildingSaverContainer.setWidth(140);
-        buildingSaverContainer.setHeight(260);
-        buildingSaverContainer.setZIndex(9999);
+        console.info("BuildingSaver HE: Desktop gefunden, erstelle Saver-Button.");
 
-        // Der Button bleibt auf dem Desktop, wird aber relativ zur rechten Kante
-        // des zentralen MainOverlay positioniert. Bei maximaler Fenstergröße
-        // ergibt der ursprüngliche Abstand right: 575 genau einen Overlay-Abstand von 72 px.
-        desktop.add(buildingSaverContainer, SAVER_DESKTOP_POSITION);
+        // Der Button liegt direkt auf dem Desktop. Der frühere Container
+        // für Button und Speicheroberflächen wird nicht mehr angelegt.
+        buildingButton = new qx.ui.form.Button("LAYOUT");
+        desktop.add(buildingButton, SAVER_BUTTON_POSITION);
 
-        function positionSaverRelativeToOverlay(targetDesktop) {
+        function positionSaverButtonRelativeToOverlay(targetDesktop) {
             var desktopBounds = targetDesktop && targetDesktop.getBounds && targetDesktop.getBounds();
             var children = targetDesktop && targetDesktop.getChildren ? targetDesktop.getChildren() : [];
             var overlay = children.find(function (child) {
@@ -1750,67 +1748,42 @@
                     child.constructor.classname === "webfrontend.gui.MainOverlay";
             });
             var overlayBounds = overlay && overlay.getBounds && overlay.getBounds();
-
-            if (!desktopBounds || !desktopBounds.width || !overlayBounds || !overlayBounds.width) {
-                return false;
-            }
+            if (!desktopBounds || !desktopBounds.width || !overlayBounds || !overlayBounds.width) return false;
 
             var overlayRight = overlayBounds.left + overlayBounds.width;
             var rightOffset = Math.max(0, Math.round(
                 desktopBounds.width - overlayRight + SAVER_OVERLAY_RIGHT_GAP
             ));
-
-            buildingSaverContainer.setLayoutProperties({ right: rightOffset, top: 0 });
-            if (typeof targetDesktop.updateLayout === "function") {
-                targetDesktop.updateLayout();
+            if (buildingButton && !buildingButton.isDisposed() &&
+                buildingButton.getLayoutParent() === targetDesktop) {
+                buildingButton.setLayoutProperties({ right: rightOffset, top: 0 });
+                if (typeof targetDesktop.updateLayout === "function") targetDesktop.updateLayout();
             }
             return { right: rightOffset, desktopWidth: desktopBounds.width,
                 overlayLeft: overlayBounds.left, overlayWidth: overlayBounds.width,
                 overlayRight: overlayRight };
         }
 
-        // Position schon beim Start korrigieren, auch wenn DevTools bereits offen ist.
-        var initialPosition = positionSaverRelativeToOverlay(desktop);
-        if (initialPosition) {
-            console.info("BuildingSaver HE: Startposition", initialPosition);
-        }
-
-        // Die Resize-Position wird immer aus den aktuellen Desktop- und Overlay-Bounds berechnet.
+        var initialPosition = positionSaverButtonRelativeToOverlay(desktop);
+        if (initialPosition) console.info("BuildingSaver HE: Button-Startposition", initialPosition);
 
         if (!window.__buildingSaverResizeHandlerInstalled) {
             window.__buildingSaverResizeHandlerInstalled = true;
             window.addEventListener("resize", function () {
-                // Qooxdoo aktualisiert Overlay-Bounds nach dem Browser-Resize.
-                // Deshalb nach kurzer Verzögerung stets aktuelle Widgets neu suchen.
                 window.setTimeout(function () {
                     try {
-                        if (!buildingSaverContainer || buildingSaverContainer.isDisposed()) {
-                            return;
-                        }
-
+                        if (!buildingButton || buildingButton.isDisposed()) return;
                         var currentApp = qx.core.Init.getApplication();
                         var currentDesktop = currentApp && currentApp.getDesktop();
-                        if (!currentDesktop) {
-                            console.warn("BuildingSaver HE: Desktop noch nicht verfügbar.");
-                            return;
-                        }
-
-                        var positionInfo = positionSaverRelativeToOverlay(currentDesktop);
-                        if (!positionInfo) {
-                            console.warn("BuildingSaver HE: Overlay-Bounds noch nicht verfügbar.");
-                            return;
-                        }
-
-                        console.info("BuildingSaver HE: Position angepasst", positionInfo);
+                        if (!currentDesktop) return;
+                        var positionInfo = positionSaverButtonRelativeToOverlay(currentDesktop);
+                        if (positionInfo) console.info("BuildingSaver HE: Button-Position angepasst", positionInfo);
                     } catch (resizeError) {
-                        console.warn("BuildingSaver HE: Resize-Neupositionierung fehlgeschlagen.", resizeError);
+                        console.warn("BuildingSaver HE: Button-Neupositionierung fehlgeschlagen.", resizeError);
                     }
                 }, 150);
             });
         }
-
-        buildingButton =
-            new qx.ui.form.Button("LAYOUT");
 
         buildingButton.set({
             width: 88,
@@ -1818,9 +1791,7 @@
             appearance: "button-text-small",
             toolTipText: "Building & Off-Saver HE – Layout / Formation"
         });
-
-        // Fallback-Position, falls die obere Spielleiste nicht gefunden wird.
-        buildingSaverContainer.add(buildingButton, { left: 5, top: 0 });
+        // Ohne Topmenü bleibt der Button direkt auf dem Desktop.
         buildingButton.setBackgroundColor("#8f0000");
         buildingButton.setTextColor("#ffffff");
 
@@ -1852,7 +1823,7 @@
                 menuParent.add(buildingButton);
                 buildingButton.set({ width: 88, height: 28 });
                 topMenuButtonAttached = true;
-                console.info("BuildingSaver HE 1.3.5: Button hinter 'Skripte' in die obere Leiste verschoben.");
+                console.info("BuildingSaver HE 1.4.0: Button hinter 'Skripte' in die obere Leiste verschoben.");
             } catch (e) {
                 console.warn("BuildingSaver HE 1.3.5: Topmenü konnte nicht verwendet werden; Fallback bleibt aktiv.", e);
             }
@@ -1880,6 +1851,7 @@
         function getSaverStateKey(currentMode) {
 
             var currentCityId = -1;
+            var currentCityName = "";
 
             try {
                 var currentCity =
@@ -1891,26 +1863,26 @@
                 if (currentCity && typeof currentCity.get_Id === "function") {
                     currentCityId = currentCity.get_Id();
                 }
+                if (currentCity) {
+                    currentCityName = currentCity.Name ||
+                        (typeof currentCity.get_Name === "function" ? currentCity.get_Name() : "");
+                }
             } catch (e) {
                 currentCityId = -1;
+                currentCityName = "";
             }
 
-            return String(currentMode) + "|" + String(currentCityId);
+            return String(currentMode) + "|" + String(currentCityId) + "|" + String(currentCityName);
         }
 
         function closeExpandedSaverPanels() {
-
-            // Layout-Ausklappung schließen
-            closeBuildingLayout();
-
-            // Formation-Ausklappung schließen
-            if (offFormationContainer) {
-                try {
-                    offFormationContainer.destroy();
-                } catch (e) {}
-
-                offFormationContainer = null;
-            }
+            // Bei jedem Wechsel von Ansicht, Modus oder City wird das
+            // eigenständige Speicherfenster vollständig geschlossen.
+            closeActiveSaverWindow();
+            buildingLayoutInput = null;
+            buildingLayoutList = null;
+            buildingLayoutSaveButton = null;
+            buildingLayoutCloseButton = null;
         }
 
         buildingModeTimer =
@@ -2086,6 +2058,23 @@
 
                 buildingButton.setLabel("LAYOUT");
 
+                var saverUi = createSaverWindow("Gebäude-Layouts", 220, 340);
+                if (!saverUi) return;
+                var saverContent = saverUi.content;
+
+                // Überschrift innerhalb des Fensters
+                var layoutHeading =
+                    new qx.ui.basic.Label("Gebäude-Layouts");
+
+                layoutHeading.set({
+                    width: 150,
+                    height: 20,
+                    textColor: "#FFFFFF",
+                    textAlign: "center"
+                });
+
+                saverContent.add(layoutHeading);
+
                 var input =
                     new qx.ui.form.TextField();
 
@@ -2104,7 +2093,7 @@
                 buildingLayoutList = layoutList;
 
                 layoutList.setLayout(
-                    new qx.ui.layout.VBox(2)
+                    new qx.ui.layout.VBox(2).set({ alignX: "center" })
                 );
 
 
@@ -2115,6 +2104,7 @@
                 .get_CurrentOwnCity();
 
                 if (!city) {
+                    closeActiveSaverWindow();
                     return;
                 }
 
@@ -2229,22 +2219,10 @@
                 }
 
 
-                buildingSaverContainer.add(
-                    input,
-                    {
-                        left: 5,
-                        top: 44
-                    }
-                );
+                saverContent.add(input);
 
 
-                buildingSaverContainer.add(
-                    layoutList,
-                    {
-                        left: 5,
-                        top: 125
-                    }
-                );
+
 
 
                 // ====================================================
@@ -2264,13 +2242,7 @@
 
                 buildingLayoutSaveButton = saveButton;
 
-                buildingSaverContainer.add(
-                    saveButton,
-                    {
-                        left: 5,
-                        top: 70
-                    }
-                );
+                saverContent.add(saveButton);
 
 
                 saveButton.addListener(
@@ -2408,30 +2380,19 @@
 
                 buildingLayoutCloseButton = closeButton;
 
-                buildingSaverContainer.add(
-                    closeButton,
-                    {
-                        left: 5,
-                        top: 100
-                    }
-                );
+                saverContent.add(closeButton);
+                saverContent.add(layoutList);
 
 
                 closeButton.addListener(
                     "execute",
                     function () {
 
-                        buildingSaverContainer
-                            .remove(input);
-
-                        buildingSaverContainer
-                            .remove(layoutList);
-
-                        buildingSaverContainer
-                            .remove(saveButton);
-
-                        buildingSaverContainer
-                            .remove(closeButton);
+                        closeActiveSaverWindow();
+                        buildingLayoutInput = null;
+                        buildingLayoutList = null;
+                        buildingLayoutSaveButton = null;
+                        buildingLayoutCloseButton = null;
                     }
                 );
 
@@ -2482,7 +2443,7 @@
 
                 if (desktop) {
                     console.info(
-                        "%cBuildingSaver HE 1.3.3 TEST: Desktop verfügbar – Initialisierung wird ausgeführt.",
+                        "%cBuildingSaver HE 1.4.0: Desktop verfügbar – Initialisierung wird ausgeführt.",
                         "background:#ff0000;color:#ffffff;font-weight:bold;font-size:16px;padding:5px;"
                     );
                     initBuildingSaver();
