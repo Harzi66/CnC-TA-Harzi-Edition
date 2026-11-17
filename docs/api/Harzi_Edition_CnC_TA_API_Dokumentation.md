@@ -3,7 +3,7 @@ Harzi Edition – C\&C Tiberium Alliances API-Dokumentation
 Version: 0.1 – Arbeitsstand
 
 Erstellt: 17.11.2026
-
+ 
 Grundlage: öffentliches Repository ConnorPerrin/TiberiumAlliancesMod
 
 Zweck: Zentrale, fortlaufend zu ergänzende Wissensbasis für die Entwicklung und Wartung der Harzi-Edition-Scripte.
