@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           Tiberium Alliances Real POI Bonus HE
-// @version        1.4.7
+// @version        1.4.8
 // @namespace      https://openuserjs.org/users/petui
 // @license        GPL-3.0-or-later
 // @author         petui (Original) / Harzi (Weiterentwicklung)
@@ -18,7 +18,7 @@ var main = function() {
 'use strict';
 
 function createRealPOIBonus() {
-			console.log('[RealPOIBonus HE] v1.4.7 loaded; page context active');
+			console.log('[RealPOIBonus HE] v1.4.8 loaded; page context active');
 
 			qx.Class.define('RealPOIBonus', {
 				type: 'singleton',
@@ -164,8 +164,10 @@ if (typeof prototype.getObject !== 'function') {
                             var poi = ownedPois[i];
                             if (!poi || poi.t === undefined) continue;
 
-                            var mappedType = ClientLib.Base.PointOfInterestTypes.GetPOITypeFromWorldPOIType(poi.t);
-                            if (mappedType === poiType) {
+                            // OwnedPOIs.t already contains the ranked POI type used by
+                            // poiType. Do not convert it again from a world-object type:
+                            // that conversion mixes categories (e.g. Reactor/Tungsten).
+                            if (poi.t === poiType) {
                                 matchingPois.push({ x: poi.x, y: poi.y, level: poi.l });
                             }
                         }
