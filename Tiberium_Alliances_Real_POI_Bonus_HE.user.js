@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           Tiberium Alliances Real POI Bonus HE
-// @version        1.4.8
+// @version        1.5.0
 // @namespace      https://openuserjs.org/users/petui
 // @license        GPL-3.0-or-later
 // @author         petui (Original) / Harzi (Weiterentwicklung)
@@ -18,7 +18,7 @@ var main = function() {
 'use strict';
 
 function createRealPOIBonus() {
-			console.log('[RealPOIBonus HE] v1.4.8 loaded; page context active');
+			console.log('[RealPOIBonus HE] v1.5.1 TEST loaded; page context active');
 
 			qx.Class.define('RealPOIBonus', {
 				type: 'singleton',
@@ -59,7 +59,18 @@ PoiRankingTypeToSortColumnMap: {}
                     statusLabel: null,
                     ownedPoiListContainer: null,
                     ownedPoiListRows: [],
+                    poiProximityLabel: null,
+                    archiveBaseRadiusKey: null,
+                    archiveRuinRadiusKey: null,
+                    archiveBaseRadiusField: null,
+                    archiveRuinRadiusField: null,
                     poiStatusInfo: null,
+                    allianceBaseCoordinates: [],
+                    allianceBaseAllianceId: null,
+                    allianceBaseMemberSignature: null,
+                    allianceBaseCoordinatesLoaded: false,
+                    allianceBaseCoordinatesLoading: false,
+                    allianceBaseLoadCallbacks: [],
 					ownedPoiCount: 0,
                     poiArchiveEntries: [],
                     poiArchiveStorageKey: null,
@@ -113,11 +124,14 @@ this.container = new qx.ui.container.Composite(new qx.ui.layout.VBox(2)).set({
                         this.container.add(this.downRealisticLabel);
                         this.container.add(this.downOptimisticLabel);
                         this.container.add(this.statusLabel);
+                        // Eigener vertikaler Bereich: jede Ruine erhält eine eigene Zeile.
+                        this.poiProximityLabel = new qx.ui.container.Composite(new qx.ui.layout.VBox(0));
+                        this.container.add(this.poiProximityLabel);
                         this.container.add(this.ownedPoiListContainer);
 
                         // Separate archive entry point; archive functionality is added independently.
                         this.archiveButton = new qx.ui.form.Button(this.archiveText('archive'));
-                        this.archiveButton.set({ width: 110 });
+                        this.archiveButton.set({ width: 165 });
                         this.archiveButton.addListener('execute', this.openArchiveWindow, this);
                         this.container.add(this.archiveButton);
 
@@ -155,7 +169,196 @@ if (typeof prototype.getObject !== 'function') {
 }
 },
 
+                    // Lädt die Koordinaten aller Basen der eigenen Allianz einmalig
+                    // über GetPublicPlayerInfo. Dadurch ist die Erkennung unabhängig
+                    // davon, welche Weltkartensektoren gerade geladen sind.
+                    ensureAllianceBaseCoordinates: function(callback) {
+                        var mainData = ClientLib.Data.MainData.GetInstance();
+                        var alliance = mainData && mainData.get_Alliance ? mainData.get_Alliance() : null;
+                        var allianceId = alliance && alliance.get_Id ? alliance.get_Id() : 0;
+
+                        if (!alliance || !allianceId || !alliance.getMemberIds) {
+                            if (callback) callback();
+                            return;
+                        }
+
+                        var memberIdsObject = alliance.getMemberIds();
+                        var memberIds = memberIdsObject && memberIdsObject.l ? memberIdsObject.l : [];
+                        var memberSignature = memberIds.join(',');
+
+                        if (this.allianceBaseAllianceId !== allianceId ||
+                            this.allianceBaseMemberSignature !== memberSignature) {
+                            this.allianceBaseAllianceId = allianceId;
+                            this.allianceBaseMemberSignature = memberSignature;
+                            this.allianceBaseCoordinates = [];
+                            this.allianceBaseCoordinatesLoaded = false;
+                            this.allianceBaseCoordinatesLoading = false;
+                            this.allianceBaseLoadCallbacks = [];
+                        }
+
+                        if (callback) {
+                            if (this.allianceBaseCoordinatesLoaded) callback();
+                            else this.allianceBaseLoadCallbacks.push(callback);
+                        }
+
+                        if (this.allianceBaseCoordinatesLoaded || this.allianceBaseCoordinatesLoading) return;
+
+                        if (!memberIds.length) {
+                            this.allianceBaseCoordinatesLoaded = true;
+                            this.finishAllianceBaseCoordinateLoad();
+                            return;
+                        }
+
+                        this.allianceBaseCoordinatesLoading = true;
+                        this.allianceBaseLoadFailures = 0;
+                        this.allianceBaseLoadIndex = 0;
+                        this.allianceBaseLoadMemberIds = memberIds.slice(0);
+                        console.log('[RealPOIBonus HE] Lade Basenkoordinaten für ' +
+                            memberIds.length + ' Allianzmitglieder …');
+
+                        this.loadNextAllianceMemberBases();
+                    },
+
+                    loadNextAllianceMemberBases: function() {
+                        var self = this;
+                        var memberIds = this.allianceBaseLoadMemberIds || [];
+                        var index = this.allianceBaseLoadIndex || 0;
+
+                        if (index >= memberIds.length) {
+                            this.allianceBaseCoordinatesLoading = false;
+                            this.allianceBaseCoordinatesLoaded = true;
+                            this.finishAllianceBaseCoordinateLoad();
+                            return;
+                        }
+
+                        var playerId = memberIds[index];
+                        this.allianceBaseLoadIndex = index + 1;
+                        var completed = false;
+                        var timeoutId = window.setTimeout(function() {
+                            if (completed) return;
+                            completed = true;
+                            self.allianceBaseLoadFailures++;
+                            console.warn('[RealPOIBonus HE] Zeitüberschreitung bei Spieler-ID ' + playerId);
+                            window.setTimeout(function() { self.loadNextAllianceMemberBases(); }, 50);
+                        }, 15000);
+
+                        var handleResult = function(data) {
+                            if (completed) return;
+                            completed = true;
+                            window.clearTimeout(timeoutId);
+
+                            if (data && data.c && data.c.length) {
+                                for (var i = 0; i < data.c.length; i++) {
+                                    var base = data.c[i];
+                                    var x = Number(base && base.x);
+                                    var y = Number(base && base.y);
+                                    if (isFinite(x) && isFinite(y)) {
+                                        self.allianceBaseCoordinates.push({ x: x, y: y });
+                                    }
+                                }
+                            } else if (!data) {
+                                self.allianceBaseLoadFailures++;
+                            }
+
+                            window.setTimeout(function() { self.loadNextAllianceMemberBases(); }, 50);
+                        };
+
+                        try {
+                            ClientLib.Net.CommunicationManager.GetInstance().SendSimpleCommand(
+                                'GetPublicPlayerInfo',
+                                { id: playerId },
+                                webfrontend.phe.cnc.Util.createEventDelegate(
+                                    ClientLib.Net.CommandResult,
+                                    null,
+                                    function(context, data) { handleResult(data); }
+                                ),
+                                null,
+                                function(error) {
+                                    if (completed) return;
+                                    completed = true;
+                                    window.clearTimeout(timeoutId);
+                                    self.allianceBaseLoadFailures++;
+                                    console.warn('[RealPOIBonus HE] Spielerinformationen konnten nicht geladen werden:',
+                                        playerId, error);
+                                    window.setTimeout(function() { self.loadNextAllianceMemberBases(); }, 50);
+                                }
+                            );
+                        } catch (e) {
+                            if (!completed) {
+                                completed = true;
+                                window.clearTimeout(timeoutId);
+                                this.allianceBaseLoadFailures++;
+                                console.warn('[RealPOIBonus HE] Abruf der Spielerinformationen fehlgeschlagen:',
+                                    playerId, e);
+                                window.setTimeout(function() { self.loadNextAllianceMemberBases(); }, 50);
+                            }
+                        }
+                    },
+
+                    finishAllianceBaseCoordinateLoad: function() {
+                        console.log('[RealPOIBonus HE] Basenabfrage abgeschlossen: ' +
+                            this.allianceBaseCoordinates.length + ' Basen aus ' +
+                            (this.allianceBaseLoadMemberIds || []).length + ' Mitgliedern; Fehler: ' +
+                            (this.allianceBaseLoadFailures || 0) + '.');
+
+                        var callbacks = this.allianceBaseLoadCallbacks || [];
+                        this.allianceBaseLoadCallbacks = [];
+                        for (var i = 0; i < callbacks.length; i++) {
+                            try { callbacks[i](); }
+                            catch (e) { console.warn('[RealPOIBonus HE] Aktualisierung nach Basenabfrage fehlgeschlagen:', e); }
+                        }
+
+                        // Bereits geöffnetes POI-Fenster und die eigene POI-Liste aktualisieren.
+                        if (this.poiStatusInfo && typeof this.poiStatusInfo.getObject === 'function') {
+                            var selectedPoi = this.poiStatusInfo.getObject();
+                            if (selectedPoi && selectedPoi.get_OwnerAllianceId &&
+                                selectedPoi.get_OwnerAllianceId() === this.allianceBaseAllianceId) {
+                                this.updatePoiProximityInfo(selectedPoi);
+                            }
+                        }
+                        if (this.currentOwnedPoiType !== undefined && this.currentOwnedPoiType !== null) {
+                            this.updateOwnedPoiList(this.currentOwnedPoiType);
+                        }
+                    },
+
+                    countAllianceBasesNear: function(centerX, centerY, radius) {
+                        var bases = this.allianceBaseCoordinates || [];
+                        var count = 0;
+                        for (var i = 0; i < bases.length; i++) {
+                            if (Math.abs(bases[i].x - centerX) <= radius &&
+                                Math.abs(bases[i].y - centerY) <= radius) {
+                                count++;
+                            }
+                        }
+                        return count;
+                    },
+
+                    getPoiProtectionCounts: function(centerX, centerY) {
+                        var mainData = ClientLib.Data.MainData.GetInstance();
+                        var world = mainData.get_World();
+                        var baseRadius = this.getPoiProximityRadius(this.archiveBaseRadiusKey, 2);
+                        var ruinRadius = this.getPoiProximityRadius(this.archiveRuinRadiusKey, 5);
+                        var bases = this.countAllianceBasesNear(centerX, centerY, baseRadius);
+                        var ruins = 0;
+
+                        // Die Ruinenerkennung bleibt vorerst unverändert.
+                        for (var rx = centerX - ruinRadius; rx <= centerX + ruinRadius; rx++) {
+                            for (var ry = centerY - ruinRadius; ry <= centerY + ruinRadius; ry++) {
+                                var ruinObject = world.GetObjectFromPosition(rx, ry);
+                                if (ruinObject && ruinObject.Type === 7) {
+                                    var alliance = mainData.get_Alliance();
+                                    var ownOwnerId = 536870912 + alliance.get_Id();
+                                    if (world.GetOwner(rx, ry) === ownOwnerId) ruins++;
+                                }
+                            }
+                        }
+
+                        return { bases: bases, ruins: ruins };
+                    },
+
                     updateOwnedPoiList: function(poiType) {
+                        this.currentOwnedPoiType = poiType;
+                        this.ensureAllianceBaseCoordinates();
                         var alliance = ClientLib.Data.MainData.GetInstance().get_Alliance();
                         var ownedPois = alliance && alliance.get_Exists() ? alliance.get_OwnedPOIs() : [];
                         var matchingPois = [];
@@ -188,6 +391,7 @@ if (typeof prototype.getObject !== 'function') {
 
                         for (var j = 0; j < matchingPois.length; j++) {
                             var entry = matchingPois[j];
+                            var poiEntryContainer = new qx.ui.container.Composite(new qx.ui.layout.HBox(4));
                             var row = new qx.ui.basic.Label(
                                 (j + 1) + '. ' + entry.x + ':' + entry.y + '  ·  Stufe ' + entry.level
                             );
@@ -203,8 +407,113 @@ if (typeof prototype.getObject !== 'function') {
                                 });
                             })(entry.x, entry.y);
 
-                            this.ownedPoiListContainer.add(row);
-                            this.ownedPoiListRows.push(row);
+                            var protection = this.getPoiProtectionCounts(entry.x, entry.y);
+                            var baseWord = protection.bases === 1 ? 'Basis' : 'Basen';
+                            var ruinWord = protection.ruins === 1 ? 'Ruine' : 'Ruinen';
+                            var protectionLabel = new qx.ui.basic.Label(
+                                'Abgesichert durch ' + protection.bases + ' ' + baseWord +
+                                ' + ' + protection.ruins + ' ' + ruinWord
+                            );
+                            protectionLabel.setTextColor('#ffff00');
+
+                            // Protection text belongs directly after the POI details
+                            // in the same horizontal line, not on a second line.
+                            poiEntryContainer.add(row);
+                            poiEntryContainer.add(protectionLabel);
+                            this.ownedPoiListContainer.add(poiEntryContainer);
+                            this.ownedPoiListRows.push(poiEntryContainer);
+                        }
+                    },
+
+                    getPoiProximityRadius: function(key, defaultValue) {
+                        var value = defaultValue;
+                        try { value = Number(localStorage.getItem(key) || defaultValue); } catch (e) {}
+                        if (!isFinite(value)) value = defaultValue;
+                        return Math.max(1, Math.min(10, Math.floor(value)));
+                    },
+
+                    updatePoiProximityInfo: function(visObject) {
+                        if (!this.poiProximityLabel) return;
+
+                        try {
+                            if (!visObject || !visObject.LANSRZ ||
+                                !isFinite(Number(visObject.DFQBMN)) ||
+                                !isFinite(Number(visObject.IIESIH))) {
+                                this.poiProximityLabel.removeAll();
+                                return;
+                            }
+
+                            var centerX = Number(visObject.DFQBMN);
+                            var centerY = Number(visObject.IIESIH);
+                            var mainData = ClientLib.Data.MainData.GetInstance();
+                            var world = mainData.get_World();
+                            var view = ClientLib.Vis.VisMain.GetInstance().get_Region();
+                            var alliance = mainData.get_Alliance();
+                            var allianceId = alliance && alliance.get_Id ? alliance.get_Id() : 0;
+                            var ownOwnerId = 536870912 + allianceId;
+                            var baseRadius = this.getPoiProximityRadius(this.archiveBaseRadiusKey, 2);
+                            var ruinRadius = this.getPoiProximityRadius(this.archiveRuinRadiusKey, 5);
+                            var ruins = [];
+
+                            // Spielerbasen kommen aus GetPublicPlayerInfo aller Allianzmitglieder,
+                            // nicht mehr aus den aktuell geladenen Weltkartensektoren.
+                            this.ensureAllianceBaseCoordinates();
+                            var baseCount = this.countAllianceBasesNear(centerX, centerY, baseRadius);
+
+                            // Ruinen werden über die aktuell geladene Kartenansicht geprüft.
+                            for (var rx = centerX - ruinRadius; rx <= centerX + ruinRadius; rx++) {
+                                for (var ry = centerY - ruinRadius; ry <= centerY + ruinRadius; ry++) {
+                                    var ruin = view.GetObjectFromPosition(rx * 128 + 64, ry * 96 + 48);
+                                    if (!ruin || typeof ruin.FYKHTE !== 'function' ||
+                                        ruin.FYKHTE() !== 7 ||
+                                        world.GetOwner(rx, ry) !== ownOwnerId) {
+                                        continue;
+                                    }
+
+                                    var expiryText = '';
+                                    try {
+                                        var expiry = mainData.get_Time().GetJSStepTime(ruin.get_CreateStep());
+                                        expiry.setHours(expiry.getHours() + 24);
+                                        expiryText = webfrontend.phe.cnc.Util.getDateTimeString(expiry);
+                                    } catch (dateError) {
+                                        expiryText = '—';
+                                    }
+
+                                    ruins.push({
+                                        x: rx,
+                                        y: ry,
+                                        owner: typeof ruin.get_OwnerBaseName === 'function'
+                                            ? ruin.get_OwnerBaseName()
+                                            : '',
+                                        expiry: expiryText
+                                    });
+                                }
+                            }
+
+                            this.poiProximityLabel.removeAll();
+                            var baseWord = baseCount === 1 ? 'Basis' : 'Basen';
+                            var ruinWord = ruins.length === 1 ? 'Ruine' : 'Ruinen';
+                            var summaryLabel = new qx.ui.basic.Label(
+                                'Abgesichert durch ' + baseCount + ' ' + baseWord +
+                                ' + ' + ruins.length + ' ' + ruinWord
+                            );
+                            summaryLabel.setTextColor('#ffff00');
+                            this.poiProximityLabel.add(summaryLabel);
+                            for (var i = 0; i < ruins.length; i++) {
+                                var ruinInfo = ruins[i];
+                                var ruinLabel = new qx.ui.basic.Label(
+                                    'Ruine ' + ruinInfo.x + ':' + ruinInfo.y +
+                                    (ruinInfo.owner ? ' – ' + ruinInfo.owner : '') +
+                                    ' – Ablauf: ' + ruinInfo.expiry
+                                );
+                                ruinLabel.setTextColor('#ffff00');
+                                this.poiProximityLabel.add(ruinLabel);
+                            }
+                        } catch (e) {
+                            console.warn('[RealPOIBonus HE] Umkreissuche fehlgeschlagen:', e);
+                            this.poiProximityLabel.removeAll();
+                            var errorLabel = new qx.ui.basic.Label('Umkreissuche derzeit nicht verfügbar.');
+                            this.poiProximityLabel.add(errorLabel);
                         }
                     },
 
@@ -219,10 +528,11 @@ if (typeof prototype.getObject !== 'function') {
                         var language = this.getArchiveLanguage();
                         var texts = {
                             de: {
-                                archive: 'POI-Archiv', poiTiberium: 'Tiberium', poiCrystal: 'Kristall', poiEnergy: 'Energie', poiInfantry: 'Infanterie', poiVehicles: 'Fahrzeuge', poiAir: 'Luftwaffe', poiResonance: 'Resonanz', options: 'Optionen', retention: 'Aufbewahrungsdauer für gespeicherte POI-Ereignisse:',
+                                archive: 'POI-Archiv & Optionen', poiTiberium: 'Tiberium', poiCrystal: 'Kristall', poiEnergy: 'Energie', poiInfantry: 'Infanterie', poiVehicles: 'Fahrzeuge', poiAir: 'Luftwaffe', poiResonance: 'Resonanz', options: 'Optionen', retention: 'Aufbewahrungsdauer für gespeicherte POI-Ereignisse:',
                                 months3: '3 Monate', months6: '6 Monate', year1: '1 Jahr', years2: '2 Jahre', unlimited: 'Unbegrenzt',
                                 maxLevel: 'Maximale POI-Stufe für Prognose (Standard: 46):',
                                 maxLevelTip: 'Zulässiger Bereich: 1 bis 100. Die optimistische Prognose berücksichtigt höchstens zwei POI-Stufen über der realistischen Stufe.',
+                                baseRadius: 'Umkreis für eigene Basen (Felder, Standard: 2):', ruinRadius: 'Umkreis für eigene Ruinen (Felder, Standard: 5):',
                                 language: 'Sprache:', deleteArchive: 'Gesamtes Archiv löschen', cancel: 'Abbrechen',
                                 confirmDelete: 'JA – ALLES LÖSCHEN', deleteTitle: 'ACHTUNG – ALLE ARCHIVDATEN WERDEN GELÖSCHT!',
                                 deleteText: 'Möchtest du wirklich das gesamte POI-Archiv löschen?\nAlle gespeicherten Gewinne und Verluste aller sieben POI-Arten werden unwiderruflich entfernt.\nDiese Daten können anschließend NICHT wiederhergestellt.',
@@ -238,10 +548,11 @@ if (typeof prototype.getObject !== 'function') {
                                 unchanged: 'Rang bleibt voraussichtlich unverändert', clickMap: 'Anklicken, um die Weltkarte auf {coords} zu zentrieren'
                             },
                             en: {
-                                archive: 'POI Archive', poiTiberium: 'Tiberium', poiCrystal: 'Crystal', poiEnergy: 'Energy', poiInfantry: 'Infantry', poiVehicles: 'Vehicles', poiAir: 'Air Force', poiResonance: 'Resonance', options: 'Options', retention: 'Retention period for saved POI events:',
+                                archive: 'POI Archive & Options', poiTiberium: 'Tiberium', poiCrystal: 'Crystal', poiEnergy: 'Energy', poiInfantry: 'Infantry', poiVehicles: 'Vehicles', poiAir: 'Air Force', poiResonance: 'Resonance', options: 'Options', retention: 'Retention period for saved POI events:',
                                 months3: '3 months', months6: '6 months', year1: '1 year', years2: '2 years', unlimited: 'Unlimited',
                                 maxLevel: 'Maximum POI level for forecast (default: 46):',
                                 maxLevelTip: 'Allowed range: 1 to 100. The optimistic forecast considers at most two POI levels above the realistic level.',
+                                baseRadius: 'Radius for own bases (fields, default: 2):', ruinRadius: 'Radius for own ruins (fields, default: 5):',
                                 language: 'Language:', deleteArchive: 'Delete entire archive', cancel: 'Cancel',
                                 confirmDelete: 'YES – DELETE ALL', deleteTitle: 'WARNING – ALL ARCHIVE DATA WILL BE DELETED!',
                                 deleteText: 'Do you really want to delete the entire POI archive?\nAll saved gains and losses for all seven POI types will be permanently removed.\nThis data CANNOT be restored.',
@@ -257,10 +568,11 @@ if (typeof prototype.getObject !== 'function') {
                                 unchanged: 'Rank is expected to remain unchanged', clickMap: 'Click to center the world map on {coords}'
                             },
                             fr: {
-                                archive: 'Archive des POI', poiTiberium: 'Tibérium', poiCrystal: 'Cristal', poiEnergy: 'Énergie', poiInfantry: 'Infanterie', poiVehicles: 'Véhicules', poiAir: 'Force aérienne', poiResonance: 'Résonance', options: 'Options', retention: 'Durée de conservation des événements POI :',
+                                archive: 'Archive POI & options', poiTiberium: 'Tibérium', poiCrystal: 'Cristal', poiEnergy: 'Énergie', poiInfantry: 'Infanterie', poiVehicles: 'Véhicules', poiAir: 'Force aérienne', poiResonance: 'Résonance', options: 'Options', retention: 'Durée de conservation des événements POI :',
                                 months3: '3 mois', months6: '6 mois', year1: '1 an', years2: '2 ans', unlimited: 'Illimitée',
                                 maxLevel: 'Niveau POI maximum pour la prévision (par défaut : 46) :',
                                 maxLevelTip: 'Plage autorisée : 1 à 100. La prévision optimiste prend en compte au maximum deux niveaux au-dessus du niveau réaliste.',
+                                baseRadius: 'Rayon des bases alliées (cases, défaut : 2) :', ruinRadius: 'Rayon des ruines alliées (cases, défaut : 5) :',
                                 language: 'Langue :', deleteArchive: 'Supprimer toute l’archive', cancel: 'Annuler',
                                 confirmDelete: 'OUI – TOUT SUPPRIMER', deleteTitle: 'ATTENTION – TOUTES LES DONNÉES SERONT SUPPRIMÉES !',
                                 deleteText: 'Voulez-vous vraiment supprimer toute l’archive POI ?\nTous les gains et pertes enregistrés pour les sept types de POI seront définitivement supprimés.\nCes données NE POURRONT PAS être restaurées.',
@@ -276,10 +588,11 @@ if (typeof prototype.getObject !== 'function') {
                                 unchanged: 'Le rang devrait rester inchangé', clickMap: 'Cliquer pour centrer la carte sur {coords}'
                             },
                             es: {
-                                archive: 'Archivo de POI', poiTiberium: 'Tiberio', poiCrystal: 'Cristal', poiEnergy: 'Energía', poiInfantry: 'Infantería', poiVehicles: 'Vehículos', poiAir: 'Fuerza aérea', poiResonance: 'Resonancia', options: 'Opciones', retention: 'Periodo de conservación de eventos POI:',
+                                archive: 'Archivo POI y opciones', poiTiberium: 'Tiberio', poiCrystal: 'Cristal', poiEnergy: 'Energía', poiInfantry: 'Infantería', poiVehicles: 'Vehículos', poiAir: 'Fuerza aérea', poiResonance: 'Resonancia', options: 'Opciones', retention: 'Periodo de conservación de eventos POI:',
                                 months3: '3 meses', months6: '6 meses', year1: '1 año', years2: '2 años', unlimited: 'Ilimitado',
                                 maxLevel: 'Nivel máximo de POI para la previsión (predeterminado: 46):',
                                 maxLevelTip: 'Rango permitido: 1 a 100. La previsión optimista considera como máximo dos niveles por encima del nivel realista.',
+                                baseRadius: 'Radio de bases propias (casillas, predeterminado: 2):', ruinRadius: 'Radio de ruinas propias (casillas, predeterminado: 5):',
                                 language: 'Idioma:', deleteArchive: 'Eliminar todo el archivo', cancel: 'Cancelar',
                                 confirmDelete: 'SÍ – ELIMINAR TODO', deleteTitle: 'ATENCIÓN – ¡SE ELIMINARÁN TODOS LOS DATOS DEL ARCHIVO!',
                                 deleteText: '¿Realmente quieres eliminar todo el archivo de POI?\nTodos los beneficios y pérdidas guardados de los siete tipos de POI se eliminarán permanentemente.\nEstos datos NO se podrán restaurar.',
@@ -304,6 +617,8 @@ if (typeof prototype.getObject !== 'function') {
                         this.poiArchiveStorageKey = 'RealPOIBonusHE_POIArchive_' + worldKey;
                         this.archiveRetentionKey = this.poiArchiveStorageKey + '_retention';
                         this.archiveMaxPoiLevelKey = this.poiArchiveStorageKey + '_maxPoiLevel';
+                        this.archiveBaseRadiusKey = this.poiArchiveStorageKey + '_baseRadius';
+                        this.archiveRuinRadiusKey = this.poiArchiveStorageKey + '_ruinRadius';
                         this.archiveLanguageKey = this.poiArchiveStorageKey + '_language';
                         this.poiArchiveSyncKey = this.poiArchiveStorageKey + '_lastNotificationSync';
                         this.poiArchiveEntries = this.loadPoiArchive();
@@ -691,7 +1006,27 @@ if (typeof prototype.getObject !== 'function') {
                             }
 
                             var optionsPage = new qx.ui.tabview.Page(this.archiveText('options'));
-                            optionsPage.setLayout(new qx.ui.layout.VBox(10));
+                            optionsPage.setLayout(new qx.ui.layout.VBox(8));
+
+                            // Einheitliche Abschnittsüberschriften mit dezenter Trennlinie.
+                            var addOptionsSection = function(caption) {
+                                var separator = new qx.ui.core.Widget();
+                                separator.set({
+                                    height: 1,
+                                    minHeight: 1,
+                                    backgroundColor: '#9aa8b2',
+                                    marginTop: 5,
+                                    marginBottom: 2
+                                });
+                                optionsPage.add(separator);
+
+                                var heading = new qx.ui.basic.Label(caption);
+                                heading.setTextColor('#8b1a00');
+                                heading.set({ marginTop: 1, marginBottom: 1 });
+                                optionsPage.add(heading);
+                            };
+
+                            addOptionsSection('ALLGEMEINE ARCHIV-EINSTELLUNGEN');
                             var retentionLabel = new qx.ui.basic.Label(this.archiveText('retention'));
                             retentionLabel.setTextColor('#000000');
                             optionsPage.add(retentionLabel);
@@ -757,6 +1092,8 @@ if (typeof prototype.getObject !== 'function') {
                                     this.archiveTypeViews = {};
                                     this.archiveRetentionSelect = null;
                                     this.archiveMaxPoiLevelField = null;
+                                    this.archiveBaseRadiusField = null;
+                                    this.archiveRuinRadiusField = null;
                                     this.archiveLanguageSelect = null;
                                     this.archiveCoordinateSearchField = null;
                                     this.archiveEventFilterSelect = null;
@@ -766,6 +1103,8 @@ if (typeof prototype.getObject !== 'function') {
                             languageRow.add(this.archiveLanguageSelect);
                             optionsPage.add(languageRow);
 
+
+                            addOptionsSection('POI-PROGNOSE');
 
                             // Maximale POI-Stufe für die optimistische Prognose.
                             var maxLevelRow = new qx.ui.container.Composite(new qx.ui.layout.HBox(8));
@@ -788,6 +1127,64 @@ if (typeof prototype.getObject !== 'function') {
                             }, this);
                             maxLevelRow.add(this.archiveMaxPoiLevelField);
                             optionsPage.add(maxLevelRow);
+
+                            addOptionsSection('UMKREISSUCHE');
+
+                            // Suchradien für die Umkreisauswertung; getrennt und dauerhaft gespeichert.
+                            var radiusFields = [
+                                { key: this.archiveBaseRadiusKey, label: this.archiveText('baseRadius'), fallback: 2, member: 'archiveBaseRadiusField' },
+                                { key: this.archiveRuinRadiusKey, label: this.archiveText('ruinRadius'), fallback: 5, member: 'archiveRuinRadiusField' }
+                            ];
+                            for (var rf = 0; rf < radiusFields.length; rf++) {
+                                (function(config, owner) {
+                                    var radiusRow = new qx.ui.container.Composite(new qx.ui.layout.HBox(8));
+                                    var radiusLabel = new qx.ui.basic.Label(config.label);
+                                    radiusLabel.setTextColor('#000000');
+                                    radiusRow.add(radiusLabel);
+
+                                    // Auswahlfeld statt Texteingabe: verhindert, dass Qooxdoo
+                                    // Zwischenstände beim Tippen oder Fokuswechsel zurücksetzt.
+                                    var radiusField = new qx.ui.form.SelectBox();
+                                    radiusField.set({ width: 70 });
+
+                                    for (var radiusOption = 1; radiusOption <= 10; radiusOption++) {
+                                        radiusField.add(new qx.ui.form.ListItem(
+                                            String(radiusOption), null, radiusOption
+                                        ));
+                                    }
+
+                                    var storedRadius = owner.getPoiProximityRadius(config.key, config.fallback);
+                                    var radiusItems = radiusField.getChildren();
+                                    for (var radiusIndex = 0; radiusIndex < radiusItems.length; radiusIndex++) {
+                                        if (Number(radiusItems[radiusIndex].getModel()) === storedRadius) {
+                                            radiusField.setSelection([radiusItems[radiusIndex]]);
+                                            break;
+                                        }
+                                    }
+
+                                    radiusField.addListener('changeSelection', function(e) {
+                                        var selection = e.getData() || [];
+                                        if (!selection.length) return;
+
+                                        var value = Number(selection[0].getModel());
+                                        if (!isFinite(value) || value < 1 || value > 10) return;
+
+                                        try { localStorage.setItem(config.key, String(value)); } catch (err) {}
+
+                                        var selectedPoi = owner.poiStatusInfo &&
+                                            typeof owner.poiStatusInfo.getObject === 'function'
+                                            ? owner.poiStatusInfo.getObject()
+                                            : null;
+                                        if (selectedPoi) owner.updatePoiProximityInfo(selectedPoi);
+                                    });
+
+                                    radiusRow.add(radiusField);
+                                    optionsPage.add(radiusRow);
+                                    owner[config.member] = radiusField;
+                                })(radiusFields[rf], this);
+                            }
+
+                            addOptionsSection('DATENVERWALTUNG');
 
                             var cleanupButton = new qx.ui.form.Button(this.archiveText('deleteArchive'));
                             var deleteWarning = new qx.ui.container.Composite(new qx.ui.layout.VBox(8));
@@ -957,6 +1354,9 @@ if (poiCount !== this.ownedPoiCount) {
 this.ownedPoiCount = poiCount;
 this.rankingBonusDataCache = {};
 }
+
+// Allianzbasen unabhängig von der Kartenansicht laden.
+this.ensureAllianceBaseCoordinates();
 },
 
 /**
@@ -968,6 +1368,13 @@ this.hideIntelligenceReport(event.getTarget());
 var allianceId = ClientLib.Data.MainData.GetInstance().get_Alliance().get_Id();
 
 if (allianceId > 0 && visObject.get_Type() !== ClientLib.Data.WorldSector.WorldObjectPointOfInterest.EPOIType.TunnelExit) {
+    // Die Umkreissuche gehört ausschließlich zum normalen POI-Informationsfenster.
+    // Sie wird nur für POIs der eigenen Allianz ausgeführt; das Archiv bleibt davon unberührt.
+    if (visObject.get_OwnerAllianceId() === allianceId) {
+        this.updatePoiProximityInfo(visObject);
+    } else if (this.poiProximityLabel) {
+        this.poiProximityLabel.removeAll();
+    }
 var selectedPoiScore = ClientLib.Base.PointOfInterestTypes.GetScoreByLevel(visObject.get_Level());
 var poiType = ClientLib.Base.PointOfInterestTypes.GetPOITypeFromWorldPOIType(visObject.get_Type());
 this.updateOwnedPoiList(poiType);
@@ -1040,6 +1447,7 @@ this.container.setVisibility('visible');
 }
 else {
 this.container.setVisibility('excluded');
+if (this.poiProximityLabel) this.poiProximityLabel.removeAll();
 if (this.ownedPoiListContainer) this.ownedPoiListContainer.removeAll();
 }
 },
